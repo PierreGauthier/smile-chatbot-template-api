@@ -5,10 +5,10 @@ from config import Settings, get_settings
 from langchain_core.globals import set_verbose, set_debug
 
 from chains import (
-    SummarizeExchangeChain
+    SummarizeExchangeChain,
+    RagChain
 )
 from services import (
-    RagChain, 
     IDatabaseDocumentService, 
     CosmosDbDocumentService, 
     DatabaseHistoryService,
@@ -86,8 +86,7 @@ class DefaultRagChatService(IChatService):
         return RagChatServiceResult(
             user_id=user_id, 
             session_id=current_session_id, 
-            answer=result,
-            complete=True
+            answer=result
         ) 
 
     ### PRIVATE

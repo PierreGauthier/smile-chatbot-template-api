@@ -5,7 +5,6 @@ from config import Settings, get_settings
 from langchain_core.globals import set_verbose, set_debug
 
 from services import (
-    RagChain, 
     IDatabaseDocumentService, 
     CosmosDbDocumentService, 
     ExtractRequestDefinitionChain,
@@ -15,6 +14,7 @@ from services import (
     CosmosDbHistoryService,
     IChatService
 )
+from chains import RagChain
 from models import (
     RagChatServiceResult, 
     IndexFilterResult,
@@ -69,8 +69,7 @@ class StructuredRequestRagChatService(IChatService):
             return RagChatServiceResult(
                 user_id=chat_thread.user_id,
                 session_id=chat_thread.session_id, 
-                answer="Something went wrong, could you please repeat your request?", 
-                complete=False
+                answer="Something went wrong, could you please repeat your request?"
             )
 
         # (3) Set defaults values to the request 
@@ -99,8 +98,7 @@ class StructuredRequestRagChatService(IChatService):
                 return RagChatServiceResult(
                     user_id=chat_thread.user_id, 
                     session_id=chat_thread.session_id, 
-                    answer=new_user_request.ai_response,
-                    complete=False
+                    answer=new_user_request.ai_response
                 )
         
         # (6) The request is complete: Find concerned Search-INDEX
@@ -114,8 +112,7 @@ class StructuredRequestRagChatService(IChatService):
             return RagChatServiceResult(
                 user_id=chat_thread.user_id, 
                 session_id=chat_thread.session_id, 
-                answer="Sorry, we did not find any sources associated with your request. We invite you to contact the technical service.",
-                complete=True
+                answer="Sorry, we did not find any sources associated with your request. We invite you to contact the technical service."
             )
         print(f"INDEX: {index_result.index_name}")
 
@@ -155,8 +152,7 @@ class StructuredRequestRagChatService(IChatService):
         return RagChatServiceResult(
             user_id=chat_thread.user_id, 
             session_id=chat_thread.session_id, 
-            answer=result,
-            complete=True
+            answer=result
         ) 
 
     ### PRIVATE

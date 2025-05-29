@@ -35,7 +35,6 @@ class Settings(BaseSettings):
 
     bot_welcome_message: str = "Hello and welcome!"
     bot_error_message: str = "Oops something went wrong!"
-    prompt_system: str = "You are a helpful assistant. Answer all questions to the best of your ability."
     max_history_size: int = 10
     max_history_token: int = 200
 
@@ -57,16 +56,6 @@ class Settings(BaseSettings):
     langsmith_extract_request_definition_prompt_name : str
     langsmith_rag_system_prompt_name : str
     langsmith_summary_exchange_prompt_name: str
-    contextualize_question_system_prompt: str = """Given a chat history and the latest user question
-    which might reference context in the chat history, formulate a standalone question
-    which can be understood without the chat history. Do NOT answer the question,
-    just reformulate it if needed and otherwise return it as is."""
-    rag_system_prompt: str = """You are an assistant for question-answering tasks. \
-    Use the following pieces of retrieved context to answer the question. \
-    If you don't know the answer, just say that you don't know. \
-    Use three sentences maximum and keep the answer concise.\
-
-    {context}"""
     rag_k: int = 3
     rag_score_threshold: float = 0.8
     

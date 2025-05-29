@@ -5,16 +5,16 @@ from config import Settings
 from langchain.output_parsers import PydanticOutputParser
 
 from config import Settings, get_settings
-from services import ILlmService, AzureOpenAiLlmService
+from services import LlmService, AzureOpenAiLlmService
 from models import ChatMessage, RequestDefinitionField
-from prompts import IPromptProvider, LangsmithExtractRequestPromptProvider
+from prompts import PromptProvider, ExtractRequestPromptProvider
 
 class ExtractRequestDefinitionChain:
 
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)],
-            prompt_provider: Annotated[IPromptProvider, Depends(LangsmithExtractRequestPromptProvider)],
-            llm_service: Annotated[ILlmService, Depends(AzureOpenAiLlmService)]):
+            prompt_provider: Annotated[PromptProvider, Depends(ExtractRequestPromptProvider)],
+            llm_service: Annotated[LlmService, Depends(AzureOpenAiLlmService)]):
         self.settings = settings
         self.prompt_provider = prompt_provider
         self.llm = llm_service.get_llm()
@@ -39,8 +39,7 @@ class ExtractRequestDefinitionChain:
         
         prompt_template = self.prompt_provider.get_prompt(previous_messages)
         
-        new_message = ChatMessage.create_human_message(message="{question}")
-        prompt_template.append(message=new_message.get_tuple_for_prompt())
+        prompt_template.append(message=("human", "{question}"))
 
         messages = prompt_template.format_messages(question=new_user_request, format_instructions=format_instructions)
         output = self.llm.invoke(messages)

@@ -13,7 +13,7 @@ class RagMainPromptProvider(PromptProvider):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
         self.prompt_name = settings.langsmith_rag_system_prompt_name
 
-    def get_prompt(self, exchange:str, extra_info:List[str]) -> ChatPromptTemplate:
+    def get_prompt(self, exchange:str, extra_info:List[str] = []) -> ChatPromptTemplate:
         rag_prompt:ChatPromptTemplate = hub.pull(self.prompt_name)
         
         if extra_info:

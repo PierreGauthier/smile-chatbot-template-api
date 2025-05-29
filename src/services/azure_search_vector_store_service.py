@@ -3,14 +3,14 @@ from fastapi import Depends
 from langchain_community.vectorstores.azuresearch import AzureSearch, AzureSearchVectorStoreRetriever
 from config import Settings, get_settings
 
-from services import OpenAIEmbeddingsService, IEmbeddingsService, IVectorStoreService
+from services import OpenAIEmbeddingsService, EmbeddingsService, IVectorStoreService
 from models import IndexFilterResult
     
 class AzureSearchVectorStoreService(IVectorStoreService):
     def __init__(
         self,
         settings: Annotated[Settings, Depends(get_settings)],
-        embeddings_service: Annotated[IEmbeddingsService, Depends(OpenAIEmbeddingsService)]):
+        embeddings_service: Annotated[EmbeddingsService, Depends(OpenAIEmbeddingsService)]):
         self.embeddings = embeddings_service.get_embeddings()
         self.azure_search_endpoint = settings.azure_search_endpoint
         self.azure_search_key = settings.azure_search_key

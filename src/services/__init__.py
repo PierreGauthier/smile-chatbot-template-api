@@ -21,10 +21,8 @@ from .llm.azure_openai_embeddings_service import AzureOpenAIEmbeddingsService
 from .llm.openai_embeddings_service import OpenAIEmbeddingsService
 from .azure_search_vector_store_service import AzureSearchVectorStoreService
 from .cosmosdb_request_service import CosmosDbRequestService
-from .cosmosdb_history_service import CosmosDbHistoryService
 
 from .chains.extract_request_definition_chain import ExtractRequestDefinitionChain
-from .chains.rag_chain import RagChain
 from .structured_request_rag_chat_service import StructuredRequestRagChatService
 from .default_rag_chat_service import DefaultRagChatService
 

@@ -3,7 +3,8 @@
         "fastapi",
         "langchain",
         "openai",
-        "Padel"
+        "Padel",
+        "vectorstore"
     ],
     "appService.zipIgnorePattern": [
         "__pycache__{,/**}",

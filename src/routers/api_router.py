@@ -73,7 +73,7 @@ async def chat(
     chat_request: ApiChatRequest = Body(...)
 ):
     ai_response: RagChatServiceResult = service.invoke(
-        message = chat_request.message, 
+        input_message = chat_request.message, 
         session_id=chat_request.session_id,
         user_id=chat_request.user_id
     )
