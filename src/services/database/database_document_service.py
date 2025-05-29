@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from models import VectorizedDocumentDto
 
-class IDatabaseDocumentService:
+class DatabaseDocumentService:
 
     @abstractmethod
     def get_document(self, doc_type:str, document_id:str) -> VectorizedDocumentDto:

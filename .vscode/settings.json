@@ -4,7 +4,8 @@
         "langchain",
         "openai",
         "Padel",
-        "vectorstore"
+        "vectorstore",
+        "vectorstores"
     ],
     "appService.zipIgnorePattern": [
         "__pycache__{,/**}",

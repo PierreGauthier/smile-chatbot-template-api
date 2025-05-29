@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 
 from models import RequestDefinition, IndexFilterResult
 
-class IIndexFilter(ABC):
+class IndexFilter(ABC):
+    
     @abstractmethod
     def apply(self, request: RequestDefinition) -> bool:
         pass

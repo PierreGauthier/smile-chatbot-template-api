@@ -5,16 +5,15 @@ from config import Settings, get_settings
 from langchain_core.globals import set_verbose, set_debug
 
 from services import (
-    IDatabaseDocumentService, 
-    CosmosDbDocumentService, 
-    ExtractRequestDefinitionChain,
-    IDatabaseRequestService,
-    IDatabaseHistoryService,
+    DatabaseDocumentService, 
+    CosmosDbDocumentService,
+    DatabaseRequestService,
+    DatabaseHistoryService,
     CosmosDbRequestService,
     CosmosDbHistoryService,
-    IChatService
+    ChatService
 )
-from chains import RagChain
+from chains import RagChain, ExtractRequestDefinitionChain
 from models import (
     RagChatServiceResult, 
     IndexFilterResult,
@@ -23,28 +22,28 @@ from models import (
     RequestDefinitionField
 )
 from index_filter import (
-    IIndexFilter,
+    IndexFilter,
     DefaultIndexFilter
 )
 
 MAX_EXCHANGES = 2 # TODO: in config file
 
-class StructuredRequestRagChatService(IChatService):
+class StructuredRequestRagChatService(ChatService):
     def __init__(
             self,
             settings: Annotated[Settings, Depends(get_settings)],
             rag_chain: Annotated[RagChain, Depends(RagChain)],
             extract_request_definition_chain: Annotated[ExtractRequestDefinitionChain, Depends(ExtractRequestDefinitionChain)],
-            document_db_service: Annotated[IDatabaseDocumentService, Depends(CosmosDbDocumentService)],
-            request_db_service: Annotated[IDatabaseRequestService, Depends(CosmosDbRequestService)],
-            history_db_service: Annotated[IDatabaseHistoryService, Depends(CosmosDbHistoryService)]):
+            document_db_service: Annotated[DatabaseDocumentService, Depends(CosmosDbDocumentService)],
+            request_db_service: Annotated[DatabaseRequestService, Depends(CosmosDbRequestService)],
+            history_db_service: Annotated[DatabaseHistoryService, Depends(CosmosDbHistoryService)]):
         self.settings = settings
         self.rag_chain = rag_chain
         self.extract_request_definition_chain = extract_request_definition_chain
         self.document_db_service = document_db_service
         self.request_db_service = request_db_service
         self.history_db_service = history_db_service
-        self.index_filters:List[IIndexFilter] = [
+        self.index_filters:List[IndexFilter] = [
             DefaultIndexFilter()
         ]
 

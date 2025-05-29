@@ -2,13 +2,12 @@ from typing import Annotated
 from fastapi import Depends
 import uuid
 
-from memory import CosmosDbDocumentDb
 from models import VectorizedDocumentDto
 from mappers import VectorizedDocumentMapper, MetadataMapper
-from services import IDatabaseDocumentService
+from services import DatabaseDocumentService, CosmosDbBase, CosmosDbDocumentDb
 
-class CosmosDbDocumentService(IDatabaseDocumentService):
-    def __init__(self, database: Annotated[CosmosDbDocumentDb, Depends(CosmosDbDocumentDb)]):
+class CosmosDbDocumentService(DatabaseDocumentService):
+    def __init__(self, database: Annotated[CosmosDbBase, Depends(CosmosDbDocumentDb)]):
         self.database = database
     
     def get_document(self, doc_type:str, document_id:str) -> VectorizedDocumentDto: 

@@ -4,12 +4,12 @@ from fastapi import Depends
 from botbuilder.core import ActivityHandler, TurnContext
 from botbuilder.schema import ChannelAccount
 
-from services import IChatService, DefaultRagChatService
+from services import ChatService, DefaultRagChatService
 from models import RagChatServiceResult
 
 class DefaultBot(ActivityHandler):
     
-    def __init__(self, chat_service: Annotated[IChatService, Depends(DefaultRagChatService)]):
+    def __init__(self, chat_service: Annotated[ChatService, Depends(DefaultRagChatService)]):
         self.chat_service = chat_service
         
     async def on_message_activity(self, turn_context: TurnContext):

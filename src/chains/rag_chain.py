@@ -12,7 +12,7 @@ from models import RagChainResult, DocumentIdentifier, IndexFilterResult
 from services import (
     LlmService,
     AzureOpenAiLlmService,
-    IVectorStoreService,
+    VectorStoreService,
     AzureSearchVectorStoreService,
 )
 from prompts import PromptProvider, RagMainPromptProvider, ContextualizePromptProvider
@@ -25,7 +25,7 @@ class RagChain:
     def __init__(self,
             settings: Annotated[Settings, Depends(get_settings)],
             llm_service: Annotated[LlmService, Depends(AzureOpenAiLlmService)],
-            vector_store_service: Annotated[IVectorStoreService, Depends(AzureSearchVectorStoreService)],
+            vector_store_service: Annotated[VectorStoreService, Depends(AzureSearchVectorStoreService)],
             contextualize_prompt_provider: Annotated[PromptProvider, Depends(ContextualizePromptProvider)],
             rag_prompt_provider: Annotated[PromptProvider, Depends(RagMainPromptProvider)]):
         self.settings = settings

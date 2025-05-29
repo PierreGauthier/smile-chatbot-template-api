@@ -19,7 +19,7 @@ from botbuilder.schema import Activity, ActivityTypes
 
 from routers import DefaultBot
 from models import ApiChatRequest, RagChatServiceResult
-from services import IChatService, DefaultRagChatService
+from services import ChatService, DefaultRagChatService
 
 router = APIRouter(prefix="/api", tags=["augmented-chat"])
 
@@ -69,7 +69,7 @@ async def messages(chat_request: Request, BOT: Annotated[DefaultBot, Depends(Def
 
 @router.post("/chat")
 async def chat(
-    service: Annotated[IChatService, Depends(DefaultRagChatService)],
+    service: Annotated[ChatService, Depends(DefaultRagChatService)],
     chat_request: ApiChatRequest = Body(...)
 ):
     ai_response: RagChatServiceResult = service.invoke(

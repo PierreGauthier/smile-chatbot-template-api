@@ -3,10 +3,10 @@ from fastapi import Depends
 from langchain_community.vectorstores.azuresearch import AzureSearch, AzureSearchVectorStoreRetriever
 from config import Settings, get_settings
 
-from services import OpenAIEmbeddingsService, EmbeddingsService, IVectorStoreService
+from services import OpenAIEmbeddingsService, EmbeddingsService, VectorStoreService
 from models import IndexFilterResult
     
-class AzureSearchVectorStoreService(IVectorStoreService):
+class AzureSearchVectorStoreService(VectorStoreService):
     def __init__(
         self,
         settings: Annotated[Settings, Depends(get_settings)],

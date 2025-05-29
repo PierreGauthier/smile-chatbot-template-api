@@ -9,11 +9,11 @@ from chains import (
     RagChain
 )
 from services import (
-    IDatabaseDocumentService, 
+    DatabaseDocumentService, 
     CosmosDbDocumentService, 
     DatabaseHistoryService,
     CosmosDbHistoryService,
-    IChatService
+    ChatService
 )
 from models import (
     RagChatServiceResult, 
@@ -21,12 +21,12 @@ from models import (
     IndexFilterResult
 )
 
-class DefaultRagChatService(IChatService):
+class DefaultRagChatService(ChatService):
     def __init__(
             self,
             settings: Annotated[Settings, Depends(get_settings)],
             rag_chain: Annotated[RagChain, Depends(RagChain)],
-            document_db_service: Annotated[IDatabaseDocumentService, Depends(CosmosDbDocumentService)],
+            document_db_service: Annotated[DatabaseDocumentService, Depends(CosmosDbDocumentService)],
             summarize_exchange_chain : Annotated[SummarizeExchangeChain, Depends(SummarizeExchangeChain)],
             history_db_service: Annotated[DatabaseHistoryService, Depends(CosmosDbHistoryService)]):
         self.settings = settings

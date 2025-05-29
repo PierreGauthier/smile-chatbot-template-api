@@ -2,13 +2,12 @@ import uuid
 from typing import Annotated
 from fastapi import Depends
 
-from services import IDatabaseRequestService
-from memory import CosmosDbRequestDb
+from services import DatabaseRequestService, CosmosDbBase, CosmosDbRequestDb
 from models import ChatRequest
 from mappers import ChatRequestMapper
 
-class CosmosDbRequestService(IDatabaseRequestService):
-    def __init__(self, database: Annotated[CosmosDbRequestDb, Depends(CosmosDbRequestDb)]):
+class CosmosDbRequestService(DatabaseRequestService):
+    def __init__(self, database: Annotated[CosmosDbBase, Depends(CosmosDbRequestDb)]):
         self.database = database
 
     def get_request(self, user_id: str, session_id: str) -> ChatRequest:

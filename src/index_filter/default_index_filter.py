@@ -1,7 +1,7 @@
-from index_filter import IIndexFilter
+from index_filter import IndexFilter
 from models import RequestDefinition, IndexFilterResult
 
-class DefaultIndexFilter(IIndexFilter):
+class DefaultIndexFilter(IndexFilter):
     """Default"""
 
     def apply(self, request: RequestDefinition) -> bool:
