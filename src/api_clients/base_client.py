@@ -1,13 +1,11 @@
 import uuid
 from base64 import b64encode
 
-from api_clients.constants import (
-    CORRELATION_ID_HEADER_KEY,
-    AUTHORIZATION_HEADER_KEY,
-    AUTHORIZATION_BASIC_TOKEN_PREFIX,
-    CONTENT_TYPE_KEY,
-    CONTENT_TYPE_JSON_VALUE
-)
+CORRELATION_ID_HEADER_KEY = "X-CorrelationId"
+AUTHORIZATION_HEADER_KEY = "Authorization"
+AUTHORIZATION_BASIC_TOKEN_PREFIX = "Basic"
+CONTENT_TYPE_KEY = "Content-Type"
+CONTENT_TYPE_JSON_VALUE = "application/json"
 
 class BaseClient():
     def __init__(self, base_url: str):

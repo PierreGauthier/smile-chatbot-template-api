@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
 
-from models import VectorizedDocumentDto
+from models import VectorizedDocument
 
 class DatabaseDocumentService:
 
     @abstractmethod
-    def get_document(self, doc_type:str, document_id:str) -> VectorizedDocumentDto:
+    def get_document(self, doc_type:str, document_id:str) -> VectorizedDocument:
         pass
     
     @abstractmethod        
-    def create_document_with_embedding(self, document:VectorizedDocumentDto) -> VectorizedDocumentDto:
+    def create_document_with_embedding(self, document:VectorizedDocument) -> VectorizedDocument:
         pass

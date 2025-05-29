@@ -23,8 +23,6 @@ class Settings(BaseSettings):
     azure_cosmos_document_partition_key: str
     azure_cosmos_history_container: str
     azure_cosmos_history_partition_key: str
-    azure_cosmos_request_container:str
-    azure_cosmos_request_partition_key:str
     
     azure_openai_endpoint: str
     azure_openai_api_key: str
@@ -33,8 +31,6 @@ class Settings(BaseSettings):
     azure_openai_embedding_deployment: str
     azure_openai_temperature : float = 0.2
 
-    bot_welcome_message: str = "Hello and welcome!"
-    bot_error_message: str = "Oops something went wrong!"
     max_history_size: int = 10
     max_history_token: int = 200
 

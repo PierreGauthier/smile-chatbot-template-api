@@ -12,3 +12,18 @@ class Metadata:
         self.filename = filename
         self.filetype = filetype
         self.pageNumber = pageNumber
+
+    def to_dict(self):
+        return {
+            "sourceFile": self.sourceFile,
+            "contentType": self.contentType,
+            "pageNumber": self.pageNumber
+        }
+    
+    @staticmethod
+    def from_dict(metadata: dict):
+        return Metadata(
+            sourceFile = metadata["sourceFile"],
+            contentType = metadata["contentType"],
+            pageNumber = metadata["pageNumber"]
+        )
