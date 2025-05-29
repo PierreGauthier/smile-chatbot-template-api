@@ -103,4 +103,4 @@ class DefaultRagChatService(ChatService):
             return (session_id, thread)
         else: 
             new_message:ChatMessage = self.history_db_service.create_message_thread(user_id=user_id, message=message)
-            return (new_message.id, [new_message])
+            return (new_message.session_id, [new_message])
