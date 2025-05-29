@@ -1,8 +1,10 @@
 from typing import List
+from dataclasses import dataclass
 from langchain_core.messages import AIMessage
+
 from models import DocumentIdentifier
 
+@dataclass
 class RagChainResult:
-    def __init__(self, answer: AIMessage, documents: List[DocumentIdentifier]):
-        self.answer = answer
-        self.documents = documents
+    answer: AIMessage
+    documents: List[DocumentIdentifier]

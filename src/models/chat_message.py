@@ -1,12 +1,13 @@
 from models import MessageData
+from dataclasses import dataclass
 
+@dataclass
 class ChatMessage:
-    def __init__(self, session_id:str, user_id:str, type:str, data:MessageData, id:str = None):
-        self.id = id
-        self.session_id = session_id
-        self.user_id = user_id
-        self.type = type
-        self.data = data
+    session_id:str
+    user_id:str
+    type:str
+    data:MessageData
+    id:str = None
 
     @classmethod
     def build_human_message(cls, session_id:str, user_id:str, content:str, id:str=None):

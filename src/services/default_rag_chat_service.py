@@ -18,7 +18,9 @@ from services import (
 from models import (
     RagChatServiceResult, 
     ChatMessage,
-    IndexFilterResult
+    IndexFilterResult,
+    DocumentSource,
+    VectorizedDocument
 )
 
 class DefaultRagChatService(ChatService):
@@ -57,36 +59,28 @@ class DefaultRagChatService(ChatService):
         # (3) RAG
         index = IndexFilterResult(index_name=self.settings.azure_search_index)
         rag_result = self.rag_chain.invoke(exchange=exchange, input_message=input_message, index=index)        
-        result = f"{rag_result.answer.content}\n\n"
+        ai_answer = rag_result.answer.content
         document_references = [
             self.document_db_service.get_document(doc_type=doc_id.doc_type, document_id=doc_id.id) 
             for doc_id in rag_result.documents if doc_id.doc_type and doc_id.id
         ]
         
         # (4) Group sources by document name:
-        sources = {}
-        for document in document_references:
-            if not document.metadata.sourceFile in sources:
-                sources[document.metadata.sourceFile] = []
-            sources[document.metadata.sourceFile].append(str(document.metadata.pageNumber))
-        
-        for source in sources.keys():
-            pages = ", ".join(f"page {page}" for page in list(set(sources[source])))
-            formatted_source = f"[{source} - ({pages})]"
-            result += f"\n{formatted_source}"
+        sources = self.build_sources(document_references)
 
         # (5) Insert AI-RAG response
         ai_response = ChatMessage.build_ai_message(
             session_id=current_session_id,
             user_id=user_id, 
-            content=result
+            content=ai_answer
         )
         self.history_db_service.upsert_message(ai_response)
         
         return RagChatServiceResult(
             user_id=user_id, 
             session_id=current_session_id, 
-            answer=result
+            answer=ai_answer,
+            sources=sources
         ) 
 
     ### PRIVATE
@@ -104,3 +98,20 @@ class DefaultRagChatService(ChatService):
         else: 
             new_message:ChatMessage = self.history_db_service.create_message_thread(user_id=user_id, message=message)
             return (new_message.session_id, [new_message])
+        
+    def build_sources(self, document_references:List[VectorizedDocument]):
+        sources: List[DocumentSource] = []
+        seen: set[tuple[str, int]] = set()
+
+        for doc in document_references:
+            key = (doc.metadata.sourceFile, doc.metadata.pageNumber)
+            if key not in seen:
+                seen.add(key)
+                sources.append(
+                    DocumentSource(
+                        filename=doc.metadata.sourceFile,
+                        page_number=doc.metadata.pageNumber,
+                        document_url=doc.metadata.document_url,
+                    )
+                )
+        return sources

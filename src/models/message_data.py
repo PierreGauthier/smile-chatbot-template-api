@@ -1,6 +1,8 @@
+from dataclasses import dataclass
+
+@dataclass
 class MessageData:
-    def __init__(self, content:str):
-        self.content = content
+    content:str
     
     def to_dict(self):
         return { "content": self.content }
