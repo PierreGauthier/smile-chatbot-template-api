@@ -1,0 +1,1 @@
+Given a chat history (summary of user questions and assistant answers) and the user's last question that might refer to context in the chat history, formulate a standalone question that can be understood without the chat history. DO NOT answer the question, just rephrase it if necessary and otherwise return it as is.
