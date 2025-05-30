@@ -1,12 +1,6 @@
-import os
 from functools import lru_cache
-from dotenv import load_dotenv
-from pydantic_settings import BaseSettings, PydanticBaseSettingsSource
-from pydantic.fields import FieldInfo
-from typing import Any, Dict, Mapping, Optional, Tuple, Type
-from azure.identity import DefaultAzureCredential
-from azure.keyvault.secrets import SecretClient
-from azure.appconfiguration.provider import load, SettingSelector
+from pydantic_settings import BaseSettings
+from typing import Optional
 
 class Settings(BaseSettings):
     project_name:str
@@ -41,7 +35,7 @@ class Settings(BaseSettings):
     azure_ad_tenant_id: Optional[str] = None
 
     applicationinsights_connection_string: Optional[str] = None
-    cors_allowed_origins: Optional[str] = None
+    cors_allowed_origins: Optional[str] = "*"
     
     azure_search_endpoint: str
     azure_search_key: str
