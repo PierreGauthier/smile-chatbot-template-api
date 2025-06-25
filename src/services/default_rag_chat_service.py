@@ -53,16 +53,17 @@ class DefaultRagChatService(ChatService):
         intent:IntentDefinitionField = self.intent_extraction_chain.invoke(input_message)
         print(f"[{intent.is_intent}]: {intent.chain_of_thoughts}")
 
-        # (1) Get the message history (or create a new one)
-        (current_session_id, message_thread) = self.__get_messages_thread(user_id=user_id, session_id=session_id, message=input_message)
+        # (1) Get the message history
+        message_thread:List[ChatMessage] = self.history_db_service.get_message_thread(user_id=user_id, session_id=session_id)
 
         # (2) Summarize exchange
         exchange = None
-        if len(message_thread) > 1:
+        if len(message_thread) > 0:
+            # DEBUG
             for msg in message_thread:
                 print(f"---{msg.data.content}")
 
-            exchange = self.summarize_exchange_chain.invoke(message_thread[:-1]) # Not the last (new) one
+            exchange = self.summarize_exchange_chain.invoke(message_thread) # Not the last (new) one
             print(exchange)
 
         # (3) RAG
@@ -75,9 +76,22 @@ class DefaultRagChatService(ChatService):
         ]
         
         # (4) Group sources by document name:
-        sources = [] if not intent.is_intent else self.build_sources(document_references)
+        sources = [] if not intent.is_intent else self.__build_sources(document_references)
 
-        # (5) Insert AI-RAG response
+        # (5) Insert User-Message
+        current_session_id = session_id
+        if current_session_id:
+            new_message = ChatMessage.build_human_message(
+                session_id=current_session_id,
+                user_id=user_id, 
+                content=input_message
+            )
+            self.history_db_service.upsert_message(new_message)
+        else:
+            new_message:ChatMessage = self.history_db_service.create_message_thread(user_id=user_id, message=input_message)
+            current_session_id = new_message.session_id
+        
+        # (6) Insert AI-RAG response
         ai_response = ChatMessage.build_ai_message(
             session_id=current_session_id,
             user_id=user_id, 
@@ -93,22 +107,8 @@ class DefaultRagChatService(ChatService):
         ) 
 
     ### PRIVATE
-
-    def __get_messages_thread(self, user_id:str, session_id:str|None, message:str):
-        if session_id:
-            new_message = ChatMessage.build_human_message(
-                session_id=session_id,
-                user_id=user_id, 
-                content=message
-            )
-            self.history_db_service.upsert_message(new_message)
-            thread:List[ChatMessage] = self.history_db_service.get_message_thread(user_id=user_id, session_id=session_id)
-            return (session_id, thread)
-        else: 
-            new_message:ChatMessage = self.history_db_service.create_message_thread(user_id=user_id, message=message)
-            return (new_message.session_id, [new_message])
         
-    def build_sources(self, document_references:List[VectorizedDocument]):
+    def __build_sources(self, document_references:List[VectorizedDocument]):
         sources: List[DocumentSource] = []
         seen: set[tuple[str, int]] = set()
 
