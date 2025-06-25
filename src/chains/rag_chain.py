@@ -37,20 +37,23 @@ class RagChain:
 
     def invoke(self, input_message:str, exchange:str, index: IndexFilterResult) -> RagChainResult:
 
+        # 1) fetch docs
         retriever = self.vector_store_service.get_vector_store_as_retriever(index)
-        contextualize_prompt = self.contextualize_prompt_provider.get_prompt()
-        contextualize_q_chain = contextualize_prompt | self.chat | StrOutputParser()
-        rag_prompt:ChatPromptTemplate = self.rag_prompt_provider.get_prompt(exchange) 
-        
-        rag_chain = (
-            RunnablePassthrough.assign(
-                context=contextualize_q_chain | retriever | self.__format_docs_with_source
-            )
-            | rag_prompt
-            | self.chat
-        )
+        docs = retriever.invoke(input_message)
+        context = self.__format_docs_with_source(docs)
 
-        ai_message: AIMessage = rag_chain.invoke({"question": input_message})
+        # 2) fallback if no doc mentions the keyword
+        if not docs:
+            answer_text = "Sorry, I don't know how to answer that question."
+            return RagChainResult(answer=AIMessage(content=answer_text), documents=[])
+
+        # 3) otherwise run the normal RAG prompt
+        rag_prompt = self.rag_prompt_provider.get_prompt(exchange=exchange)
+        ai_message: AIMessage = (
+            rag_prompt
+            | self.chat
+        ).invoke({"question": input_message, "context": context})
+
         return RagChainResult(answer=ai_message, documents=self.doc_ids)
     
     def __format_docs_with_source(self, docs: List[Document]) -> str:
