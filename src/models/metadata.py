@@ -2,24 +2,24 @@ from dataclasses import dataclass
 
 @dataclass
 class Metadata:
-    sourceFile: str
+    sourceName: str
     contentType: str 
     pageNumber: int
-    document_url: str
+    documentUrl: str
 
     def to_dict(self):
         return {
-            "sourceFile": self.sourceFile,
+            "sourceName": self.sourceName,
             "contentType": self.contentType,
             "pageNumber": self.pageNumber,
-            "document_url": self.document_url
+            "documentUrl": self.documentUrl
         }
     
     @staticmethod
     def from_dict(metadata: dict):
         return Metadata(
-            sourceFile = metadata["sourceFile"],
+            sourceName = metadata["sourceName"],
             contentType = metadata["contentType"],
             pageNumber = metadata["pageNumber"],
-            document_url = metadata["document_url"]
+            documentUrl = metadata["documentUrl"]
         )

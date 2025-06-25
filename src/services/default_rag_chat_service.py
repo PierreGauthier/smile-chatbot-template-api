@@ -6,7 +6,9 @@ from langchain_core.globals import set_verbose, set_debug
 
 from chains import (
     SummarizeExchangeChain,
-    RagChain
+    RagChain,
+    BasicPydanticChain,
+    IntentExtractionChain
 )
 from services import (
     DatabaseDocumentService, 
@@ -22,6 +24,7 @@ from models import (
     DocumentSource,
     VectorizedDocument
 )
+from fields import IntentDefinitionField
 
 class DefaultRagChatService(ChatService):
     def __init__(
@@ -29,9 +32,11 @@ class DefaultRagChatService(ChatService):
             settings: Annotated[Settings, Depends(get_settings)],
             rag_chain: Annotated[RagChain, Depends(RagChain)],
             document_db_service: Annotated[DatabaseDocumentService, Depends(CosmosDbDocumentService)],
+            intent_extraction_chain: Annotated[BasicPydanticChain, Depends(IntentExtractionChain)],
             summarize_exchange_chain : Annotated[SummarizeExchangeChain, Depends(SummarizeExchangeChain)],
             history_db_service: Annotated[DatabaseHistoryService, Depends(CosmosDbHistoryService)]):
         self.settings = settings
+        self.intent_extraction_chain = intent_extraction_chain
         self.rag_chain = rag_chain
         self.document_db_service = document_db_service
         self.history_db_service = history_db_service
@@ -43,6 +48,10 @@ class DefaultRagChatService(ChatService):
 
     def invoke(self, input_message: str, user_id: str, session_id: str = None) -> RagChatServiceResult:
         """Get RAG response"""
+
+        # (0) Detect intent
+        intent:IntentDefinitionField = self.intent_extraction_chain.invoke(input_message)
+        print(f"[{intent.is_intent}]: {intent.chain_of_thoughts}")
 
         # (1) Get the message history (or create a new one)
         (current_session_id, message_thread) = self.__get_messages_thread(user_id=user_id, session_id=session_id, message=input_message)
@@ -66,7 +75,7 @@ class DefaultRagChatService(ChatService):
         ]
         
         # (4) Group sources by document name:
-        sources = self.build_sources(document_references)
+        sources = [] if not intent.is_intent else self.build_sources(document_references)
 
         # (5) Insert AI-RAG response
         ai_response = ChatMessage.build_ai_message(
@@ -104,14 +113,15 @@ class DefaultRagChatService(ChatService):
         seen: set[tuple[str, int]] = set()
 
         for doc in document_references:
-            key = (doc.metadata.sourceFile, doc.metadata.pageNumber)
+            key = (doc.metadata.sourceName, doc.metadata.pageNumber)
             if key not in seen:
                 seen.add(key)
                 sources.append(
                     DocumentSource(
-                        filename=doc.metadata.sourceFile,
+                        document_name=doc.metadata.sourceName,
+                        document_type=doc.doc_type,
                         page_number=doc.metadata.pageNumber,
-                        document_url=doc.metadata.document_url,
+                        document_url=doc.metadata.documentUrl,
                     )
                 )
         return sources

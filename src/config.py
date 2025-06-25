@@ -46,6 +46,7 @@ class Settings(BaseSettings):
     langsmith_extract_request_definition_prompt_name : str
     langsmith_rag_system_prompt_name : str
     langsmith_summary_exchange_prompt_name: str
+    langsmith_intent_extraction_prompt_name: str
     rag_k: int = 3
     rag_score_threshold: float = 0.8
     
