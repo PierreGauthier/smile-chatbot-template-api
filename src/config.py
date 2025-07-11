@@ -49,6 +49,11 @@ class Settings(BaseSettings):
     langsmith_intent_extraction_prompt_name: str
     rag_k: int = 3
     rag_score_threshold: float = 0.8
+
+    elastic_suite_api_base_url: str
+    elastic_suite_attribute_set_endpoint:str
+    elastic_suite_username:str
+    elastic_suite_password:str
     
     class Config:
         env_file = ".env"
