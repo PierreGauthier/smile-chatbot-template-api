@@ -4,9 +4,9 @@ from langchain_core.embeddings import Embeddings
 from langchain_openai import AzureOpenAIEmbeddings
 
 from config import Settings, get_settings
-from services import EmbeddingsService
+from agents import EmbeddingsAgent
 
-class AzureOpenAIEmbeddingsService(EmbeddingsService):
+class AzureOpenAIEmbeddingsAgent(EmbeddingsAgent):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
         self.embeddings = AzureOpenAIEmbeddings(
             azure_deployment=settings.azure_openai_embedding_deployment,

@@ -1,18 +1,18 @@
 from langchain.output_parsers import PydanticOutputParser
 
 from config import Settings
-from services import LlmService
+from agents import LlmAgent
 from prompts import PromptProvider
 
 class BasicPydanticChain:
 
     def __init__(self, 
             settings: Settings, 
-            llm_service: LlmService,
+            llm_agent: LlmAgent,
             prompt_provider: PromptProvider,
             pydantic_object: type):
         self.settings = settings
-        self.llm = llm_service.get_llm()
+        self.llm_agent = llm_agent
         self.prompt_provider = prompt_provider
         self.pydantic_object = pydantic_object
 
@@ -24,7 +24,7 @@ class BasicPydanticChain:
         prompt_template.append(message=("human", "{question}"))
 
         messages = prompt_template.format_messages(question=user_message, format_instructions=format_instructions)
-        output = self.llm.invoke(messages)
+        output = self.llm_agent.invoke(messages)
 
         response = output_parser.parse(output.content)
         return response

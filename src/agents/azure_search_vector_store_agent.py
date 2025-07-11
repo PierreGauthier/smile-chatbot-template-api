@@ -3,15 +3,16 @@ from fastapi import Depends
 from langchain_community.vectorstores.azuresearch import AzureSearch, AzureSearchVectorStoreRetriever
 from config import Settings, get_settings
 
-from services import OpenAIEmbeddingsService, EmbeddingsService, VectorStoreService
+from agents import OpenAIEmbeddingsAgent, EmbeddingsAgent
+from agents import VectorStoreAgent
 from models import IndexFilterResult
     
-class AzureSearchVectorStoreService(VectorStoreService):
+class AzureSearchVectorStoreAgent(VectorStoreAgent):
     def __init__(
         self,
         settings: Annotated[Settings, Depends(get_settings)],
-        embeddings_service: Annotated[EmbeddingsService, Depends(OpenAIEmbeddingsService)]):
-        self.embeddings = embeddings_service.get_embeddings()
+        embeddings_agent: Annotated[EmbeddingsAgent, Depends(OpenAIEmbeddingsAgent)]):
+        self.embeddings = embeddings_agent.get_embeddings()
         self.azure_search_endpoint = settings.azure_search_endpoint
         self.azure_search_key = settings.azure_search_key
         self.rag_k = settings.rag_k

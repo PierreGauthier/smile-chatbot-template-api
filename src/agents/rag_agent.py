@@ -2,18 +2,15 @@ from typing import List, Annotated
 from fastapi import Depends
 
 from langchain_core.documents import Document
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
 from langchain_core.messages import AIMessage
 
 from config import Settings, get_settings
 from models import RagChainResult, DocumentIdentifier, IndexFilterResult
-from services import (
-    LlmService,
-    AzureOpenAiLlmService,
-    VectorStoreService,
-    AzureSearchVectorStoreService,
+from agents import (
+    LlmAgent,
+    AzureOpenAiLlmAgent,
+    VectorStoreAgent,
+    AzureSearchVectorStoreAgent,
 )
 from prompts import PromptProvider, RagMainPromptProvider, ContextualizePromptProvider
 
@@ -21,24 +18,24 @@ from prompts import PromptProvider, RagMainPromptProvider, ContextualizePromptPr
 # logging.basicConfig(level=logging.DEBUG)
 # logger = logging.getLogger(__name__)
 
-class RagChain:
+class RagAgent:
     def __init__(self,
             settings: Annotated[Settings, Depends(get_settings)],
-            llm_service: Annotated[LlmService, Depends(AzureOpenAiLlmService)],
-            vector_store_service: Annotated[VectorStoreService, Depends(AzureSearchVectorStoreService)],
+            llm_agent: Annotated[LlmAgent, Depends(AzureOpenAiLlmAgent)],
+            vector_store_agent: Annotated[VectorStoreAgent, Depends(AzureSearchVectorStoreAgent)],
             contextualize_prompt_provider: Annotated[PromptProvider, Depends(ContextualizePromptProvider)],
             rag_prompt_provider: Annotated[PromptProvider, Depends(RagMainPromptProvider)]):
         self.settings = settings
         self.doc_ids = []
-        self.chat = llm_service.get_llm()
+        self.chat = llm_agent.get_llm()
         self.contextualize_prompt_provider = contextualize_prompt_provider
         self.rag_prompt_provider = rag_prompt_provider
-        self.vector_store_service = vector_store_service
+        self.vector_store_agent = vector_store_agent
 
     def invoke(self, input_message:str, exchange:str, index: IndexFilterResult) -> RagChainResult:
 
         # 1) fetch docs
-        retriever = self.vector_store_service.get_vector_store_as_retriever(index)
+        retriever = self.vector_store_agent.get_vector_store_as_retriever(index)
         docs = retriever.invoke(input_message)
         context = self.__format_docs_with_source(docs)
 

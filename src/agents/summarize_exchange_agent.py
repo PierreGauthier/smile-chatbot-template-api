@@ -3,19 +3,19 @@ from fastapi import Depends
 from config import Settings
 
 from config import Settings, get_settings
-from services import LlmService, AzureOpenAiLlmService
+from agents import LlmAgent, AzureOpenAiLlmAgent
 from models import ChatMessage
 from prompts import PromptProvider, ContextualizePromptProvider
 
-class SummarizeExchangeChain:
+class SummarizeExchangeAgent:
 
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
-            llm_service: Annotated[LlmService, Depends(AzureOpenAiLlmService)],
+            llm_agent: Annotated[LlmAgent, Depends(AzureOpenAiLlmAgent)],
             prompt_provider: Annotated[PromptProvider, Depends(ContextualizePromptProvider)]):
         self.settings = settings
         self.prompt_provider = prompt_provider
-        self.llm = llm_service.get_llm()
+        self.llm_agent = llm_agent
     
     def invoke(self, exchange: List[ChatMessage]):
 
@@ -30,5 +30,5 @@ class SummarizeExchangeChain:
         prompt_template.append(new_message)
 
         messages = prompt_template.format_messages(question=new_message)
-        output = self.llm.invoke(messages)
+        output = self.llm_agent.invoke(messages)
         return output.content
