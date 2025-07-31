@@ -2,11 +2,11 @@ import uuid
 from typing import Annotated, List
 from fastapi import Depends
 
-from services import DatabaseHistoryService, CosmosDbHistoryDb
+from services import DatabaseHistoryService, CosmosDbHistoryDb, CosmosDbBase
 from models import ChatMessage
 
 class CosmosDbHistoryService(DatabaseHistoryService):
-    def __init__(self, database: Annotated[CosmosDbHistoryDb, Depends(CosmosDbHistoryDb)]):
+    def __init__(self, database: Annotated[CosmosDbBase, Depends(CosmosDbHistoryDb)]):
         self.database = database
 
     def create_message_thread(self, user_id: str, message: str) -> ChatMessage:

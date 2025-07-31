@@ -7,6 +7,6 @@ from config import Settings, get_settings
 class FirestoreHistoryDb(FirestoreBase):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
         super().__init__(
-            collection=settings.firestore_document_collection,
+            collection=settings.firestore_history_collection,
             settings=settings
         )

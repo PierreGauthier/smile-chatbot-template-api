@@ -6,6 +6,7 @@ from .firestore_document_db import FirestoreDocumentDb
 from .firestore_history_db import FirestoreHistoryDb
 from .database_history_service import DatabaseHistoryService
 from .cosmosdb_history_service import CosmosDbHistoryService
+from .firestore_history_service import FirestoreHistoryService
 
 from .azure_ad_authorization_service import AzureADAuthorizationService
 from .database_document_service import DatabaseDocumentService
@@ -26,6 +27,7 @@ __all__ = [
     "DatabaseDocumentService",
     "ChatService",
     "CosmosDbDocumentService",
-    "DefaultRagChatService"
+    "DefaultRagChatService",
+    "FirestoreHistoryService"
 ]
 

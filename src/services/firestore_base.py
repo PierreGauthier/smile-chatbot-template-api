@@ -4,10 +4,10 @@ from google.oauth2 import service_account
 from config import Settings
 
 class FirestoreBase:
-    def __init__(self, settings: Settings):
+    def __init__(self,collection:str, settings: Settings):
         self.project_id = settings.gcp_project_id
         self.credentials_path = settings.gcp_credentials_path
-        self.collection_name = settings.firestore_document_collection
+        self.collection_name = collection
         self.database_id = settings.firestore_database_id
         self.client = self._get_firestore_client()
         

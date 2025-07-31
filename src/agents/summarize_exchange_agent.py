@@ -3,15 +3,16 @@ from fastapi import Depends
 from config import Settings
 
 from config import Settings, get_settings
-from ai import LlmProvider, AzureOpenAiLlmProvider
+from ai import LlmProvider
 from models import ChatMessage
 from prompts import PromptProvider, ContextualizePromptProvider
+from dependencies import get_llm_agent
 
 class SummarizeExchangeAgent:
 
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
-            llm_agent: Annotated[LlmProvider, Depends(AzureOpenAiLlmProvider)],
+            llm_agent: Annotated[LlmProvider, Depends(get_llm_agent)],
             prompt_provider: Annotated[PromptProvider, Depends(ContextualizePromptProvider)]):
         self.settings = settings
         self.prompt_provider = prompt_provider
