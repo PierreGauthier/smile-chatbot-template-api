@@ -459,3 +459,6 @@ data/*/*.json
 data/*/*.csv
 data/*/*.txt
 data/*/vect.info
+
+#keys
+keys/

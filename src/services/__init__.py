@@ -1,6 +1,9 @@
 from .cosmosdb_base import CosmosDbBase
+from .firestore_base import FirestoreBase
 from .cosmosdb_history_db import CosmosDbHistoryDb
 from .cosmosdb_document_db import CosmosDbDocumentDb
+from .firestore_document_db import FirestoreDocumentDb
+from .firestore_history_db import FirestoreHistoryDb
 from .database_history_service import DatabaseHistoryService
 from .cosmosdb_history_service import CosmosDbHistoryService
 
@@ -12,8 +15,11 @@ from .default_rag_chat_service import DefaultRagChatService
 
 __all__ = [
     "CosmosDbBase",
+    "FirestoreBase",
     "CosmosDbHistoryDb",
+    "FirestoreHistoryDb",
     "CosmosDbDocumentDb",
+    "FirestoreDocumentDb",
     "DatabaseHistoryService",
     "CosmosDbHistoryService",
     "AzureADAuthorizationService",

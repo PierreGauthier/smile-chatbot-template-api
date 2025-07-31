@@ -1,12 +1,14 @@
 {
     "cSpell.words": [
         "fastapi",
+        "firestore",
         "langchain",
         "LANGSMITH",
         "openai",
         "Padel",
         "vectorstore",
-        "vectorstores"
+        "vectorstores",
+        "vertexai"
     ],
     "appService.zipIgnorePattern": [
         "__pycache__{,/**}",

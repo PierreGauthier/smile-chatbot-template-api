@@ -3,9 +3,9 @@ from fastapi import Depends
 from langchain_openai import AzureChatOpenAI
 
 from config import Settings, get_settings
-from agents import LlmAgent
+from ai import LlmProvider
 
-class AzureOpenAiLlmAgent(LlmAgent):
+class AzureOpenAiLlmProvider(LlmProvider):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
         self.chat = AzureChatOpenAI(
             azure_endpoint=settings.azure_openai_endpoint,

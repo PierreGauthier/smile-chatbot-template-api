@@ -53,6 +53,25 @@ class DefaultRagChatService(ChatService):
         intent:IntentDefinitionField = self.intent_extraction_agent.invoke(input_message)
         print(f"[{intent.is_intent}]: {intent.chain_of_thoughts}")
 
+        return RagChatServiceResult(
+            user_id=user_id, 
+            session_id="", 
+            answer=intent.chain_of_thoughts,
+            sources=[]
+        ) 
+
+
+
+
+
+
+
+
+
+
+
+
+
         # (1) Get the message history
         message_thread:List[ChatMessage] = self.history_db_service.get_message_thread(user_id=user_id, session_id=session_id)
 

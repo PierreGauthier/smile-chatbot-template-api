@@ -4,9 +4,9 @@ from langchain_core.embeddings import Embeddings
 from langchain_openai import OpenAIEmbeddings
 
 from config import Settings, get_settings
-from agents import EmbeddingsAgent
+from ai import EmbeddingsProvider
 
-class OpenAIEmbeddingsAgent(EmbeddingsAgent):
+class OpenAIEmbeddingsProvider(EmbeddingsProvider):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
         self.embeddings = OpenAIEmbeddings(openai_api_key=settings.openai_api_key)
 

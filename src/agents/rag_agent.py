@@ -6,11 +6,11 @@ from langchain_core.messages import AIMessage
 
 from config import Settings, get_settings
 from models import RagChainResult, DocumentIdentifier, IndexFilterResult
-from agents import (
-    LlmAgent,
-    AzureOpenAiLlmAgent,
-    VectorStoreAgent,
-    AzureSearchVectorStoreAgent,
+from ai import (
+    LlmProvider,
+    AzureOpenAiLlmProvider,
+    VectorStoreProvider,
+    AzureSearchVectorStoreProvider,
 )
 from prompts import PromptProvider, RagMainPromptProvider, ContextualizePromptProvider
 
@@ -21,8 +21,8 @@ from prompts import PromptProvider, RagMainPromptProvider, ContextualizePromptPr
 class RagAgent:
     def __init__(self,
             settings: Annotated[Settings, Depends(get_settings)],
-            llm_agent: Annotated[LlmAgent, Depends(AzureOpenAiLlmAgent)],
-            vector_store_agent: Annotated[VectorStoreAgent, Depends(AzureSearchVectorStoreAgent)],
+            llm_agent: Annotated[LlmProvider, Depends(AzureOpenAiLlmProvider)],
+            vector_store_agent: Annotated[VectorStoreProvider, Depends(AzureSearchVectorStoreProvider)],
             contextualize_prompt_provider: Annotated[PromptProvider, Depends(ContextualizePromptProvider)],
             rag_prompt_provider: Annotated[PromptProvider, Depends(RagMainPromptProvider)]):
         self.settings = settings

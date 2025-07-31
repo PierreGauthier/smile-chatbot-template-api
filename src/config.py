@@ -6,6 +6,8 @@ class Settings(BaseSettings):
     project_name:str
     environment: str = "local"
     debug: bool = False
+
+    llm_provider:str
     
     openai_api_version: str = "2020-05-10"
     openai_api_key: str
@@ -47,13 +49,26 @@ class Settings(BaseSettings):
     langsmith_rag_system_prompt_name : str
     langsmith_summary_exchange_prompt_name: str
     langsmith_intent_extraction_prompt_name: str
+
     rag_k: int = 3
     rag_score_threshold: float = 0.8
+    max_tokens: Optional[int] = 2048
+    top_p: Optional[float] = 0.95
+    top_k: Optional[int] = 40
 
     elastic_suite_api_base_url: str
     elastic_suite_attribute_set_endpoint:str
     elastic_suite_username:str
     elastic_suite_password:str
+
+    gcp_project_id:str
+    gcp_credentials_path:str
+    firestore_database_id: str
+    firestore_document_collection:str
+    firestore_history_collection:str
+    gcp_vertex_model_name:str
+    gcp_vertex_location:str
+    gcp_vertex_temperature:str
     
     class Config:
         env_file = ".env"

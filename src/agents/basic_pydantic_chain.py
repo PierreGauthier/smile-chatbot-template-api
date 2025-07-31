@@ -1,14 +1,14 @@
 from langchain.output_parsers import PydanticOutputParser
 
 from config import Settings
-from agents import LlmAgent
+from ai import LlmProvider
 from prompts import PromptProvider
 
 class BasicPydanticChain:
 
     def __init__(self, 
             settings: Settings, 
-            llm_agent: LlmAgent,
+            llm_agent: LlmProvider,
             prompt_provider: PromptProvider,
             pydantic_object: type):
         self.settings = settings
