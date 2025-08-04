@@ -10,12 +10,7 @@ from agents import (
     BasicPydanticChain,
     IntentExtractionAgent
 )
-from services import (
-    DatabaseDocumentService, 
-    CosmosDbDocumentService, 
-    DatabaseHistoryService,
-    ChatService
-)
+from services import DatabaseDocumentService, DatabaseHistoryService, ChatService
 from models import (
     RagChatServiceResult, 
     ChatMessage,
@@ -24,17 +19,17 @@ from models import (
     VectorizedDocument
 )
 from fields import IntentDefinitionField
-from dependencies import get_history_service
+from dependencies import inject_history_service, inject_document_service
 
 class DefaultRagChatService(ChatService):
     def __init__(
             self,
             settings: Annotated[Settings, Depends(get_settings)],
             rag_agent: Annotated[RagAgent, Depends(RagAgent)],
-            document_db_service: Annotated[DatabaseDocumentService, Depends(CosmosDbDocumentService)],
+            document_db_service: Annotated[DatabaseDocumentService, Depends(inject_document_service)],
             intent_extraction_agent: Annotated[BasicPydanticChain, Depends(IntentExtractionAgent)],
             summarize_exchange_agent : Annotated[BasicPydanticChain, Depends(SummarizeExchangeAgent)],
-            history_db_service: Annotated[DatabaseHistoryService, Depends(get_history_service)]):
+            history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service)]):
         self.settings = settings
         self.intent_extraction_agent = intent_extraction_agent
         self.rag_agent = rag_agent
@@ -85,31 +80,6 @@ class DefaultRagChatService(ChatService):
             answer=exchange,
             sources=[]
         ) 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        # # (1) Get the message history
-        # message_thread:List[ChatMessage] = self.history_db_service.get_message_thread(user_id=user_id, session_id=session_id)
-
-        # # (2) Summarize exchange
-        # exchange = None
-        # if len(message_thread) > 0:
-        #     # DEBUG
-        #     for msg in message_thread:
-        #         print(f"---{msg.data.content}")
-
-        #     exchange = self.summarize_exchange_agent.invoke(message_thread) # Not the last (new) one
-        #     print(exchange)
 
         # # (3) RAG
         # index = IndexFilterResult(index_name=self.settings.azure_search_index)

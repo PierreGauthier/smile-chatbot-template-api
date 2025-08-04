@@ -27,4 +27,4 @@ PyMuPDF
 python-dotenv==1.0.1
 google-cloud-firestore 
 google-auth
-langchain_google_vertexai
+langchain-google-vertexai

@@ -12,6 +12,7 @@ from .azure_ad_authorization_service import AzureADAuthorizationService
 from .database_document_service import DatabaseDocumentService
 from .chat_service import ChatService
 from .cosmosdb_document_service import CosmosDbDocumentService
+from .firestore_document_service import FirestoreDocumentService
 from .default_rag_chat_service import DefaultRagChatService
 
 __all__ = [
@@ -28,6 +29,7 @@ __all__ = [
     "ChatService",
     "CosmosDbDocumentService",
     "DefaultRagChatService",
-    "FirestoreHistoryService"
+    "FirestoreHistoryService",
+    "FirestoreDocumentService"
 ]
 
