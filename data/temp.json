@@ -1,0 +1,2025 @@
+[
+    {
+        "entity_id": "112371",
+        "attribute_set_id": "1882",
+        "type_id": "simple",
+        "sku": "0528682",
+        "has_options": false,
+        "required_options": false,
+        "created_at": "2023-10-04 01:40:54",
+        "updated_at": "2025-07-01 10:24:25",
+        "row_id": "112371",
+        "created_in": "1",
+        "updated_in": "2147483647",
+        "visibility": "4",
+        "price": [
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "0"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "1"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "2"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "3"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "36"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "39"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "42"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "45"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "48"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "51"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "54"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "57"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "60"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "63"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "66"
+            },
+            {
+                "price": "357.500000",
+                "original_price": "357.500000",
+                "is_discount": false,
+                "customer_group_id": "67"
+            }
+        ],
+        "indexed_attributes": [
+            "price",
+            "name",
+            "url_key",
+            "ref_art_fou",
+            "tech_product_type",
+            "title",
+            "brand_name_es",
+            "description",
+            "short_description",
+            "description_excerpt",
+            "category_es",
+            "gencod",
+            "tech_energy_type",
+            "tech_in_out_usage",
+            "tech_material",
+            "status",
+            "tech_colors",
+            "tech_number_of_burners",
+            "tech_number_of_guests",
+            "tech_packaging_type",
+            "tech_product_portable",
+            "tech_watt_power",
+            "tech_fat_collector",
+            "brand_name"
+        ],
+        "category": [
+            {
+                "category_id": 550,
+                "is_virtual": "false",
+                "category_uid": "NTUw"
+            },
+            {
+                "category_id": 656,
+                "is_virtual": "false",
+                "name": "Jardin et am\u00e9nagement ext\u00e9rieur",
+                "category_uid": "NjU2"
+            },
+            {
+                "category_id": 695,
+                "is_parent": true,
+                "is_virtual": "false",
+                "name": "Barbecue",
+                "category_uid": "Njk1"
+            },
+            {
+                "category_id": 1524,
+                "is_virtual": "false",
+                "name": "Plein air",
+                "category_uid": "MTUyNA=="
+            }
+        ],
+        "name": [
+            "Barbecue Weber Traveler Compact gaz WEBER"
+        ],
+        "url_key": [
+            "0528682"
+        ],
+        "ref_art_fou": [
+            "1500557"
+        ],
+        "tech_product_type": [
+            "Barbecue"
+        ],
+        "title": [
+            "Barbecue Weber Traveler Compact gaz WEBER"
+        ],
+        "brand_name_es": [
+            "WEBER"
+        ],
+        "option_text_brand_name_es": [
+            "WEBER"
+        ],
+        "description": [
+            "<p>Caract\u00e9ristiques techniques:<br><\/p><p>Puissance : 3,2 kW.<\/p><p>Cuve et couvercle en acier \u00e9maill\u00e9.<\/p><p>Br\u00fbleur en acier inoxydable.<\/p><p>Thermom\u00e8tre int\u00e9gr\u00e9 pour le contr\u00f4le de la temp\u00e9rature pendant la cuisson.<\/p><p> Temps de pr\u00e9chauffage : 10 mins.<\/p><p>Temp\u00e9rature max. : 315\u00b0C.<\/p><p>Bac de r\u00e9cup\u00e9ration des graisses.<\/p><p>Large poign\u00e9e pour une manipulation ais\u00e9e.<\/p><p>Grilles de cuisson haute r\u00e9sistance en fonte d'acier \u00e9maill\u00e9e.<\/p><p>Tablette lat\u00e9rale.<\/p><p>Con\u00e7u sp\u00e9cialement pour optimiser l'utilisation du gaz.<\/p><p>Chariot pliable int\u00e9gr\u00e9 avec crochets porte-ustensiles.<\/p><p>Se replie facilement sans effort ni assistance n\u00e9cessaire.<\/p><p>Se glisse dans le coffre d'une voiture.<\/p>"
+        ],
+        "short_description": [
+            "Weber Traveler Compact barbecue gaz."
+        ],
+        "description_excerpt": [
+            "Weber Traveler Compact barbecue gaz."
+        ],
+        "category_es": [
+            "695"
+        ],
+        "option_text_category_es": [
+            "Barbecue"
+        ],
+        "gencod": [
+            "0077924998928|077924998928"
+        ],
+        "tech_energy_type": [
+            "17634"
+        ],
+        "option_text_tech_energy_type": [
+            "Gaz"
+        ],
+        "tech_in_out_usage": [
+            "17817"
+        ],
+        "option_text_tech_in_out_usage": [
+            "Ext\u00e9rieur"
+        ],
+        "tech_material": [
+            "33145"
+        ],
+        "option_text_tech_material": [
+            "Acier \u00e9maill\u00e9"
+        ],
+        "status": [
+            1
+        ],
+        "option_text_status": [
+            "Activ\u00e9"
+        ],
+        "tech_colors": [
+            16963
+        ],
+        "option_text_tech_colors": [
+            "Noir"
+        ],
+        "tech_number_of_burners": [
+            25172
+        ],
+        "option_text_tech_number_of_burners": [
+            "1"
+        ],
+        "tech_number_of_guests": [
+            25175
+        ],
+        "option_text_tech_number_of_guests": [
+            "6"
+        ],
+        "tech_packaging_type": [
+            28027
+        ],
+        "option_text_tech_packaging_type": [
+            "1"
+        ],
+        "tech_product_portable": [
+            18376
+        ],
+        "option_text_tech_product_portable": [
+            "Oui"
+        ],
+        "tech_watt_power": [
+            30456
+        ],
+        "option_text_tech_watt_power": [
+            "3200 W"
+        ],
+        "tech_fat_collector": [
+            29100
+        ],
+        "option_text_tech_fat_collector": [
+            "Oui"
+        ],
+        "stock": {
+            "is_in_stock": true,
+            "qty": 0
+        },
+        "brand_name": [
+            "384"
+        ],
+        "option_text_brand_name": [
+            "WEBER"
+        ],
+        "_stats": {
+            "views": {
+                "total": 398,
+                "daily": {
+                    "ma": 1.2857142857143,
+                    "count": 43
+                },
+                "weekly": {
+                    "ma": 9.75,
+                    "count": 86
+                }
+            }
+        },
+        "type": "product",
+        "thumbnail": "instantsearch\/ajax\/thumbnail?productId=112371",
+        "url": "0528682.html",
+        "highlightCategory": "Jardin et am\u00e9nagement ext\u00e9rieur"
+    },
+    {
+        "entity_id": "111975",
+        "attribute_set_id": "1649",
+        "type_id": "simple",
+        "sku": "0521803",
+        "has_options": false,
+        "required_options": false,
+        "created_at": "2023-09-22 01:43:10",
+        "updated_at": "2025-07-01 07:34:51",
+        "row_id": "111975",
+        "created_in": "1",
+        "updated_in": "2147483647",
+        "visibility": "4",
+        "price": [
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "0"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "1"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "2"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "3"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "36"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "39"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "42"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "45"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "48"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "51"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "54"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "57"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "60"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "63"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "66"
+            },
+            {
+                "price": "34.941667",
+                "original_price": "39.975000",
+                "is_discount": true,
+                "customer_group_id": "67"
+            }
+        ],
+        "indexed_attributes": [
+            "price",
+            "name",
+            "url_key",
+            "ref_art_fou",
+            "tech_product_type",
+            "title",
+            "brand_name_es",
+            "description",
+            "short_description",
+            "description_excerpt",
+            "category_es",
+            "gencod",
+            "tech_material",
+            "tech_minimum_age_advised",
+            "tech_type",
+            "status",
+            "is_in_promo",
+            "good_deals",
+            "tech_colors",
+            "tech_packaging_type",
+            "brand_name"
+        ],
+        "category": [
+            {
+                "category_id": 550,
+                "is_virtual": "false",
+                "category_uid": "NTUw"
+            },
+            {
+                "category_id": 656,
+                "is_virtual": "false",
+                "name": "Jardin et am\u00e9nagement ext\u00e9rieur",
+                "category_uid": "NjU2"
+            },
+            {
+                "category_id": 696,
+                "is_parent": true,
+                "is_virtual": "false",
+                "name": "Jeu plein air",
+                "category_uid": "Njk2"
+            },
+            {
+                "category_id": 741,
+                "is_virtual": "false",
+                "name": "Activit\u00e9s de loisir",
+                "category_uid": "NzQx"
+            },
+            {
+                "category_id": 779,
+                "is_virtual": "false",
+                "name": "Jouet et jeu",
+                "category_uid": "Nzc5"
+            },
+            {
+                "category_id": 783,
+                "is_parent": true,
+                "is_virtual": "false",
+                "name": "Jeu plein air",
+                "category_uid": "Nzgz"
+            },
+            {
+                "category_id": 1524,
+                "is_virtual": "false",
+                "name": "Plein air",
+                "category_uid": "MTUyNA=="
+            }
+        ],
+        "name": [
+            "Barbecue Weber One Touch Premium avec charbon \u00e9lectronique"
+        ],
+        "url_key": [
+            "0521803"
+        ],
+        "ref_art_fou": [
+            "9466"
+        ],
+        "tech_product_type": [
+            "Jouet d'imitation"
+        ],
+        "title": [
+            "Barbecue Weber One Touch Premium avec charbon \u00e9lectronique"
+        ],
+        "brand_name_es": [
+            "KLEIN"
+        ],
+        "option_text_brand_name_es": [
+            "KLEIN"
+        ],
+        "description": [
+            "<p>Ce barbecue WEBER One Touch Premium est une reproduction tr\u00e8s fid\u00e8le du mod\u00e8le original. Il est \u00e9quip\u00e9 d'un couvercle, de deux grilles, de poign\u00e9es lat\u00e9rales, de crochets pour suspendre des ustensiles et de deux roues qui permettent de le d\u00e9placer tr\u00e8s facilement. L'heure du repas approche ? <\/p><p>Commence par allumer le feu en pla\u00e7ant l'allume-feu pr\u00e8s du charbon. Ce dernier se met alors \u00e0 rougeoyer et \u00e0 gr\u00e9siller (fonction sonore et fonction lumineuse). <\/p><p>Quand tu es pr\u00eat, dispose les ingr\u00e9dients de ton choix sur la grille : steak, poisson, crevette, poivron, tomate, oignon. Utilise ensuite la pince pour retourner r\u00e9guli\u00e8rement les aliments et retire-les une fois la cuisson termin\u00e9e. Le repas s'annonce particuli\u00e8rement savoureux ! <\/p><p>Dimensions du produit mont\u00e9 : 40 x 32 x 53 cm. <\/p><p>Piles non fournies (3 x LR03-AAA). <\/p><p>A partir de 3 ans.<\/p>"
+        ],
+        "short_description": [
+            "Barbecue Weber One Touch Premium, reproduction fid\u00e8le du mod\u00e8le original. Vendu avec de nombreux accessoires : aliments factices, pince, allume-feu et charbon \u00e9lectronique (bruitage et fonction lumineuse). Dimensions mont\u00e9 : 32 x 20 x 59 cm."
+        ],
+        "description_excerpt": [
+            "Barbecue Weber One Touch Premium, reproduction fid\u00e8le du mod\u00e8le original. Vendu avec de nombreux accessoires : aliments factices, pince, allume-feu et charbon \u00e9lectronique (bruitage et fonction lumineuse). Dimensions mont\u00e9 : 32 x 20 x 59 cm."
+        ],
+        "category_es": [
+            "358",
+            "783",
+            "696"
+        ],
+        "option_text_category_es": [
+            "Jeu de plein air",
+            "Jeu plein air",
+            "Jeu plein air"
+        ],
+        "gencod": [
+            "4009847094667"
+        ],
+        "tech_material": [
+            "17999"
+        ],
+        "option_text_tech_material": [
+            "Plastique"
+        ],
+        "tech_minimum_age_advised": [
+            "29535"
+        ],
+        "option_text_tech_minimum_age_advised": [
+            "3+"
+        ],
+        "tech_type": [
+            "47467"
+        ],
+        "option_text_tech_type": [
+            "Outil de jardin"
+        ],
+        "status": [
+            1
+        ],
+        "option_text_status": [
+            "Activ\u00e9"
+        ],
+        "is_in_promo": [
+            true
+        ],
+        "option_text_is_in_promo": [
+            "Produit en promotion"
+        ],
+        "good_deals": [
+            true
+        ],
+        "option_text_good_deals": [
+            "Bonnes Affaires"
+        ],
+        "tech_colors": [
+            16963
+        ],
+        "option_text_tech_colors": [
+            "Noir"
+        ],
+        "tech_packaging_type": [
+            28027
+        ],
+        "option_text_tech_packaging_type": [
+            "1"
+        ],
+        "stock": {
+            "is_in_stock": true,
+            "qty": 0
+        },
+        "brand_name": [
+            "943"
+        ],
+        "option_text_brand_name": [
+            "KLEIN"
+        ],
+        "_stats": {
+            "views": {
+                "total": 719,
+                "daily": {
+                    "ma": 2.4285714285714,
+                    "count": 62
+                },
+                "weekly": {
+                    "ma": 14,
+                    "count": 136
+                }
+            }
+        },
+        "type": "product",
+        "thumbnail": "instantsearch\/ajax\/thumbnail?productId=111975",
+        "url": "0521803.html",
+        "highlightCategory": "Jardin et am\u00e9nagement ext\u00e9rieur"
+    },
+    {
+        "entity_id": "46223",
+        "attribute_set_id": "1882",
+        "type_id": "simple",
+        "sku": "0370868",
+        "has_options": false,
+        "required_options": false,
+        "created_at": "2021-04-24 01:25:13",
+        "updated_at": "2025-07-01 10:24:25",
+        "row_id": "46223",
+        "created_in": "1",
+        "updated_in": "2147483647",
+        "visibility": "4",
+        "price": [
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "0"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "1"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "2"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "3"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "36"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "39"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "42"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "45"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "48"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "51"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "54"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "57"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "60"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "63"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "66"
+            },
+            {
+                "price": "208.250000",
+                "original_price": "208.250000",
+                "is_discount": false,
+                "customer_group_id": "67"
+            }
+        ],
+        "indexed_attributes": [
+            "price",
+            "name",
+            "url_key",
+            "ref_art_fou",
+            "tech_product_type",
+            "title",
+            "brand_name_es",
+            "description",
+            "short_description",
+            "description_excerpt",
+            "category_es",
+            "gencod",
+            "tech_energy_type",
+            "tech_in_out_usage",
+            "tech_material",
+            "tech_type",
+            "tech_materials",
+            "status",
+            "tech_colors",
+            "tech_number_of_guests",
+            "tech_packaging_type",
+            "tech_product_portable",
+            "tech_fat_collector",
+            "brand_name"
+        ],
+        "category": [
+            {
+                "category_id": 550,
+                "is_virtual": "false",
+                "category_uid": "NTUw"
+            },
+            {
+                "category_id": 656,
+                "is_virtual": "false",
+                "name": "Jardin et am\u00e9nagement ext\u00e9rieur",
+                "category_uid": "NjU2"
+            },
+            {
+                "category_id": 695,
+                "is_parent": true,
+                "is_virtual": "false",
+                "name": "Barbecue",
+                "category_uid": "Njk1"
+            },
+            {
+                "category_id": 1524,
+                "is_virtual": "false",
+                "name": "Plein air",
+                "category_uid": "MTUyNA=="
+            }
+        ],
+        "name": [
+            "Barbecue original Kettle E-5710 Charcoal grill WEBER"
+        ],
+        "url_key": [
+            "0370868"
+        ],
+        "ref_art_fou": [
+            "14101004 EX 14101053"
+        ],
+        "tech_product_type": [
+            "Barbecue"
+        ],
+        "title": [
+            "Barbecue original Kettle E-5710 Charcoal grill WEBER"
+        ],
+        "brand_name_es": [
+            "WEBER"
+        ],
+        "option_text_brand_name_es": [
+            "WEBER"
+        ],
+        "description": [
+            "Crochets pour porte-ustensiles int\u00e9gr\u00e9s. Cuve et couvercle en acier \u00e9maill\u00e9. Grille de cuisson en acier chrom\u00e9 \u00d8 57 cm. Thermom\u00e8tre int\u00e9gr\u00e9. Syst\u00e8me de nettoyage One-Touch. Coloris noir. Cuve garantie 10 ans<span style=\"font-weight: bold;\">.<\/span> (voir conditions en magasin).<br>"
+        ],
+        "short_description": [
+            "Barbecue WEBER en acier \u00e9maill\u00e9 avec couvercle. Grille de cuisson en acier chrom\u00e9 \u00d857 cm. Dispose d'un crochet porte-ustensiles.<br>"
+        ],
+        "description_excerpt": [
+            "Barbecue WEBER en acier \u00e9maill\u00e9 avec couvercle. Grille de cuisson en acier chrom\u00e9 \u00d857 cm. Dispose d'un crochet porte-ustensiles.<br>"
+        ],
+        "category_es": [
+            "695"
+        ],
+        "option_text_category_es": [
+            "Barbecue"
+        ],
+        "gencod": [
+            "0077924129506|077924129506|0077924085406"
+        ],
+        "tech_energy_type": [
+            "17632"
+        ],
+        "option_text_tech_energy_type": [
+            "Charbon"
+        ],
+        "tech_in_out_usage": [
+            "17817"
+        ],
+        "option_text_tech_in_out_usage": [
+            "Ext\u00e9rieur"
+        ],
+        "tech_material": [
+            "17999",
+            "33145"
+        ],
+        "option_text_tech_material": [
+            "Plastique",
+            "Acier \u00e9maill\u00e9"
+        ],
+        "tech_type": [
+            "29118"
+        ],
+        "option_text_tech_type": [
+            "Charbon"
+        ],
+        "tech_materials": [
+            "36479"
+        ],
+        "option_text_tech_materials": [
+            "Acier"
+        ],
+        "status": [
+            1
+        ],
+        "option_text_status": [
+            "Activ\u00e9"
+        ],
+        "tech_colors": [
+            16887
+        ],
+        "option_text_tech_colors": [
+            "Gris noir"
+        ],
+        "tech_number_of_guests": [
+            18195
+        ],
+        "option_text_tech_number_of_guests": [
+            "10"
+        ],
+        "tech_packaging_type": [
+            28027
+        ],
+        "option_text_tech_packaging_type": [
+            "1"
+        ],
+        "tech_product_portable": [
+            18376
+        ],
+        "option_text_tech_product_portable": [
+            "Oui"
+        ],
+        "tech_fat_collector": [
+            29099
+        ],
+        "option_text_tech_fat_collector": [
+            "Non"
+        ],
+        "stock": {
+            "is_in_stock": true,
+            "qty": 0
+        },
+        "brand_name": [
+            "384"
+        ],
+        "option_text_brand_name": [
+            "WEBER"
+        ],
+        "_stats": {
+            "views": {
+                "total": 1182,
+                "daily": {
+                    "ma": 2.5714285714286,
+                    "count": 101
+                },
+                "weekly": {
+                    "ma": 26.75,
+                    "count": 244
+                }
+            },
+            "sales": {
+                "total": 1,
+                "daily": {
+                    "ma": 0,
+                    "count": 0
+                },
+                "weekly": {
+                    "ma": 0,
+                    "count": 0
+                }
+            },
+            "conversion_rate": {
+                "total": 0.00084602368866328,
+                "daily": {
+                    "ma": 0,
+                    "count": 0
+                },
+                "weekly": {
+                    "ma": 0,
+                    "count": 0
+                }
+            }
+        },
+        "type": "product",
+        "thumbnail": "instantsearch\/ajax\/thumbnail?productId=46223",
+        "url": "0370868.html",
+        "highlightCategory": "Jardin et am\u00e9nagement ext\u00e9rieur"
+    },
+    {
+        "entity_id": "112379",
+        "attribute_set_id": "1882",
+        "type_id": "simple",
+        "sku": "0528685",
+        "has_options": false,
+        "required_options": false,
+        "created_at": "2023-10-04 01:40:54",
+        "updated_at": "2025-07-01 10:24:25",
+        "row_id": "112379",
+        "created_in": "1",
+        "updated_in": "2147483647",
+        "visibility": "4",
+        "price": [
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "0"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "1"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "2"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "3"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "36"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "39"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "42"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "45"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "48"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "51"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "54"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "57"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "60"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "63"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "66"
+            },
+            {
+                "price": "832.150000",
+                "original_price": "832.150000",
+                "is_discount": false,
+                "customer_group_id": "67"
+            }
+        ],
+        "indexed_attributes": [
+            "price",
+            "name",
+            "url_key",
+            "ref_art_fou",
+            "tech_product_type",
+            "title",
+            "brand_name_es",
+            "description",
+            "short_description",
+            "description_excerpt",
+            "category_es",
+            "gencod",
+            "tech_energy_type",
+            "tech_in_out_usage",
+            "tech_material",
+            "status",
+            "tech_colors",
+            "tech_number_of_burners",
+            "tech_number_of_guests",
+            "tech_packaging_type",
+            "tech_product_portable",
+            "tech_watt_power",
+            "brand_name"
+        ],
+        "category": [
+            {
+                "category_id": 550,
+                "is_virtual": "false",
+                "category_uid": "NTUw"
+            },
+            {
+                "category_id": 656,
+                "is_virtual": "false",
+                "name": "Jardin et am\u00e9nagement ext\u00e9rieur",
+                "category_uid": "NjU2"
+            },
+            {
+                "category_id": 695,
+                "is_parent": true,
+                "is_virtual": "false",
+                "name": "Barbecue",
+                "category_uid": "Njk1"
+            },
+            {
+                "category_id": 1524,
+                "is_virtual": "false",
+                "name": "Plein air",
+                "category_uid": "MTUyNA=="
+            }
+        ],
+        "name": [
+            "Barbecue Genesis E-315 gaz WEBER"
+        ],
+        "url_key": [
+            "0528685"
+        ],
+        "ref_art_fou": [
+            "1500385"
+        ],
+        "tech_product_type": [
+            "Barbecue"
+        ],
+        "title": [
+            "Barbecue Genesis E-315 gaz WEBER"
+        ],
+        "brand_name_es": [
+            "WEBER"
+        ],
+        "option_text_brand_name_es": [
+            "WEBER"
+        ],
+        "description": [
+            "<p>Caract\u00e9ristiques techniques :<br><\/p><p>Puissance: 11,4 kW.<\/p><p>Cuve en fonte d'aluminium.<br><\/p><p>Couvercle en acier \u00e9maill\u00e9.3 br\u00fbleurs PUREBLU\u2122.<\/p><p>Grille de cuisson en fonte d'acier \u00e9maill\u00e9.<\/p><p>Tablettes lat\u00e9rales sym\u00e9triques.<\/p><p>Compatible Weber Crafted - Gourmet BBQ System.Barres Flavorizer en acier inoxydable.<\/p><p>Syst\u00e8me d'allumage piezo-\u00e9l\u00e9ctronique.<\/p><p>Thermom\u00e8tre int\u00e9gr\u00e9 au couvercle.<\/p><p>Placard ferm\u00e9 2 portes.<\/p><p>4 roulettes pivotantes dont 2 auto bloquantes.<\/p><p>D\u00e9tendeur inclus.<\/p><p>Temps de pr\u00e9chauffage : 15 mins.<\/p><p>Temp\u00e9rature max. : 400\u00b0C.<\/p>"
+        ],
+        "short_description": [
+            "Barbecue Genesis E-315 barbecue gaz."
+        ],
+        "description_excerpt": [
+            "Barbecue Genesis E-315 barbecue gaz."
+        ],
+        "category_es": [
+            "695"
+        ],
+        "option_text_category_es": [
+            "Barbecue"
+        ],
+        "gencod": [
+            "0077924996504|077924996504"
+        ],
+        "tech_energy_type": [
+            "17634"
+        ],
+        "option_text_tech_energy_type": [
+            "Gaz"
+        ],
+        "tech_in_out_usage": [
+            "17817"
+        ],
+        "option_text_tech_in_out_usage": [
+            "Ext\u00e9rieur"
+        ],
+        "tech_material": [
+            "33145"
+        ],
+        "option_text_tech_material": [
+            "Acier \u00e9maill\u00e9"
+        ],
+        "status": [
+            1
+        ],
+        "option_text_status": [
+            "Activ\u00e9"
+        ],
+        "tech_colors": [
+            16963
+        ],
+        "option_text_tech_colors": [
+            "Noir"
+        ],
+        "tech_number_of_burners": [
+            25173
+        ],
+        "option_text_tech_number_of_burners": [
+            "3"
+        ],
+        "tech_number_of_guests": [
+            27453
+        ],
+        "option_text_tech_number_of_guests": [
+            "14"
+        ],
+        "tech_packaging_type": [
+            28027
+        ],
+        "option_text_tech_packaging_type": [
+            "1"
+        ],
+        "tech_product_portable": [
+            18376
+        ],
+        "option_text_tech_product_portable": [
+            "Oui"
+        ],
+        "tech_watt_power": [
+            39975
+        ],
+        "option_text_tech_watt_power": [
+            "11400 W"
+        ],
+        "stock": {
+            "is_in_stock": true,
+            "qty": 0
+        },
+        "brand_name": [
+            "384"
+        ],
+        "option_text_brand_name": [
+            "WEBER"
+        ],
+        "_stats": {
+            "views": {
+                "total": 272,
+                "daily": {
+                    "ma": 0.71428571428571,
+                    "count": 24
+                },
+                "weekly": {
+                    "ma": 6.5,
+                    "count": 57
+                }
+            }
+        },
+        "type": "product",
+        "thumbnail": "instantsearch\/ajax\/thumbnail?productId=112379",
+        "url": "0528685.html",
+        "highlightCategory": "Jardin et am\u00e9nagement ext\u00e9rieur"
+    },
+    {
+        "entity_id": "34052",
+        "attribute_set_id": "1882",
+        "type_id": "simple",
+        "sku": "0264041",
+        "has_options": false,
+        "required_options": false,
+        "created_at": "2020-11-04 12:32:55",
+        "updated_at": "2025-07-01 10:24:25",
+        "row_id": "34052",
+        "created_in": "1",
+        "updated_in": "2147483647",
+        "visibility": "4",
+        "price": [
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "0"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "1"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "2"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "3"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "36"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "39"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "42"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "45"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "48"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "51"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "54"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "57"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "60"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "63"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "66"
+            },
+            {
+                "price": "99.991667",
+                "original_price": "99.991667",
+                "is_discount": false,
+                "customer_group_id": "67"
+            }
+        ],
+        "indexed_attributes": [
+            "price",
+            "name",
+            "url_key",
+            "ref_art_fou",
+            "tech_product_type",
+            "title",
+            "brand_name_es",
+            "description",
+            "short_description",
+            "description_excerpt",
+            "category_es",
+            "gencod",
+            "tech_energy_type",
+            "tech_in_out_usage",
+            "tech_material",
+            "tech_type",
+            "tech_materials",
+            "status",
+            "tech_colors",
+            "tech_height",
+            "tech_length",
+            "tech_number_of_guests",
+            "tech_packaging_type",
+            "tech_product_portable",
+            "tech_width",
+            "tech_fat_collector",
+            "brand_name"
+        ],
+        "category": [
+            {
+                "category_id": 550,
+                "is_virtual": "false",
+                "category_uid": "NTUw"
+            },
+            {
+                "category_id": 656,
+                "is_virtual": "false",
+                "name": "Jardin et am\u00e9nagement ext\u00e9rieur",
+                "category_uid": "NjU2"
+            },
+            {
+                "category_id": 695,
+                "is_parent": true,
+                "is_virtual": "false",
+                "name": "Barbecue",
+                "category_uid": "Njk1"
+            },
+            {
+                "category_id": 1524,
+                "is_virtual": "false",
+                "name": "Plein air",
+                "category_uid": "MTUyNA=="
+            }
+        ],
+        "name": [
+            "Barbecue \u00e0 charbon Go-Anywhere WEBER"
+        ],
+        "url_key": [
+            "0264041"
+        ],
+        "ref_art_fou": [
+            "1131004"
+        ],
+        "tech_product_type": [
+            "Barbecue"
+        ],
+        "title": [
+            "Barbecue \u00e0 charbon Go-Anywhere WEBER"
+        ],
+        "brand_name_es": [
+            "WEBER"
+        ],
+        "option_text_brand_name_es": [
+            "WEBER"
+        ],
+        "description": [
+            "Voyagez en emportant des saveurs famili\u00e8res.<br>M\u00eame si vous passez la plupart du temps sur la route, le barbecue \u00e0 charbon portable Go-Anywhere vous permet de vous retrouver chez vous pendant quelques instants.<br>Il est de votre responsabilit\u00e9 de v\u00e9rifier la r\u00e9glementation en vigueur pour l'utilisation d'un barbecue en plein nature, de v\u00e9rifier les accords de copropri\u00e9t\u00e9 ou de municipalit\u00e9 et de respecter la l\u00e9gislation locale. <br>Ce barbecue \u00e0 charbon est fabriqu\u00e9 en acier \u00e9maill\u00e9. Sa cuve et son couvercle sont garantis 10 ans. Il dispose d'une grille de cuisson 42 x 26 cm en acier chrom\u00e9, de clapets d'a\u00e9ration en aluminium, d'une grille foy\u00e8re en acier et d'une coupelle cendrier en aluminium.<br>Pratique, il est \u00e9quip\u00e9 d'un syst\u00e8me de verrouillage pour le transport. De plus, il propose un bol doseur de briquettes qui permet de doser parfaitement les briquettes."
+        ],
+        "short_description": [
+            "Avec sa structure compact, le barbecue \u00e0 charbon Go-Anywhere est le barbecue nomade id\u00e9al !"
+        ],
+        "description_excerpt": [
+            "Avec sa structure compact, le barbecue \u00e0 charbon Go-Anywhere est le barbecue nomade id\u00e9al !"
+        ],
+        "category_es": [
+            "695"
+        ],
+        "option_text_category_es": [
+            "Barbecue"
+        ],
+        "gencod": [
+            "0077924029271|077924029271"
+        ],
+        "tech_energy_type": [
+            "17632"
+        ],
+        "option_text_tech_energy_type": [
+            "Charbon"
+        ],
+        "tech_in_out_usage": [
+            "17817"
+        ],
+        "option_text_tech_in_out_usage": [
+            "Ext\u00e9rieur"
+        ],
+        "tech_material": [
+            "33145"
+        ],
+        "option_text_tech_material": [
+            "Acier \u00e9maill\u00e9"
+        ],
+        "tech_type": [
+            "29118"
+        ],
+        "option_text_tech_type": [
+            "Charbon"
+        ],
+        "tech_materials": [
+            "36479"
+        ],
+        "option_text_tech_materials": [
+            "Acier"
+        ],
+        "status": [
+            1
+        ],
+        "option_text_status": [
+            "Activ\u00e9"
+        ],
+        "tech_colors": [
+            16963
+        ],
+        "option_text_tech_colors": [
+            "Noir"
+        ],
+        "tech_height": [
+            19485
+        ],
+        "option_text_tech_height": [
+            "0.37 m"
+        ],
+        "tech_length": [
+            20280
+        ],
+        "option_text_tech_length": [
+            "0.53 m"
+        ],
+        "tech_number_of_guests": [
+            25174
+        ],
+        "option_text_tech_number_of_guests": [
+            "4"
+        ],
+        "tech_packaging_type": [
+            28027
+        ],
+        "option_text_tech_packaging_type": [
+            "1"
+        ],
+        "tech_product_portable": [
+            18376
+        ],
+        "option_text_tech_product_portable": [
+            "Oui"
+        ],
+        "tech_width": [
+            23974
+        ],
+        "option_text_tech_width": [
+            "0.31 m"
+        ],
+        "tech_fat_collector": [
+            29099
+        ],
+        "option_text_tech_fat_collector": [
+            "Non"
+        ],
+        "stock": {
+            "is_in_stock": true,
+            "qty": 0
+        },
+        "brand_name": [
+            "384"
+        ],
+        "option_text_brand_name": [
+            "WEBER"
+        ],
+        "_stats": {
+            "views": {
+                "total": 293,
+                "daily": {
+                    "ma": 4.1428571428571,
+                    "count": 46
+                },
+                "weekly": {
+                    "ma": 7,
+                    "count": 72
+                }
+            },
+            "sales": {
+                "total": 1,
+                "daily": {
+                    "ma": 0,
+                    "count": 0
+                },
+                "weekly": {
+                    "ma": 0,
+                    "count": 0
+                }
+            },
+            "conversion_rate": {
+                "total": 0.0034129692832765,
+                "daily": {
+                    "ma": 0,
+                    "count": 0
+                },
+                "weekly": {
+                    "ma": 0,
+                    "count": 0
+                }
+            }
+        },
+        "type": "product",
+        "thumbnail": "instantsearch\/ajax\/thumbnail?productId=34052",
+        "url": "0264041.html",
+        "highlightCategory": "Jardin et am\u00e9nagement ext\u00e9rieur"
+    },
+    {
+        "entity_id": "112374",
+        "attribute_set_id": "1882",
+        "type_id": "simple",
+        "sku": "0528687",
+        "has_options": false,
+        "required_options": false,
+        "created_at": "2023-10-04 01:40:54",
+        "updated_at": "2025-07-01 10:24:25",
+        "row_id": "112374",
+        "created_in": "1",
+        "updated_in": "2147483647",
+        "visibility": "4",
+        "price": [
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "0"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "1"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "2"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "3"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "36"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "39"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "42"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "45"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "48"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "51"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "54"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "57"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "60"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "63"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "66"
+            },
+            {
+                "price": "998.816667",
+                "original_price": "998.816667",
+                "is_discount": false,
+                "customer_group_id": "67"
+            }
+        ],
+        "indexed_attributes": [
+            "price",
+            "name",
+            "url_key",
+            "ref_art_fou",
+            "tech_product_type",
+            "title",
+            "brand_name_es",
+            "description",
+            "short_description",
+            "description_excerpt",
+            "category_es",
+            "gencod",
+            "tech_energy_type",
+            "tech_in_out_usage",
+            "tech_material",
+            "status",
+            "tech_colors",
+            "tech_number_of_burners",
+            "tech_number_of_guests",
+            "tech_packaging_type",
+            "tech_product_portable",
+            "tech_watt_power",
+            "brand_name"
+        ],
+        "category": [
+            {
+                "category_id": 550,
+                "is_virtual": "false",
+                "category_uid": "NTUw"
+            },
+            {
+                "category_id": 656,
+                "is_virtual": "false",
+                "name": "Jardin et am\u00e9nagement ext\u00e9rieur",
+                "category_uid": "NjU2"
+            },
+            {
+                "category_id": 695,
+                "is_parent": true,
+                "is_virtual": "false",
+                "name": "Barbecue",
+                "category_uid": "Njk1"
+            },
+            {
+                "category_id": 1524,
+                "is_virtual": "false",
+                "name": "Plein air",
+                "category_uid": "MTUyNA=="
+            }
+        ],
+        "name": [
+            "Barbecue Genesis E-415 gaz WEBER"
+        ],
+        "url_key": [
+            "0528687"
+        ],
+        "ref_art_fou": [
+            "1500431"
+        ],
+        "tech_product_type": [
+            "Barbecue"
+        ],
+        "title": [
+            "Barbecue Genesis E-415 gaz WEBER"
+        ],
+        "brand_name_es": [
+            "WEBER"
+        ],
+        "option_text_brand_name_es": [
+            "WEBER"
+        ],
+        "description": [
+            "<p>caract\u00e9ristiques techniques :<\/p><p>Puissance: 14 kW.<\/p><p>Cuve en fonte d'aluminium .<\/p><p>Couvercle en acier \u00e9maill\u00e9.<\/p><p>4 br\u00fbleurs PUREBLU\u2122.<\/p><p>Grille de cuisson en fonte d'acier \u00e9maill\u00e9.<\/p><p>Tablettes lat\u00e9rales sym\u00e9triques.<\/p><p>Compatible Weber Crafted - Gourmet BBQ System.<\/p><p>Barres Flavorizer en acier inoxydable.<\/p><p>Syst\u00e8me d'allumage piezo-\u00e9l\u00e9ctronique.<\/p><p>Thermom\u00e8tre int\u00e9gr\u00e9 au couvercle.<\/p><p>Placard ferm\u00e9 2 portes.4 roulettes pivotantes dont 2 auto bloquantes.<\/p><p>D\u00e9tendeur inclus.<\/p><p>Temps de pr\u00e9chauffage : 15 mins.<\/p><p>Temp\u00e9rature max. : 400\u00b0C.<\/p>"
+        ],
+        "short_description": [
+            "Genesis E-415 barbecue gaz."
+        ],
+        "description_excerpt": [
+            "Genesis E-415 barbecue gaz."
+        ],
+        "category_es": [
+            "695"
+        ],
+        "option_text_category_es": [
+            "Barbecue"
+        ],
+        "gencod": [
+            "0077924996719|077924996719"
+        ],
+        "tech_energy_type": [
+            "17634"
+        ],
+        "option_text_tech_energy_type": [
+            "Gaz"
+        ],
+        "tech_in_out_usage": [
+            "17817"
+        ],
+        "option_text_tech_in_out_usage": [
+            "Ext\u00e9rieur"
+        ],
+        "tech_material": [
+            "33145"
+        ],
+        "option_text_tech_material": [
+            "Acier \u00e9maill\u00e9"
+        ],
+        "status": [
+            1
+        ],
+        "option_text_status": [
+            "Activ\u00e9"
+        ],
+        "tech_colors": [
+            16887
+        ],
+        "option_text_tech_colors": [
+            "Gris noir"
+        ],
+        "tech_number_of_burners": [
+            27469
+        ],
+        "option_text_tech_number_of_burners": [
+            "4"
+        ],
+        "tech_number_of_guests": [
+            27454
+        ],
+        "option_text_tech_number_of_guests": [
+            "16"
+        ],
+        "tech_packaging_type": [
+            28027
+        ],
+        "option_text_tech_packaging_type": [
+            "1"
+        ],
+        "tech_product_portable": [
+            18376
+        ],
+        "option_text_tech_product_portable": [
+            "Oui"
+        ],
+        "tech_watt_power": [
+            29134
+        ],
+        "option_text_tech_watt_power": [
+            "14000 W"
+        ],
+        "stock": {
+            "is_in_stock": true,
+            "qty": 0
+        },
+        "brand_name": [
+            "384"
+        ],
+        "option_text_brand_name": [
+            "WEBER"
+        ],
+        "_stats": {
+            "views": {
+                "total": 128,
+                "daily": {
+                    "ma": 0.28571428571429,
+                    "count": 14
+                },
+                "weekly": {
+                    "ma": 5,
+                    "count": 32
+                }
+            },
+            "sales": {
+                "total": 1,
+                "daily": {
+                    "ma": 0,
+                    "count": 0
+                },
+                "weekly": {
+                    "ma": 0,
+                    "count": 0
+                }
+            },
+            "conversion_rate": {
+                "total": 0.0078125,
+                "daily": {
+                    "ma": 0,
+                    "count": 0
+                },
+                "weekly": {
+                    "ma": 0,
+                    "count": 0
+                }
+            }
+        },
+        "type": "product",
+        "thumbnail": "instantsearch\/ajax\/thumbnail?productId=112374",
+        "url": "0528687.html",
+        "highlightCategory": "Jardin et am\u00e9nagement ext\u00e9rieur"
+    },
+    {
+        "attribute_code": "brand_name",
+        "attribute_label": "Marque",
+        "type": "product_attribute",
+        "count": 109,
+        "custom_url": "https:\/\/www.lamaison.fr\/brand\/weber",
+        "image": "https:\/\/www.lamaison.fr\/media\/scoped_eav\/entity\/brand\/3\/c\/4\/8\/3c486c387c23d5c4d0f4241cf91e7af6871ae325_WEBER_LOGO.png",
+        "title": "WEBER",
+        "url": "catalogsearch\/result?q=WEBER&brand_name=WEBER"
+    },
+    {
+        "attribute_code": "brand_name",
+        "attribute_label": "Marque",
+        "type": "product_attribute",
+        "count": 29,
+        "custom_url": "https:\/\/www.lamaison.fr\/brand\/barbecook",
+        "image": "https:\/\/www.lamaison.fr\/media\/scoped_eav\/entity\/brand\/9\/d\/4\/a\/9d4aab823d9f68aae504095e0d0bb63af3732670_BARBECOOK_LOGO.png",
+        "title": "BARBECOOK",
+        "url": "catalogsearch\/result?q=BARBECOOK&brand_name=BARBECOOK"
+    },
+    {
+        "attribute_code": "brand_name",
+        "attribute_label": "Marque",
+        "type": "product_attribute",
+        "count": 17,
+        "custom_url": "https:\/\/www.lamaison.fr\/brand\/napoleon",
+        "image": "https:\/\/www.lamaison.fr\/media\/scoped_eav\/entity\/brand\/3\/7\/c\/0\/37c07de81e021111d96b9318075b7b57b05d5831_napoleon_logo.jpg",
+        "title": "NAPOLEON",
+        "url": "catalogsearch\/result?q=NAPOLEON&brand_name=NAPOLEON"
+    },
+    {
+        "entity_id": "695",
+        "attribute_set_id": "3",
+        "parent_id": "1524",
+        "created_at": "2020-10-26 09:29:01",
+        "updated_at": "2025-08-03 22:05:09",
+        "path": "1\/550\/656\/1524\/695",
+        "position": "2",
+        "level": "4",
+        "children_count": "0",
+        "row_id": "695",
+        "created_in": "1",
+        "updated_in": "2147483647",
+        "is_active": "1",
+        "product_count": "106",
+        "description": [
+            "<style>#html-body [data-pb-style=M1OWQ8O]{justify-content:flex-start;display:flex;flex-direction:column;background-position:left top;background-size:cover;background-repeat:no-repeat;background-attachment:scroll;border-style:none;border-width:1px;border-radius:0;margin:0 0 10px;padding:10px}#html-body [data-pb-style=FP6WP35]{border-style:none;border-width:1px;border-radius:0;margin:0;padding:0}<\/style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\" data-pb-style=\"M1OWQ8O\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\" data-pb-style=\"FP6WP35\"><p>Avec les beaux jours qui reviennent, votre envie de cuisiner en plein air se fait sentir ! L\u2019odeur des grillades, la chaleur du soleil et la convivialit\u00e9 des journ\u00e9es d\u2019\u00e9t\u00e9 vous donnent envie d'un bon barbecue\u2026 C\u2019est pourquoi LaMaison.fr vous propose de vous accompagner dans le choix de votre barbecue. Barbecue \u00e9lectrique, barbecue \u00e0 gaz, barbecue au charbon de bois, sur roulette, avec ou sans tablette\u2026 Recevoir des grandes tabl\u00e9es d\u2019amis ou de famille sera une partie de plaisir !<\/p><\/div><\/div><\/div>"
+        ],
+        "is_displayed_in_autocomplete": [
+            true
+        ],
+        "option_text_is_displayed_in_autocomplete": [
+            "Display Category in Autocomplete"
+        ],
+        "name": [
+            "Barbecue"
+        ],
+        "url_key": [
+            "barbecue"
+        ],
+        "url_path": [
+            "jardin-et-amenagement-exterieur\/plein-air\/barbecue"
+        ],
+        "tree": [
+            "Jardin et am\u00e9nagement ext\u00e9rieur",
+            "Plein air",
+            "Barbecue"
+        ],
+        "type": "category",
+        "title": "Barbecue",
+        "url": "jardin-et-amenagement-exterieur\/plein-air\/barbecue.html"
+    },
+    {
+        "entity_id": "1526",
+        "attribute_set_id": "3",
+        "parent_id": "1524",
+        "created_at": "2022-03-03 01:05:14",
+        "updated_at": "2025-08-03 22:05:09",
+        "path": "1\/550\/656\/1524\/1526",
+        "position": "4",
+        "level": "4",
+        "children_count": "0",
+        "row_id": "1526",
+        "created_in": "1",
+        "updated_in": "2147483647",
+        "is_active": "1",
+        "product_count": "219",
+        "description": [
+            "<style>#html-body [data-pb-style=PW3JR16]{justify-content:flex-start;display:flex;flex-direction:column;background-position:left top;background-size:cover;background-repeat:no-repeat;background-attachment:scroll;border-style:none;border-width:1px;border-radius:0;margin:0 0 10px;padding:10px}#html-body [data-pb-style=BRVEXFH]{border-style:none;border-width:1px;border-radius:0;margin:0;padding:0}<\/style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\" data-pb-style=\"PW3JR16\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\" data-pb-style=\"BRVEXFH\"><p>Vous avez investi dans un beau barbecue et l\u2019automne arrive et vous pensez d\u00e9j\u00e0 \u00e0 prot\u00e9ger vos accessoires pour pr\u00e9server la dur\u00e9e de vie de votre mat\u00e9riel ? Tr\u00e8s bonne initiative ! LaMaison.fr vous propose des housses pour barbecues, afin de prot\u00e9ger votre mobilier pour l\u2019hiver. Mais si la saison des barbecues et plancha n\u2019est pas encore termin\u00e9e, d\u00e9couvrez nos accessoires : grilles, nettoyants, r\u00f4tissoires, gants, pinces, barquettes, kit d\u2019ustensiles pour barbecues\u2026<\/p><\/div><\/div><\/div>"
+        ],
+        "is_displayed_in_autocomplete": [
+            true
+        ],
+        "option_text_is_displayed_in_autocomplete": [
+            "Display Category in Autocomplete"
+        ],
+        "name": [
+            "Accessoires et housse"
+        ],
+        "url_key": [
+            "accessoires-et-housse"
+        ],
+        "url_path": [
+            "jardin-et-amenagement-exterieur\/plein-air\/accessoires-et-housse"
+        ],
+        "tree": [
+            "Jardin et am\u00e9nagement ext\u00e9rieur",
+            "Plein air",
+            "Accessoires et housse"
+        ],
+        "type": "category",
+        "title": "Accessoires et housse",
+        "url": "jardin-et-amenagement-exterieur\/plein-air\/accessoires-et-housse.html"
+    },
+    {
+        "entity_id": "1527",
+        "attribute_set_id": "3",
+        "parent_id": "1524",
+        "created_at": "2022-03-03 01:05:14",
+        "updated_at": "2025-08-03 22:05:09",
+        "path": "1\/550\/656\/1524\/1527",
+        "position": "5",
+        "level": "4",
+        "children_count": "0",
+        "row_id": "1527",
+        "created_in": "1",
+        "updated_in": "2147483647",
+        "is_active": "1",
+        "product_count": "51",
+        "description": [
+            "<style>#html-body [data-pb-style=DMPGT2Q]{justify-content:flex-start;display:flex;flex-direction:column;background-position:left top;background-size:cover;background-repeat:no-repeat;background-attachment:scroll;border-style:none;border-width:1px;border-radius:0;margin:0 0 10px;padding:10px}#html-body [data-pb-style=ULP7MMV]{border-style:none;border-width:1px;border-radius:0;margin:0;padding:0}<\/style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\" data-pb-style=\"DMPGT2Q\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\" data-pb-style=\"ULP7MMV\"><p>Pas de fum\u00e9e sans feu, c\u2019est bien ce que dit ce vieil adage ? Pour un barbecue r\u00e9ussi et des braises bien vives en un clin d\u2019\u0153il, LaMaison.fr vous propose des combustibles (charbon de bois, copeaux, pellets) et de l\u2019allume-feu (cube, bouchon, gel, liquide) pour un allumage rapide et sans vous faire perdre patience. Ainsi, vous pourrez profiter de vos convives ! Si vous rencontrez des difficult\u00e9s \u00e0 obtenir de bonnes braises, il existe une technique infaillible pour <a href=\"\/blog\/post\/allumeeeez-le-feu\" target=\"_blank\" rel=\"noopener\">allumer votre charbon de bois<\/a>\u2026<\/p><\/div><\/div><\/div>"
+        ],
+        "is_displayed_in_autocomplete": [
+            true
+        ],
+        "option_text_is_displayed_in_autocomplete": [
+            "Display Category in Autocomplete"
+        ],
+        "name": [
+            "Combustible, allume feu"
+        ],
+        "url_key": [
+            "combustible-allume-feu"
+        ],
+        "url_path": [
+            "jardin-et-amenagement-exterieur\/plein-air\/combustible-allume-feu"
+        ],
+        "tree": [
+            "Jardin et am\u00e9nagement ext\u00e9rieur",
+            "Plein air",
+            "Combustible, allume feu"
+        ],
+        "type": "category",
+        "title": "Combustible, allume feu",
+        "url": "jardin-et-amenagement-exterieur\/plein-air\/combustible-allume-feu.html"
+    },
+    {
+        "title": "Comment \u00e9teindre son barbecue ?",
+        "image": "https:\/\/www.lamaison.fr\/media\/magefan_blog\/bbq-810545_640.jpg",
+        "url": "https:\/\/www.lamaison.fr\/blog\/post\/comment-eteindre-son-barbecue",
+        "picto": "u-icon-document",
+        "type": "blog_post"
+    },
+    {
+        "title": "Plancha ou barbecue, quelle \u00e9nergie choisir ?",
+        "image": "https:\/\/www.lamaison.fr\/media\/magefan_blog\/00_Lamaisonfr_Visuel_Sommaire_Barbecue.jpg",
+        "url": "https:\/\/www.lamaison.fr\/blog\/post\/plancha-ou-barbecue-quelle-energie-choisir",
+        "picto": "u-icon-document",
+        "type": "blog_post"
+    }
+]

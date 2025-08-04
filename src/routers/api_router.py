@@ -1,25 +1,27 @@
-from typing import Annotated
-from fastapi import APIRouter, Depends
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter
 
 import sys
+import uuid
 import traceback
 from datetime import datetime
 from http import HTTPStatus
 
+from pathlib import Path
+import json
+
 from fastapi import FastAPI, Request, Response, Body
-from fastapi.responses import JSONResponse
 from botbuilder.core import (
     BotFrameworkAdapterSettings,
     TurnContext,
     BotFrameworkAdapter,
 )
-from botbuilder.core.integration import aiohttp_error_middleware
 from botbuilder.schema import Activity, ActivityTypes
 
-from routers import DefaultBot
-from models import ApiChatRequest, RagChatServiceResult
-from services import ChatService, DefaultRagChatService
+from models import (
+    ApiChatRequest, 
+    ElasticSuiteResult, 
+    ElasticSuiteAnswer
+)
 
 router = APIRouter(prefix="/api", tags=["augmented-chat"])
 
@@ -51,30 +53,41 @@ async def on_error(context: TurnContext, error: Exception):
 
 ADAPTER.on_turn_error = on_error
 
-@router.post("/messages")
-async def messages(chat_request: Request, BOT: Annotated[DefaultBot, Depends(DefaultBot)]) -> Response:
-    
-    if "application/json" in chat_request.headers["Content-Type"]:
-        body = await chat_request.json()
-    else:
-        return Response(status_code=HTTPStatus.UNSUPPORTED_MEDIA_TYPE)
-    
-    activity = Activity().deserialize(body)
-    auth_header = chat_request.headers["Authorization"] if "Authorization" in chat_request.headers else ""
-
-    response = await ADAPTER.process_activity(activity, auth_header, BOT.on_turn)
-    if response:
-        return JSONResponse(content=response.body, status_code=response.status)
-    return Response(status_code=HTTPStatus.OK)
-
 @router.post("/chat")
-async def chat(
-    service: Annotated[ChatService, Depends(DefaultRagChatService)],
-    chat_request: ApiChatRequest = Body(...)
-):
-    ai_response: RagChatServiceResult = service.invoke(
-        input_message = chat_request.message, 
-        session_id=chat_request.session_id,
-        user_id=chat_request.user_id
+async def chat(chat_request: ApiChatRequest = Body(...)):
+    
+    input_message = chat_request.message
+    session_id=chat_request.session_id
+    user_id=chat_request.user_id
+
+    current_session_id = session_id if session_id else str(uuid.uuid4())
+
+    if "liste" in input_message.lower():
+        return __search_result(user_id, current_session_id)
+    else: 
+        return __simple_answer(user_id, current_session_id)
+    
+
+def __simple_answer(user_id, session_id):
+    return ElasticSuiteResult(
+        user_id=user_id,
+        session_id=session_id,
+        messages=[ElasticSuiteAnswer(
+            message="Une réponse du chatbot",
+            products=[]
+        )]
     )
-    return ai_response
+
+def __search_result(user_id, session_id):
+    path = Path("data/temp.json").expanduser().resolve()
+    with path.open("r", encoding="utf-8") as fp:
+        data = json.load(fp)
+
+    return ElasticSuiteResult(
+        user_id=user_id,
+        session_id=session_id,
+        messages=[ElasticSuiteAnswer(
+            message="Voici une liste de produits :",
+            products=data
+        )]
+    )

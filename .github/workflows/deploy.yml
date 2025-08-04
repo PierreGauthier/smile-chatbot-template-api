@@ -3,7 +3,7 @@ name: Deploy SMILE-Chatbot-API to Azure
 on:
   push:
     branches:
-      - main 
+      - mock
 
 jobs:
   build-and-deploy:
