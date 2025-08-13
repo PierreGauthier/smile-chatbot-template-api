@@ -1,9 +1,8 @@
 from .content_type import ContentType
-from .metadata import Metadata
+from .rag_document_metadata import RagDocumentMetadata
 from .document_source import DocumentSource
-from .vectorized_document import VectorizedDocument
+from .rag_document import RagDocument
 from .api_chat_request import ApiChatRequest
-from .cosmosdb_connection import CosmosDbConnection
 from .document_identifier import DocumentIdentifier
 from .rag_chain_result import RagChainResult
 from .rag_chat_service_result import RagChatServiceResult
@@ -11,7 +10,6 @@ from .message_data import MessageData
 from .chat_message import ChatMessage
 from .search_scoring_profile import SearchScoringProfile
 from .index_filter_result import IndexFilterResult
-from .google_cloud_storage_document_mapper import GoogleCloudStorageDocumentMapper
 
 from .api_param import ApiParam
 from .attribute_set_api_param import AttributeSetApiParam
@@ -23,10 +21,9 @@ from .attribute_set_api_response import AttributeSetApiResponse
 
 __all__ = [
     "ContentType",
-    "Metadata",
+    "RagDocumentMetadata",
     "DocumentSource",
-    "VectorizedDocument",
-    "CosmosDbConnection",
+    "RagDocument",
     "DocumentIdentifier",
     "RagChainResult",
     "RagChatServiceResult",
@@ -42,5 +39,4 @@ __all__ = [
     "AttributeSetApiParam",
     "AttributeSetResponse",
     "AttributeSetApiResponse",
-    "GoogleCloudStorageDocumentMapper"
 ]

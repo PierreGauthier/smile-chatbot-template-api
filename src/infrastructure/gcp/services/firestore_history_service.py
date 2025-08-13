@@ -3,12 +3,17 @@ from typing import Annotated, List
 from fastapi import Depends
 from google.cloud import firestore
 
-from services import DatabaseHistoryService, FirestoreHistoryDb, FirestoreBase
+from config import Settings, get_settings
+from services import DatabaseHistoryService
 from models import ChatMessage
+from infrastructure.gcp.services import Firestore
 
 class FirestoreHistoryService(DatabaseHistoryService):
-    def __init__(self, database: Annotated[FirestoreBase, Depends(FirestoreHistoryDb)]):
-        self.database = database
+    def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
+        self.database = Firestore(
+            collection=settings.firestore_history_collection,
+            settings=settings
+        )
 
     def create_message_thread(self, user_id: str, message: str) -> ChatMessage:
         collection_ref = self.database.get_collection()

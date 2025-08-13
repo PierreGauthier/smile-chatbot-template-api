@@ -2,12 +2,18 @@ import uuid
 from typing import Annotated, List
 from fastapi import Depends
 
-from services import DatabaseHistoryService, CosmosDbHistoryDb, CosmosDbBase
+from config import Settings, get_settings
+from services import DatabaseHistoryService
 from models import ChatMessage
+from infrastructure.azure.services import CosmosDb
 
 class CosmosDbHistoryService(DatabaseHistoryService):
-    def __init__(self, database: Annotated[CosmosDbBase, Depends(CosmosDbHistoryDb)]):
-        self.database = database
+    def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
+        self.database = CosmosDb(
+            container=settings.azure_cosmos_history_container,
+            partition_key=settings.azure_cosmos_history_partition_key,
+            settings=settings
+        )
 
     def create_message_thread(self, user_id: str, message: str) -> ChatMessage:
         container = self.database.get_container()

@@ -7,23 +7,13 @@ from ai import (
     GCPVertexLlmProvider, 
     EmbeddingsProvider, 
     OpenAIEmbeddingsProvider,
-    AzureOpenAIEmbeddingsProvider,
     VectorStoreProvider,
     GCPVertexVectorStoreProvider,
     AzureSearchVectorStoreProvider
 )
-from services import (
-    DatabaseHistoryService, 
-    CosmosDbHistoryService, 
-    CosmosDbHistoryDb,
-    CosmosDbDocumentService,
-    CosmosDbDocumentDb,
-    FirestoreHistoryService,
-    FirestoreHistoryDb,
-    FirestoreDocumentDb,
-    FirestoreDocumentService,
-    GoogleCloudStorageDocumentService
-)
+from infrastructure.gcp.services import GoogleCloudStorageDocumentService, FirestoreHistoryService
+from infrastructure.azure.services import CosmosDbDocumentService, CosmosDbHistoryService
+from services import DatabaseHistoryService, DatabaseDocumentService
 
 def inject_llm_provider(settings: Settings = Depends(get_settings)) -> LlmProvider:
     provider = settings.llm_provider.lower()
@@ -42,17 +32,17 @@ def inject_history_service(settings: Settings = Depends(get_settings)) -> Databa
     provider = settings.llm_provider.lower()
     match provider:
         case "azure":
-            return CosmosDbHistoryService(CosmosDbHistoryDb(settings))
+            return CosmosDbHistoryService(settings)
         case "gcp":
-            return FirestoreHistoryService(FirestoreHistoryDb(settings))
+            return FirestoreHistoryService(settings)
         case _:
             raise ValueError(f"Unsupported History DB service provider: {provider}")
         
-def inject_document_service(settings: Settings = Depends(get_settings)) -> DatabaseHistoryService:
+def inject_document_service(settings: Settings = Depends(get_settings)) -> DatabaseDocumentService:
     provider = settings.llm_provider.lower()
     match provider:
         case "azure":
-            return CosmosDbDocumentService(CosmosDbDocumentDb(settings))
+            return CosmosDbDocumentService(settings)
         case "gcp":
             return GoogleCloudStorageDocumentService(settings)
             #return FirestoreDocumentService(FirestoreDocumentDb(settings))

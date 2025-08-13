@@ -1,13 +1,9 @@
 from abc import ABC, abstractmethod
 
-from models import VectorizedDocument
+from models import RagDocument
 
 class DatabaseDocumentService:
 
     @abstractmethod
-    def get_document(self, doc_type:str, document_id:str) -> VectorizedDocument:
-        pass
-    
-    @abstractmethod        
-    def create_document_with_embedding(self, document:VectorizedDocument) -> VectorizedDocument:
+    def get_document(self, doc_type:str, document_id:str) -> RagDocument:
         pass

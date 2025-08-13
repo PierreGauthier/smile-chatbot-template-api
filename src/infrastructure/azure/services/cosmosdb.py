@@ -1,7 +1,7 @@
 from config import Settings
 from azure.cosmos import ContainerProxy, CosmosClient, PartitionKey
 
-class CosmosDbBase():
+class CosmosDb:
     def __init__(self, container: str, partition_key:str, settings: Settings):
         self.cosmos_endpoint = settings.azure_cosmos_url
         self.cosmos_database = settings.azure_cosmos_database

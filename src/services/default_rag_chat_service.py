@@ -16,7 +16,7 @@ from models import (
     ChatMessage,
     IndexFilterResult,
     DocumentSource,
-    VectorizedDocument
+    RagDocument
 )
 from fields import IntentDefinitionField
 from dependencies import inject_history_service, inject_document_service
@@ -122,7 +122,7 @@ class DefaultRagChatService(ChatService):
 
     ### PRIVATE
         
-    def __build_sources(self, document_references:List[VectorizedDocument]):
+    def __build_sources(self, document_references:List[RagDocument]):
         sources: List[DocumentSource] = []
         seen: set[tuple[str, int]] = set()
 
@@ -133,7 +133,7 @@ class DefaultRagChatService(ChatService):
                 sources.append(
                     DocumentSource(
                         document_name=doc.metadata.sourceName,
-                        document_type=doc.doc_type,
+                        document_type=doc.metadata.doc_type,
                         page_number=doc.metadata.pageNumber,
                         document_url=doc.metadata.documentUrl,
                     )
