@@ -69,7 +69,12 @@ class Settings(BaseSettings):
     gcp_vertex_model_name:str
     gcp_vertex_location:str
     gcp_vertex_temperature:str
-    
+    gcp_vertex_vector_location:str
+    gcp_vertex_vector_index_id:str
+    gcp_vertex_vector_endpoint_id:str
+    gcp_storage_document_bucket_name:str
+    gcp_storage_document_bucket_collection:str
+        
     class Config:
         env_file = ".env"
         env_file_encoding = 'utf-8'

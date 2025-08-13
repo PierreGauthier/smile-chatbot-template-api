@@ -13,6 +13,8 @@ from .database_document_service import DatabaseDocumentService
 from .chat_service import ChatService
 from .cosmosdb_document_service import CosmosDbDocumentService
 from .firestore_document_service import FirestoreDocumentService
+from .google_cloud_storage_document_service import GoogleCloudStorageDocumentService
+
 from .default_rag_chat_service import DefaultRagChatService
 
 __all__ = [
@@ -30,6 +32,7 @@ __all__ = [
     "CosmosDbDocumentService",
     "DefaultRagChatService",
     "FirestoreHistoryService",
+    "GoogleCloudStorageDocumentService",
     "FirestoreDocumentService"
 ]
 

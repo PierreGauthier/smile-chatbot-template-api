@@ -11,6 +11,7 @@ from .message_data import MessageData
 from .chat_message import ChatMessage
 from .search_scoring_profile import SearchScoringProfile
 from .index_filter_result import IndexFilterResult
+from .google_cloud_storage_document_mapper import GoogleCloudStorageDocumentMapper
 
 from .api_param import ApiParam
 from .attribute_set_api_param import AttributeSetApiParam
@@ -40,5 +41,6 @@ __all__ = [
     "ApiParam",
     "AttributeSetApiParam",
     "AttributeSetResponse",
-    "AttributeSetApiResponse"
+    "AttributeSetApiResponse",
+    "GoogleCloudStorageDocumentMapper"
 ]

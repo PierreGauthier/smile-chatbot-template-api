@@ -8,7 +8,9 @@ from ai import (
     EmbeddingsProvider, 
     OpenAIEmbeddingsProvider,
     AzureOpenAIEmbeddingsProvider,
-    VectorStoreProvider
+    VectorStoreProvider,
+    GCPVertexVectorStoreProvider,
+    AzureSearchVectorStoreProvider
 )
 from services import (
     DatabaseHistoryService, 
@@ -19,7 +21,8 @@ from services import (
     FirestoreHistoryService,
     FirestoreHistoryDb,
     FirestoreDocumentDb,
-    FirestoreDocumentService
+    FirestoreDocumentService,
+    GoogleCloudStorageDocumentService
 )
 
 def inject_llm_provider(settings: Settings = Depends(get_settings)) -> LlmProvider:
@@ -43,18 +46,31 @@ def inject_history_service(settings: Settings = Depends(get_settings)) -> Databa
         case "gcp":
             return FirestoreHistoryService(FirestoreHistoryDb(settings))
         case _:
-            raise ValueError(f"Unsupported History service provider: {provider}")
+            raise ValueError(f"Unsupported History DB service provider: {provider}")
         
 def inject_document_service(settings: Settings = Depends(get_settings)) -> DatabaseHistoryService:
     provider = settings.llm_provider.lower()
-
     match provider:
         case "azure":
             return CosmosDbDocumentService(CosmosDbDocumentDb(settings))
         case "gcp":
-            return FirestoreDocumentService(FirestoreDocumentDb(settings))
+            return GoogleCloudStorageDocumentService(settings)
+            #return FirestoreDocumentService(FirestoreDocumentDb(settings))
         case _:
-            raise ValueError(f"Unsupported History service provider: {provider}")
+            raise ValueError(f"Unsupported Document DB service provider: {provider}")
         
 def inject_vector_store_provider(settings: Settings = Depends(get_settings)) -> VectorStoreProvider:
-    pass
+    provider = settings.llm_provider.lower()
+    match provider:
+        case "azure":
+            return AzureSearchVectorStoreProvider(
+                settings=settings,
+                embeddings_provider=OpenAIEmbeddingsProvider(settings)
+            )
+        case "gcp":
+            return GCPVertexVectorStoreProvider(
+                settings=settings,
+                embeddings_provider=OpenAIEmbeddingsProvider(settings)
+            )
+        case _:
+            raise ValueError(f"Unsupported vector store service provider: {provider}")

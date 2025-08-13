@@ -8,6 +8,7 @@ from .openai_embeddings_provider import OpenAIEmbeddingsProvider
 
 from .vector_store_provider import VectorStoreProvider
 from .azure_search_vector_store_provider import AzureSearchVectorStoreProvider
+from .gcp_vertex_vector_store_provider import GCPVertexVectorStoreProvider
 
 __all__ = [
     "EmbeddingsProvider",
@@ -17,5 +18,6 @@ __all__ = [
     "AzureOpenAIEmbeddingsProvider",
     "OpenAIEmbeddingsProvider",
     "VectorStoreProvider",
-    "AzureSearchVectorStoreProvider"
+    "AzureSearchVectorStoreProvider",
+    "GCPVertexVectorStoreProvider"
 ]

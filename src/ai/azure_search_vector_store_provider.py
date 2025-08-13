@@ -10,8 +10,8 @@ class AzureSearchVectorStoreProvider(VectorStoreProvider):
     def __init__(
         self,
         settings: Annotated[Settings, Depends(get_settings)],
-        embeddings_agent: Annotated[EmbeddingsProvider, Depends(OpenAIEmbeddingsProvider)]):
-        self.embeddings = embeddings_agent.get_embeddings()
+        embeddings_provider: Annotated[EmbeddingsProvider, Depends(OpenAIEmbeddingsProvider)]):
+        self.embeddings = embeddings_provider.get_embeddings()
         self.azure_search_endpoint = settings.azure_search_endpoint
         self.azure_search_key = settings.azure_search_key
         self.rag_k = settings.rag_k
