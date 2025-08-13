@@ -14,8 +14,7 @@ from ai import (
 from config import Settings, get_settings
 from models import IndexFilterResult
 
-
-class GCPVertexVectorStoreProvider(VectorStoreProvider):
+class VertexVectorStoreProvider(VectorStoreProvider):
     """VectorStoreProvider that queries Vertex AI Vector Search and stores raw docs / metadata in GCS."""
 
     def __init__(

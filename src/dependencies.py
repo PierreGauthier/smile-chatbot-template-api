@@ -3,16 +3,16 @@ from fastapi import Depends
 from config import Settings, get_settings
 from ai import (
     LlmProvider, 
-    AzureOpenAiLlmProvider, 
-    GCPVertexLlmProvider, 
     EmbeddingsProvider, 
     OpenAIEmbeddingsProvider,
     VectorStoreProvider,
-    GCPVertexVectorStoreProvider,
-    AzureSearchVectorStoreProvider
 )
+
 from infrastructure.gcp.services import GoogleCloudStorageDocumentService, FirestoreHistoryService
+from infrastructure.gcp.ai import VertexLlmProvider, VertexVectorStoreProvider
 from infrastructure.azure.services import CosmosDbDocumentService, CosmosDbHistoryService
+from infrastructure.azure.ai import AzureOpenAiLlmProvider, AzureSearchVectorStoreProvider
+
 from services import DatabaseHistoryService, DatabaseDocumentService
 
 def inject_llm_provider(settings: Settings = Depends(get_settings)) -> LlmProvider:
@@ -21,7 +21,7 @@ def inject_llm_provider(settings: Settings = Depends(get_settings)) -> LlmProvid
         case "azure":
             return AzureOpenAiLlmProvider(settings)
         case "gcp":
-            return GCPVertexLlmProvider(settings)
+            return VertexLlmProvider(settings)
         case _:
             raise ValueError(f"Unsupported LLM provider: {provider}")
 
@@ -58,7 +58,7 @@ def inject_vector_store_provider(settings: Settings = Depends(get_settings)) -> 
                 embeddings_provider=OpenAIEmbeddingsProvider(settings)
             )
         case "gcp":
-            return GCPVertexVectorStoreProvider(
+            return VertexVectorStoreProvider(
                 settings=settings,
                 embeddings_provider=OpenAIEmbeddingsProvider(settings)
             )

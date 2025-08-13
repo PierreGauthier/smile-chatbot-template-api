@@ -6,7 +6,7 @@ from google.oauth2 import service_account
 from config import Settings, get_settings
 from ai import LlmProvider
 
-class GCPVertexLlmProvider(LlmProvider):
+class VertexLlmProvider(LlmProvider):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
         credentials = None
         if settings.gcp_credentials_path:
