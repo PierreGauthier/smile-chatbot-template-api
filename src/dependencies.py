@@ -1,12 +1,7 @@
 from fastapi import Depends
 
 from config import Settings, get_settings
-from ai import (
-    LlmProvider, 
-    EmbeddingsProvider, 
-    OpenAIEmbeddingsProvider,
-    VectorStoreProvider,
-)
+from ai import LlmProvider, EmbeddingsProvider, OpenAIEmbeddingsProvider, VectorStoreProvider
 
 from infrastructure.gcp.services import GoogleCloudStorageDocumentService, FirestoreHistoryService
 from infrastructure.gcp.ai import VertexLlmProvider, VertexVectorStoreProvider
