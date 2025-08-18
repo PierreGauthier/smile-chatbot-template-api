@@ -69,7 +69,7 @@ class DefaultRagChatService(ChatService):
             for msg in message_thread:
                 print(f"---{msg.data.content}")
 
-            exchange = self.summarize_exchange_agent.invoke(message_thread) # Not the last (new) one
+            exchange = self.summarize_exchange_agent.invoke(message_thread)
             print(exchange)
 
         # (3) RAG
@@ -80,45 +80,24 @@ class DefaultRagChatService(ChatService):
             self.document_db_service.get_document(doc_type=doc_id.doc_type, document_id=doc_id.id) 
             for doc_id in rag_result.documents if doc_id.doc_type and doc_id.id
         ]
-
-        ## ---        
+        
+        # (4) Group sources by document name:
+        sources = [] if not intent.is_intent else self.__build_sources(document_references)
+        
+        # (5) Insert AI-RAG response
+        ai_response = ChatMessage.build_ai_message(
+            session_id=current_session_id,
+            user_id=user_id, 
+            content=ai_answer
+        )
+        self.history_db_service.upsert_message(ai_response)
+        
         return RagChatServiceResult(
             user_id=user_id, 
             session_id=current_session_id, 
             answer=ai_answer,
-            sources=[]
+            sources=sources
         ) 
-        
-        # # (4) Group sources by document name:
-        # sources = [] if not intent.is_intent else self.__build_sources(document_references)
-
-        # # (5) Insert User-Message
-        # current_session_id = session_id
-        # if current_session_id:
-        #     new_message = ChatMessage.build_human_message(
-        #         session_id=current_session_id,
-        #         user_id=user_id, 
-        #         content=input_message
-        #     )
-        #     self.history_db_service.upsert_message(new_message)
-        # else:
-        #     new_message:ChatMessage = self.history_db_service.create_message_thread(user_id=user_id, message=input_message)
-        #     current_session_id = new_message.session_id
-        
-        # # (6) Insert AI-RAG response
-        # ai_response = ChatMessage.build_ai_message(
-        #     session_id=current_session_id,
-        #     user_id=user_id, 
-        #     content=ai_answer
-        # )
-        # self.history_db_service.upsert_message(ai_response)
-        
-        # return RagChatServiceResult(
-        #     user_id=user_id, 
-        #     session_id=current_session_id, 
-        #     answer=ai_answer,
-        #     sources=sources
-        # ) 
 
     ### PRIVATE
         
