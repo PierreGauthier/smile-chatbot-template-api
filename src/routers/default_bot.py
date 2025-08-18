@@ -5,7 +5,7 @@ from botbuilder.core import ActivityHandler, TurnContext
 from botbuilder.schema import ChannelAccount
 
 from services import ChatService, DefaultRagChatService
-from models import RagChatServiceResult
+from models import ChatServiceResult
 
 class DefaultBot(ActivityHandler):
     
@@ -16,7 +16,7 @@ class DefaultBot(ActivityHandler):
         conversation_id = turn_context.activity.conversation.id
         user_id = turn_context.activity.recipient.id
         message = turn_context.activity.text
-        ai_response:RagChatServiceResult = self.chat_service.invoke(
+        ai_response:ChatServiceResult = self.chat_service.invoke(
             message = message, 
             session_id=conversation_id, 
             user_id=user_id

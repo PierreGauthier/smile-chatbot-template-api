@@ -12,10 +12,10 @@ from agents import (
 )
 from services import DatabaseDocumentService, DatabaseHistoryService, ChatService
 from models import (
-    RagChatServiceResult, 
+    ChatServiceResult, 
     ChatMessage,
     IndexFilterResult,
-    DocumentSource,
+    Source,
     RagDocument
 )
 from fields import IntentDefinitionField
@@ -41,7 +41,7 @@ class DefaultRagChatService(ChatService):
         set_verbose(settings.debug)
         set_debug(settings.debug)
 
-    def invoke(self, input_message: str, user_id: str, session_id: str = None) -> RagChatServiceResult:
+    def invoke(self, input_message: str, user_id: str, session_id: str = None) -> ChatServiceResult:
         """Get RAG response"""
 
         # (0) Detect intent
@@ -92,7 +92,7 @@ class DefaultRagChatService(ChatService):
         )
         self.history_db_service.upsert_message(ai_response)
         
-        return RagChatServiceResult(
+        return ChatServiceResult(
             user_id=user_id, 
             session_id=current_session_id, 
             answer=ai_answer,
@@ -102,7 +102,7 @@ class DefaultRagChatService(ChatService):
     ### PRIVATE
         
     def __build_sources(self, document_references:List[RagDocument]):
-        sources: List[DocumentSource] = []
+        sources: List[Source] = []
         seen: set[tuple[str, int]] = set()
 
         for doc in document_references:
@@ -110,11 +110,11 @@ class DefaultRagChatService(ChatService):
             if key not in seen:
                 seen.add(key)
                 sources.append(
-                    DocumentSource(
-                        document_name=doc.metadata.sourceName,
-                        document_type=doc.metadata.doc_type,
+                    Source(
+                        name=doc.metadata.sourceName,
+                        type=doc.metadata.doc_type,
                         page_number=doc.metadata.pageNumber,
-                        document_url=doc.metadata.documentUrl,
+                        address=doc.metadata.documentUrl,
                     )
                 )
         return sources

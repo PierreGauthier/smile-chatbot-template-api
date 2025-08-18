@@ -1,11 +1,12 @@
+from .setup_service_result import SetupServiceResult
 from .content_type import ContentType
 from .rag_document_metadata import RagDocumentMetadata
-from .document_source import DocumentSource
+from .source import Source
 from .rag_document import RagDocument
 from .api_chat_request import ApiChatRequest
 from .document_identifier import DocumentIdentifier
 from .rag_chain_result import RagChainResult
-from .rag_chat_service_result import RagChatServiceResult
+from .chat_service_result import ChatServiceResult
 from .message_data import MessageData
 from .chat_message import ChatMessage
 from .search_scoring_profile import SearchScoringProfile
@@ -20,13 +21,14 @@ from .attribute_set_response import AttributeSetResponse
 from .attribute_set_api_response import AttributeSetApiResponse
 
 __all__ = [
+    "SetupServiceResult",
     "ContentType",
     "RagDocumentMetadata",
-    "DocumentSource",
+    "Source",
     "RagDocument",
     "DocumentIdentifier",
     "RagChainResult",
-    "RagChatServiceResult",
+    "ChatServiceResult",
     "MessageData",
     "ChatMessage",
     "ApiChatRequest",

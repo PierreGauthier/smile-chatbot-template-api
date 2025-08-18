@@ -18,8 +18,8 @@ from botbuilder.core.integration import aiohttp_error_middleware
 from botbuilder.schema import Activity, ActivityTypes
 
 from routers import DefaultBot
-from models import ApiChatRequest, RagChatServiceResult
-from services import ChatService, DefaultRagChatService
+from models import ApiChatRequest, ChatServiceResult, SetupServiceResult
+from services import ChatService, DefaultRagChatService, ConversationalSearchSetupService
 
 router = APIRouter(prefix="/api", tags=["augmented-chat"])
 
@@ -72,9 +72,16 @@ async def chat(
     service: Annotated[ChatService, Depends(DefaultRagChatService)],
     chat_request: ApiChatRequest = Body(...)
 ):
-    ai_response: RagChatServiceResult = service.invoke(
+    ai_response: ChatServiceResult = service.invoke(
         input_message = chat_request.message, 
         session_id=chat_request.session_id,
         user_id=chat_request.user_id
     )
     return ai_response
+
+@router.post("/setup")
+async def chat(
+    service: Annotated[ConversationalSearchSetupService, Depends(ConversationalSearchSetupService)]
+):
+    response: SetupServiceResult = service.setup()
+    return response
