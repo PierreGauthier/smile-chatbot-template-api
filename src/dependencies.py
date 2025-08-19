@@ -5,10 +5,10 @@ from ai import LlmProvider, EmbeddingsProvider, OpenAIEmbeddingsProvider, Vector
 
 from infrastructure.gcp.services import GoogleCloudStorageDocumentService, FirestoreHistoryService
 from infrastructure.gcp.ai import VertexLlmProvider, VertexVectorStoreProvider
-from infrastructure.azure.services import CosmosDbDocumentService, CosmosDbHistoryService
+from infrastructure.azure.services import CosmosDbDocumentService, CosmosDbHistoryService, CosmosDBAttributesSetupService
 from infrastructure.azure.ai import AzureOpenAiLlmProvider, AzureSearchVectorStoreProvider
 
-from services import DatabaseHistoryService, DatabaseDocumentService
+from services import DatabaseHistoryService, DatabaseDocumentService, DatabaseAttributesSetupService
 
 def inject_llm_provider(settings: Settings = Depends(get_settings)) -> LlmProvider:
     provider = settings.llm_provider.lower()
@@ -22,6 +22,14 @@ def inject_llm_provider(settings: Settings = Depends(get_settings)) -> LlmProvid
 
 def inject_embedding_provider(settings: Settings = Depends(get_settings)) -> EmbeddingsProvider:
     return OpenAIEmbeddingsProvider(settings)
+
+def inject_attribute_database_service(settings: Settings = Depends(get_settings)) -> DatabaseAttributesSetupService:
+    provider = settings.llm_provider.lower()
+    match provider:
+        case "azure":
+            return CosmosDBAttributesSetupService(settings)
+        case _:
+            raise ValueError(f"Unsupported History DB service provider: {provider}")
 
 def inject_history_service(settings: Settings = Depends(get_settings)) -> DatabaseHistoryService:
     provider = settings.llm_provider.lower()

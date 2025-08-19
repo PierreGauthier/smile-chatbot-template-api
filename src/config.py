@@ -19,6 +19,10 @@ class Settings(BaseSettings):
     azure_cosmos_document_partition_key: str
     azure_cosmos_history_container: str
     azure_cosmos_history_partition_key: str
+    azure_cosmos_attributes_container:str
+    azure_cosmos_attributes_partition_key:str
+    azure_cosmos_filters_container:str
+    azure_cosmos_filters_partition_key:str
     
     azure_openai_endpoint: str
     azure_openai_api_key: str
@@ -50,16 +54,18 @@ class Settings(BaseSettings):
     langsmith_summary_exchange_prompt_name: str
     langsmith_intent_extraction_prompt_name: str
 
+    # Elastic suite
+    langsmith_attribute_set_extraction_prompt_name:str
+    elastic_suite_api_base_url: str
+    elastic_suite_attribute_set_endpoint:str
+    elastic_suite_username:str
+    elastic_suite_password:str
+
     rag_k: int = 3
     rag_score_threshold: float = 0.8
     max_tokens: Optional[int] = 2048
     top_p: Optional[float] = 0.95
     top_k: Optional[int] = 40
-
-    elastic_suite_api_base_url: str
-    elastic_suite_attribute_set_endpoint:str
-    elastic_suite_username:str
-    elastic_suite_password:str
 
     gcp_project_id:str
     gcp_credentials_path:str
