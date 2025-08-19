@@ -25,7 +25,7 @@ class SummarizeExchangeAgent:
         exchange_list = []
         for message in exchange:
             message_type = "Assistant" if message.type == "ai" else "User"
-            exchange_list.append(f"- {message_type} : {message.data.content}")
+            exchange_list.append(f"- {message_type}: {message.data.content}")
 
         new_message = ("human", '\n'.join(exchange_list))
         prompt_template.append(new_message)

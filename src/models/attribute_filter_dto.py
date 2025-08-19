@@ -7,13 +7,14 @@ from models import FilterOptionDto
 @dataclass
 class AttributeFilterDto:
     id:str
+    attribute_id:int
     label:str
     code:str
     type:str
     description:str
     options:List[FilterOptionDto]
 
-    def build_from_api_response(response:dict):
+    def build_from_api_response(response:dict, attribute_id:int):
         label = response.get("attribute_label", None)
         code = response.get("attribute_code", None)
         type = response.get("attribute_type", None)
@@ -26,6 +27,7 @@ class AttributeFilterDto:
                 options.append(FilterOptionDto.build_from_api_response(option_dict))
         return AttributeFilterDto(
             id=str(uuid.uuid4()),
+            attribute_id=attribute_id,
             label=label,
             code=code,
             type=type,
@@ -47,7 +49,7 @@ class AttributeFilterDto:
     
     def from_dto(dto:dict):
         options_dict = dto.get("options") or []
-        options = [FilterOptionDto.from_dto() for o in options_dict]
+        options = [FilterOptionDto.from_dto(o) for o in options_dict]
         return AttributeFilterDto(
             id=dto.get("id"),
             attribute_id=dto.get("attribute_id"),

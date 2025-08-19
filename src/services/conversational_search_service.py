@@ -13,7 +13,9 @@ from services import DatabaseHistoryService, ChatService, DatabaseAttributesSetu
 from models import (
     ChatServiceResult, 
     AttributeSetDto,
-    ElasticSuiteAttributeSet
+    ElasticSuiteAttributeSet,
+    AttributeFilterDto,
+    ChatMessage
 )
 from fields import AttributeField
 from dependencies import inject_history_service, inject_attribute_database_service
@@ -38,21 +40,58 @@ class ConversationalSearchService(ChatService):
 
     def invoke(self, input_message: str, user_id: str, session_id: str = None) -> ChatServiceResult:
 
-        # (0) Get attribute set list
+        # Insert user message and get the message history
+        current_session_id = session_id
+        if current_session_id:
+            new_message = ChatMessage.build_human_message(
+                session_id=current_session_id,
+                user_id=user_id, 
+                content=input_message
+            )
+            self.history_db_service.upsert_message(new_message)
+        else:
+            new_message:ChatMessage = self.history_db_service.create_message_thread(user_id=user_id, message=input_message)
+            current_session_id = new_message.session_id
+        message_thread:List[ChatMessage] = self.history_db_service.get_message_thread(user_id=user_id, session_id=current_session_id)
+
+        # Summarize exchange
+        exchange = input_message
+        if len(message_thread) > 1:
+            # DEBUG
+            for msg in message_thread:
+                print(f"---{msg.data.content}")
+
+            exchange = self.summarize_exchange_agent.invoke(message_thread)
+            print(exchange)
+
+        # Get attribute set list
         attribute_sets:List[AttributeSetDto] = self.attribute_set_db_service.list_attribute_sets()
 
-        # (1) Detect product (attribute set)
+        # Detect product (attribute set)
+        # TODO : do it with the summary of the conversation (need to change the prompt)
         detected_attribute_set:AttributeField = self.attribute_set_extraction_agent.invoke(
-            user_message=input_message,
+            user_message=exchange,
             attribute_set=[ElasticSuiteAttributeSet(name=attr.name, description=attr.description) for attr in attribute_sets],
             product_counter_example="bicycle"
         )
         print(f"[{detected_attribute_set.is_intent}]: {detected_attribute_set.chain_of_thoughts}")
 
+        # Get the filter list of the product
+        attribute_set_name = next((attr for attr in attribute_sets if attr.name == detected_attribute_set.product), None)
+        if not attribute_set_name:
+            return ChatServiceResult(
+                user_id=user_id,
+                session_id=session_id,
+                answer="Sorry, I couldn't find the product you are searching for.",
+                sources=[]
+            )
+
+        filters:List[AttributeFilterDto] = self.attribute_set_db_service.get_filters(attribute_set_name.attribute_set_id)
+
         return ChatServiceResult(
             user_id=user_id,
             session_id=session_id,
-            answer=detected_attribute_set.product,
+            answer=f"Found {len(filters)} filters",
             sources=[]
         )
     

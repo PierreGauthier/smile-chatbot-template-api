@@ -31,7 +31,7 @@ class AttributeSetDto:
         filters:List[AttributeFilterDto] = []
         if filters_dicts:
             for filters_dict in filters_dicts:
-                filters.append(AttributeFilterDto.build_from_api_response(filters_dict))
+                filters.append(AttributeFilterDto.build_from_api_response(filters_dict, attribute_set_id))
 
         object =  AttributeSetDto(
             id=str(uuid.uuid4()),

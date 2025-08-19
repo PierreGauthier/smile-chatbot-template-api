@@ -78,6 +78,56 @@ class CosmosDBAttributesSetupService(DatabaseAttributesSetupService):
             description=description,
             filters=filters,
         )
+    
+    def get_attribute_set_by_name(self, attribute_set_name: str) -> AttributeSetDto:
+        """
+        Find an AttributeSet by its name (exact match) and return it with filters filled.
+        Cross-partition query since 'name' is not the partition key.
+        """
+        attributes_container = self.attributes_database.get_container()
+
+        # Exact match on name
+        query = "SELECT TOP 1 c.id, c.attribute_set_id, c.name, c.description FROM c WHERE c.name = @name"
+        params = [{"name": "@name", "value": attribute_set_name}]
+        items = list(
+            attributes_container.query_items(
+                query=query,
+                parameters=params,
+                enable_cross_partition_query=True,
+            )
+        )
+
+        # Optional: fallback to case-insensitive match if exact not found
+        if not items:
+            ci_query = "SELECT TOP 1 c.id, c.name, c.description FROM c WHERE LOWER(c.name) = LOWER(@name)"
+            items = list(
+                attributes_container.query_items(
+                    query=ci_query,
+                    parameters=params,
+                    enable_cross_partition_query=True,
+                )
+            )
+
+        if not items:
+            raise ValueError(f"Attribute set with name '{attribute_set_name}' not found")
+
+        it = items[0]
+        id = it.get("id")
+        attribute_set_id = it.get("attribute_set_id")
+        name = it.get("name", "-unknown-")
+        description = it.get("description", "-")
+
+        # Fetch and attach filters
+        filters: List[AttributeFilterDto] = self.get_filters(attribute_set_id)
+
+        return AttributeSetDto(
+            id=id,
+            attribute_set_id=attribute_set_id,
+            name=name,
+            description=description,
+            filters=filters,
+        )
+        
 
     def list_attribute_sets(self) -> List[AttributeSetDto]:
         """

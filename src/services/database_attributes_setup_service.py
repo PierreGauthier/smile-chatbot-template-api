@@ -14,6 +14,10 @@ class DatabaseAttributesSetupService(ABC):
         pass
     
     @abstractmethod
+    def get_attribute_set_by_name(self, attribute_set_name:str) -> AttributeSetDto:
+        pass
+
+    @abstractmethod
     def list_attribute_sets(self) -> List[AttributeSetDto]:
         pass
 
