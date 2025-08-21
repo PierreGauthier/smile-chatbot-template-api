@@ -7,18 +7,20 @@ from langchain_core.globals import set_verbose, set_debug
 from agents import (
     SummarizeExchangeAgent,
     BasicPydanticChain,
-    AttributeSetExtractionAgent
+    AttributeSetExtractionAgent,
+    FilterExtractionAgent
 )
-from services import DatabaseHistoryService, ChatService, DatabaseAttributesSetupService
+from services import DatabaseHistoryService, ChatService, DatabaseAttributesSetupService, DatabaseRequestService
 from models import (
     ChatServiceResult, 
     AttributeSetDto,
     ElasticSuiteAttributeSet,
     AttributeFilterDto,
-    ChatMessage
+    ChatMessage,
+    UserRequestDto
 )
 from fields import AttributeField
-from dependencies import inject_history_service, inject_attribute_database_service
+from dependencies import inject_history_service, inject_attribute_database_service, inject_request_service
 
 class ConversationalSearchService(ChatService):
     def __init__(
@@ -26,13 +28,17 @@ class ConversationalSearchService(ChatService):
             settings: Annotated[Settings, Depends(get_settings)],
             attribute_set_db_service : Annotated[DatabaseAttributesSetupService, Depends(inject_attribute_database_service)],
             attribute_set_extraction_agent: Annotated[AttributeSetExtractionAgent, Depends(AttributeSetExtractionAgent)],
+            filters_extraction_agent: Annotated[FilterExtractionAgent, Depends(FilterExtractionAgent)],
             summarize_exchange_agent : Annotated[BasicPydanticChain, Depends(SummarizeExchangeAgent)],
-            history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service)]):
+            history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service)],
+            request_db_service: Annotated[DatabaseRequestService, Depends(inject_request_service)]):
         self.settings = settings
         self.attribute_set_db_service = attribute_set_db_service
         self.attribute_set_extraction_agent = attribute_set_extraction_agent
         self.history_db_service = history_db_service
         self.summarize_exchange_agent = summarize_exchange_agent
+        self.filters_extraction_agent = filters_extraction_agent
+        self.request_db_service = request_db_service
 
         # Set the verbosity level based on the DEBUG environment variable
         set_verbose(settings.debug)
@@ -63,16 +69,21 @@ class ConversationalSearchService(ChatService):
 
             exchange = self.summarize_exchange_agent.invoke(message_thread)
             print(exchange)
+        
+        # Get requests
+        requests:List[UserRequestDto] = self.request_db_service.get_requests(
+            user_id=user_id, 
+            session_id=current_session_id
+        ) if session_id else []
 
         # Get attribute set list
         attribute_sets:List[AttributeSetDto] = self.attribute_set_db_service.list_attribute_sets()
 
         # Detect product (attribute set)
-        # TODO : do it with the summary of the conversation (need to change the prompt)
         detected_attribute_set:AttributeField = self.attribute_set_extraction_agent.invoke(
             user_message=exchange,
             attribute_set=[ElasticSuiteAttributeSet(name=attr.name, description=attr.description) for attr in attribute_sets],
-            product_counter_example="bicycle"
+            product_counter_example="bicycle" # TODO
         )
         print(f"[{detected_attribute_set.is_intent}]: {detected_attribute_set.chain_of_thoughts}")
 
@@ -87,6 +98,7 @@ class ConversationalSearchService(ChatService):
             )
 
         filters:List[AttributeFilterDto] = self.attribute_set_db_service.get_filters(attribute_set_name.attribute_set_id)
+        result = self.filters_extraction_agent.invoke(exchange=exchange, filters=filters)
 
         return ChatServiceResult(
             user_id=user_id,

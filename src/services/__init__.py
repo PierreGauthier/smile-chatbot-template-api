@@ -5,6 +5,7 @@ from .chat_service import ChatService
 from .default_rag_chat_service import DefaultRagChatService
 from .conversational_search_setup_service import ConversationalSearchSetupService
 from .conversational_search_service import ConversationalSearchService
+from .database_request_service import DatabaseRequestService
 
 
 __all__ = [
@@ -14,5 +15,6 @@ __all__ = [
     "DefaultRagChatService",
     "ConversationalSearchSetupService",
     "DatabaseAttributesSetupService",
-    "ConversationalSearchService"
+    "ConversationalSearchService",
+    "DatabaseRequestService"
 ]

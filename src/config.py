@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     azure_cosmos_attributes_partition_key:str
     azure_cosmos_filters_container:str
     azure_cosmos_filters_partition_key:str
+    azure_cosmos_request_container:str
+    azure_cosmos_request_partition_key:str
     
     azure_openai_endpoint: str
     azure_openai_api_key: str
@@ -54,8 +56,10 @@ class Settings(BaseSettings):
     langsmith_summary_exchange_prompt_name: str
     langsmith_intent_extraction_prompt_name: str
 
+
     # Elastic suite
     langsmith_attribute_set_extraction_prompt_name:str
+    langsmith_filters_extraction_prompt_name:str
     elastic_suite_api_base_url: str
     elastic_suite_attribute_set_endpoint:str
     elastic_suite_username:str

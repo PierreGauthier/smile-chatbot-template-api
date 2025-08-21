@@ -5,10 +5,20 @@ from ai import LlmProvider, EmbeddingsProvider, OpenAIEmbeddingsProvider, Vector
 
 from infrastructure.gcp.services import GoogleCloudStorageDocumentService, FirestoreHistoryService
 from infrastructure.gcp.ai import VertexLlmProvider, VertexVectorStoreProvider
-from infrastructure.azure.services import CosmosDbDocumentService, CosmosDbHistoryService, CosmosDBAttributesSetupService
+from infrastructure.azure.services import (
+    CosmosDbDocumentService, 
+    CosmosDbHistoryService, 
+    CosmosDBAttributesSetupService,
+    CosmosDbRequestService
+)
 from infrastructure.azure.ai import AzureOpenAiLlmProvider, AzureSearchVectorStoreProvider
 
-from services import DatabaseHistoryService, DatabaseDocumentService, DatabaseAttributesSetupService
+from services import (
+    DatabaseHistoryService, 
+    DatabaseDocumentService, 
+    DatabaseAttributesSetupService, 
+    DatabaseRequestService
+)
 
 def inject_llm_provider(settings: Settings = Depends(get_settings)) -> LlmProvider:
     provider = settings.llm_provider.lower()
@@ -51,6 +61,14 @@ def inject_document_service(settings: Settings = Depends(get_settings)) -> Datab
             #return FirestoreDocumentService(FirestoreDocumentDb(settings))
         case _:
             raise ValueError(f"Unsupported Document DB service provider: {provider}")
+        
+def inject_request_service(settings: Settings = Depends(get_settings)) -> DatabaseRequestService:
+    provider = settings.llm_provider.lower()
+    match provider:
+        case "azure":
+            return CosmosDbRequestService(settings)
+        case _:
+            raise ValueError(f"Unsupported Request DB service provider: {provider}")
         
 def inject_vector_store_provider(settings: Settings = Depends(get_settings)) -> VectorStoreProvider:
     provider = settings.llm_provider.lower()

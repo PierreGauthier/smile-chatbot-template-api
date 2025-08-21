@@ -4,6 +4,7 @@ from .contextualize_prompt_provider import ContextualizePromptProvider
 from .summary_prompt_provider import SummaryPromptProvider
 from .intent_extraction_prompt_provider import IntentExtractionPromptProvider
 from .attribute_set_extraction_prompt_provider import AttributeSetExtractionPromptProvider
+from .filters_extraction_prompt_provider import FiltersExtractionPromptProvider
 
 __all__ = [
     "PromptProvider",
@@ -11,5 +12,6 @@ __all__ = [
     "ContextualizePromptProvider",
     "SummaryPromptProvider",
     "IntentExtractionPromptProvider",
-    "AttributeSetExtractionPromptProvider"
+    "AttributeSetExtractionPromptProvider",
+    "FiltersExtractionPromptProvider"
 ]

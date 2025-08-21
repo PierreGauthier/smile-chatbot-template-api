@@ -1,31 +1,23 @@
 import json
 from pydantic import BaseModel, Field, create_model
-from typing import Any
+from typing import Any, List
 
-# 1. Map the strings you expect in the JSON → real Python / typing types
-TYPE_LOOKUP: dict[str, Any] = {
-    "str": str,
-    "int": int,
-    "float": float,
-    "bool": bool,
-    "list[str]": list[str],     # Python 3.9+ syntax
-    "list[int]": list[int],
-    # add other shapes such as "Optional[str]" etc. as needed
-}
+from models import PydanticSchema
 
-def build_pydantic_model(schema: dict) -> type[BaseModel]:
+def build_pydantic_model(schemas: List[PydanticSchema]) -> type[BaseModel]:
     """
-    Turn the JSON schema above into a live Pydantic model class.
+    Turn a Pydantic schema into a live Pydantic model class.
     """
-    model_name = schema.get("model_name", "DynamicModel")
+    model_name = "DynamicModel"
     field_defs: dict[str, tuple[type, Any]] = {}
 
-    for f in schema["fields"]:
-        py_type = TYPE_LOOKUP[f["type"]]         # resolve the string → real type
-        default  = ... if f.get("required", True) else None
-        field_defs[f["name"]] = (
+    for schema in schemas:
+        description = schema.description or f"The {schema.name} of the product"
+        py_type = float if schema.type == "price" else str
+        default  = ... if schema.required else None
+        field_defs[schema.name] = (
             py_type,
-            Field(default, description=f.get("description"))
+            Field(default, description=description)
         )
 
     # Pydantic does all the leg-work (validators, schema generation, etc.)
