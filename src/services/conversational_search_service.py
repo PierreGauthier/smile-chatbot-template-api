@@ -80,30 +80,37 @@ class ConversationalSearchService(ChatService):
         attribute_sets:List[AttributeSetDto] = self.attribute_set_db_service.list_attribute_sets()
 
         # Detect product (attribute set)
-        detected_attribute_set:AttributeField = self.attribute_set_extraction_agent.invoke(
+        detected_attribute_sets:AttributeField = self.attribute_set_extraction_agent.invoke(
             user_message=exchange,
             attribute_set=[ElasticSuiteAttributeSet(name=attr.name, description=attr.description) for attr in attribute_sets],
             product_counter_example="bicycle" # TODO
         )
-        print(f"[{detected_attribute_set.is_intent}]: {detected_attribute_set.chain_of_thoughts}")
+        print(f"[{detected_attribute_sets.is_intent}]: {detected_attribute_sets.chain_of_thoughts}")
 
-        # Get the filter list of the product
-        attribute_set_name = next((attr for attr in attribute_sets if attr.name == detected_attribute_set.product), None)
-        if not attribute_set_name:
-            return ChatServiceResult(
-                user_id=user_id,
-                session_id=session_id,
-                answer="Sorry, I couldn't find the product you are searching for.",
-                sources=[]
-            )
+        # Build a request for each product that the user is searching for
+        request_chain_results = []
+        for product in detected_attribute_sets.products:
+            # Get the filter list of the product
+            attribute_set_name = next((attr for attr in attribute_sets if attr.name == product), None)
+            if attribute_set_name:
+                filters:List[AttributeFilterDto] = self.attribute_set_db_service.get_filters(attribute_set_name.attribute_set_id)
+                result = self.filters_extraction_agent.invoke(exchange=exchange, filters=filters)
+                request_chain_results.append(result)
+            # if not attribute_set_name:
+                # return ChatServiceResult(
+                #     user_id=user_id,
+                #     session_id=session_id,
+                #     answer="Sorry, I couldn't find the product you are searching for.",
+                #     sources=[]
+                # )
 
-        filters:List[AttributeFilterDto] = self.attribute_set_db_service.get_filters(attribute_set_name.attribute_set_id)
-        result = self.filters_extraction_agent.invoke(exchange=exchange, filters=filters)
+        # filters:List[AttributeFilterDto] = self.attribute_set_db_service.get_filters(attribute_set_name.attribute_set_id)
+        # result = self.filters_extraction_agent.invoke(exchange=exchange, filters=filters)
 
         return ChatServiceResult(
             user_id=user_id,
             session_id=session_id,
-            answer=f"Found {len(filters)} filters",
+            answer= str(detected_attribute_sets.products),#f"Found {len(filters)} filters",
             sources=[]
         )
     

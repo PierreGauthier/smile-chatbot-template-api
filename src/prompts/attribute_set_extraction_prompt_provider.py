@@ -21,13 +21,18 @@ class AttributeSetExtractionPromptProvider(PromptProvider):
         product_possible_values = "\n".join(
             f"- {attr.name}: {attr.description}" for attr in attribute_set
         )
-        example_name = attribute_set[0].name.capitalize()
-        example_value = attribute_set[0].name.lower()
+        example1_name = attribute_set[0].name.capitalize()
+        example1_value = attribute_set[0].name.lower()
+
+        example2_name = attribute_set[1].name.capitalize()
+        example2_value = attribute_set[1].name.lower()
 
         prompt = prompt.partial(
             attribute_set=product_possible_values,
-            attribute_example_name=example_name,
-            attribute_example_value=example_value,
+            attribute_example1_name=example1_name,
+            attribute_example1_value=example1_value,
+            attribute_example2_name=example2_name,
+            attribute_example2_value=example2_value,
             attribute_counter_example=product_counter_example,
         )
 

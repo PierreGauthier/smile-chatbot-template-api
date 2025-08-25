@@ -2,7 +2,6 @@ from fastapi import Depends
 
 from config import Settings, get_settings
 from ai import LlmProvider, EmbeddingsProvider, OpenAIEmbeddingsProvider, VectorStoreProvider
-
 from infrastructure.gcp.services import GoogleCloudStorageDocumentService, FirestoreHistoryService
 from infrastructure.gcp.ai import VertexLlmProvider, VertexVectorStoreProvider
 from infrastructure.azure.services import (
@@ -12,7 +11,6 @@ from infrastructure.azure.services import (
     CosmosDbRequestService
 )
 from infrastructure.azure.ai import AzureOpenAiLlmProvider, AzureSearchVectorStoreProvider
-
 from services import (
     DatabaseHistoryService, 
     DatabaseDocumentService, 
