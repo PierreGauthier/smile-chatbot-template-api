@@ -2,7 +2,7 @@ import json
 from pydantic import BaseModel, Field, create_model
 from typing import Any, List
 
-from models import PydanticSchema
+from fields import PriceRangeField, PydanticSchema
 
 def build_pydantic_model(schemas: List[PydanticSchema]) -> type[BaseModel]:
     """
@@ -13,7 +13,7 @@ def build_pydantic_model(schemas: List[PydanticSchema]) -> type[BaseModel]:
 
     for schema in schemas:
         description = schema.description or f"The {schema.name} of the product"
-        py_type = float if schema.type == "price" else str
+        py_type = PriceRangeField if schema.type == "price" else str
         default  = ... if schema.required else None
         field_defs[schema.name] = (
             py_type,

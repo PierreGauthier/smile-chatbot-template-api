@@ -60,6 +60,8 @@ class Settings(BaseSettings):
     # Elastic suite
     langsmith_attribute_set_extraction_prompt_name:str
     langsmith_filters_extraction_prompt_name:str
+    langsmith_elastic_suite_question_summarizer_prompt_name:str
+
     elastic_suite_api_base_url: str
     elastic_suite_attribute_set_endpoint:str
     elastic_suite_username:str

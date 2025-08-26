@@ -8,7 +8,8 @@ from agents import (
     SummarizeExchangeAgent,
     BasicPydanticChain,
     AttributeSetExtractionAgent,
-    FilterExtractionAgent
+    FilterExtractionAgent,
+    ElasticSuiteQuestionSummarizerAgent
 )
 from services import DatabaseHistoryService, ChatService, DatabaseAttributesSetupService, DatabaseRequestService
 from models import (
@@ -17,7 +18,8 @@ from models import (
     ElasticSuiteAttributeSet,
     AttributeFilterDto,
     ChatMessage,
-    UserRequestDto
+    UserRequestDto,
+    ProductFilterQuestion
 )
 from fields import AttributeField
 from dependencies import inject_history_service, inject_attribute_database_service, inject_request_service
@@ -30,6 +32,7 @@ class ConversationalSearchService(ChatService):
             attribute_set_extraction_agent: Annotated[AttributeSetExtractionAgent, Depends(AttributeSetExtractionAgent)],
             filters_extraction_agent: Annotated[FilterExtractionAgent, Depends(FilterExtractionAgent)],
             summarize_exchange_agent : Annotated[BasicPydanticChain, Depends(SummarizeExchangeAgent)],
+            summarize_question_agent : Annotated[ElasticSuiteQuestionSummarizerAgent, Depends(ElasticSuiteQuestionSummarizerAgent)],
             history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service)],
             request_db_service: Annotated[DatabaseRequestService, Depends(inject_request_service)]):
         self.settings = settings
@@ -39,6 +42,7 @@ class ConversationalSearchService(ChatService):
         self.summarize_exchange_agent = summarize_exchange_agent
         self.filters_extraction_agent = filters_extraction_agent
         self.request_db_service = request_db_service
+        self.summarize_question_agent = summarize_question_agent
 
         # Set the verbosity level based on the DEBUG environment variable
         set_verbose(settings.debug)
@@ -88,14 +92,17 @@ class ConversationalSearchService(ChatService):
         print(f"[{detected_attribute_sets.is_intent}]: {detected_attribute_sets.chain_of_thoughts}")
 
         # Build a request for each product that the user is searching for
-        request_chain_results = []
+        request_chain_results:List[ProductFilterQuestion] = [] # (attribute-set,ai-question)
         for product in detected_attribute_sets.products:
             # Get the filter list of the product
             attribute_set_name = next((attr for attr in attribute_sets if attr.name == product), None)
             if attribute_set_name:
                 filters:List[AttributeFilterDto] = self.attribute_set_db_service.get_filters(attribute_set_name.attribute_set_id)
                 result = self.filters_extraction_agent.invoke(exchange=exchange, filters=filters)
-                request_chain_results.append(result)
+                request_chain_results.append(ProductFilterQuestion(
+                    attribute_set_name=product, 
+                    ai_question=result.ai_question
+                ))
             # if not attribute_set_name:
                 # return ChatServiceResult(
                 #     user_id=user_id,
@@ -103,14 +110,26 @@ class ConversationalSearchService(ChatService):
                 #     answer="Sorry, I couldn't find the product you are searching for.",
                 #     sources=[]
                 # )
+        
+        summarized_question = self.summarize_question_agent.invoke(
+            last_exchange=message_thread[:4],
+            questions=request_chain_results
+        )
+
+        # Insert the AI message in the DB
+        self.history_db_service.upsert_message(message=ChatMessage.build_ai_message(
+            user_id=user_id,
+            session_id=current_session_id,
+            content=summarized_question
+        ))
 
         # filters:List[AttributeFilterDto] = self.attribute_set_db_service.get_filters(attribute_set_name.attribute_set_id)
         # result = self.filters_extraction_agent.invoke(exchange=exchange, filters=filters)
 
         return ChatServiceResult(
             user_id=user_id,
-            session_id=session_id,
-            answer= str(detected_attribute_sets.products),#f"Found {len(filters)} filters",
+            session_id=current_session_id,
+            answer= summarized_question,#str(detected_attribute_sets.products),#f"Found {len(filters)} filters",
             sources=[]
         )
     

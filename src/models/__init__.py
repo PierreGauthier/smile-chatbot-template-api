@@ -21,8 +21,8 @@ from .attribute_filter_dto import AttributeFilterDto
 from .attribute_set_dto import AttributeSetDto
 from .attribute_set_api_response import AttributeSetApiResponse
 
-from .pydantic_schema import PydanticSchema
 from .user_request_dto import UserRequestDto
+from .product_filter_question import ProductFilterQuestion
 
 __all__ = [
     "ElasticSuiteAttributeSet",
@@ -46,6 +46,6 @@ __all__ = [
     "AttributeSetApiParam",
     "AttributeSetDto",
     "AttributeSetApiResponse",
-    "PydanticSchema",
-    "UserRequestDto"
+    "UserRequestDto",
+    "ProductFilterQuestion"
 ]

@@ -7,10 +7,10 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from config import Settings, get_settings
 from ai import LlmProvider
-from models import AttributeFilterDto, PydanticSchema
+from models import AttributeFilterDto
 from prompts import PromptProvider, FiltersExtractionPromptProvider
 from dependencies import inject_llm_provider
-from fields import build_pydantic_model
+from fields import build_pydantic_model, PydanticSchema
 
 class FilterExtractionAgent:
 

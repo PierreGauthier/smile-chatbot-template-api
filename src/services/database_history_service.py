@@ -14,5 +14,5 @@ class DatabaseHistoryService(ABC):
         pass
     
     @abstractmethod
-    def upsert_message(self, thread:ChatMessage):
+    def upsert_message(self, message:ChatMessage):
         pass
