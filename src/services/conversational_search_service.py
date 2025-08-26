@@ -103,13 +103,13 @@ class ConversationalSearchService(ChatService):
                     attribute_set_name=product, 
                     ai_question=result.ai_question
                 ))
-            # if not attribute_set_name:
-                # return ChatServiceResult(
-                #     user_id=user_id,
-                #     session_id=session_id,
-                #     answer="Sorry, I couldn't find the product you are searching for.",
-                #     sources=[]
-                # )
+        if not request_chain_results:
+            return ChatServiceResult(
+                user_id=user_id,
+                session_id=session_id,
+                answer="Sorry, I couldn't find the product(s) you are searching for.",
+                sources=[]
+            )
         
         summarized_question = self.summarize_question_agent.invoke(
             last_exchange=message_thread[:4],

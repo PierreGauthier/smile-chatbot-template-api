@@ -47,12 +47,12 @@ Available Questions:
 ```
 
 **Expected Output:**
-"Perfect, I can help you find both! Are you looking for a specific color for the barbecue, and do you have any brand preferences for the bicycle?"
+Perfect, I can help you find both! Are you looking for a specific color for the barbecue, and do you have any brand preferences for the bicycle?
 
 ## Additional Examples of Good Responses:
-- "Great! Do you have a brand preference for the barbecue, and what color bicycle are you thinking of?"
-- "No problem at all! Are you searching for any particular barbecue color, and is there a bicycle brand you prefer?"
-- "Excellent! Do you have a specific color in mind for either the barbecue or the bicycle?"
+- Great! Do you have a brand preference for the barbecue, and what color bicycle are you thinking of?
+- No problem at all! Are you searching for any particular barbecue color, and is there a bicycle brand you prefer?
+- Excellent! Do you have a specific color in mind for either the barbecue or the bicycle?
 
 # Your Turn
 Based on the conversation context and available questions provided, generate one natural, conversational follow-up response following the guidelines above.

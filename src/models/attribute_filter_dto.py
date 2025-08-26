@@ -13,27 +13,6 @@ class AttributeFilterDto:
     type:str
     description:str
     options:List[FilterOptionDto]
-
-    def build_from_api_response(response:dict, attribute_id:int):
-        label = response.get("attribute_label", None)
-        code = response.get("attribute_code", None)
-        type = response.get("attribute_type", None)
-        description = response.get("filter_description", None)
-        
-        options_dicts = response.get("attribute_options", None)
-        options:List[FilterOptionDto] = []
-        if options_dicts:
-            for option_dict in options_dicts:
-                options.append(FilterOptionDto.build_from_api_response(option_dict))
-        return AttributeFilterDto(
-            id=str(uuid.uuid4()),
-            attribute_id=attribute_id,
-            label=label,
-            code=code,
-            type=type,
-            description=description,
-            options=options
-        )
     
     def to_dict(self, attribute_id:int) -> dict:
         options = [option.to_dict() for option in self.options]

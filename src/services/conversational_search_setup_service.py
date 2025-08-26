@@ -6,7 +6,7 @@ from models import (
     AttributeSetApiResponse,
     SetupServiceResult
 )
-from api_clients import ElasticSuiteAttributeSetClient
+from infrastructure.configuration.elastic_suite import ElasticSuiteAttributeSetClient
 from agents import AttributeSetExtractionAgent
 from services import DatabaseAttributesSetupService
 from dependencies import inject_attribute_database_service
