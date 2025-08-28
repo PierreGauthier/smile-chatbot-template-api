@@ -18,6 +18,9 @@ from services import (
     DatabaseRequestService
 )
 
+def inject_embedding_provider(settings: Settings = Depends(get_settings)) -> EmbeddingsProvider:
+    return OpenAIEmbeddingsProvider(settings)
+
 def inject_llm_provider(settings: Settings = Depends(get_settings)) -> LlmProvider:
     provider = settings.llm_provider.lower()
     match provider:
@@ -27,9 +30,6 @@ def inject_llm_provider(settings: Settings = Depends(get_settings)) -> LlmProvid
             return VertexLlmProvider(settings)
         case _:
             raise ValueError(f"Unsupported LLM provider: {provider}")
-
-def inject_embedding_provider(settings: Settings = Depends(get_settings)) -> EmbeddingsProvider:
-    return OpenAIEmbeddingsProvider(settings)
 
 def inject_attribute_database_service(settings: Settings = Depends(get_settings)) -> DatabaseAttributesSetupService:
     provider = settings.llm_provider.lower()

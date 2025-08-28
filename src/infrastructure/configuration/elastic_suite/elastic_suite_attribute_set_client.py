@@ -33,4 +33,5 @@ class ElasticSuiteAttributeSetClient(BaseClient):
         response = self.get(url=url, headers=headers)
         params.query = query
         return self.attribute_set_response_builder.build_response(params, response)
+
     

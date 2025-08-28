@@ -1,15 +1,11 @@
-import uuid
-import re
 from typing import List
 from dataclasses import dataclass
 
-from models import AttributeFilterDto
+from models import AttributeFilterDto, AttributeSetDefinition
 
 @dataclass
-class AttributeSetDto:
+class AttributeSetDto(AttributeSetDefinition):
     id:str
-    attribute_set_id:int
-    name:str
     description:str
     filters: List[AttributeFilterDto]
 

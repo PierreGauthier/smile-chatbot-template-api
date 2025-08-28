@@ -12,19 +12,31 @@ from .chat_message import ChatMessage
 from .search_scoring_profile import SearchScoringProfile
 from .index_filter_result import IndexFilterResult
 
+from .api_response import ApiResponse
+from .search_response_item import SearchResponseItem
+from .search_api_response import SearchApiResponse
+from .attribute_set_definition import AttributeSetDefinition
+from .attribute_filter_definition import AttributeFilterDefinition
 from .elastic_suite_attribute_set import ElasticSuiteAttributeSet
 from .api_param import ApiParam
 from .attribute_set_api_param import AttributeSetApiParam
-from .api_response import ApiResponse
 from .filter_option_dto import FilterOptionDto
 from .attribute_filter_dto import AttributeFilterDto
 from .attribute_set_dto import AttributeSetDto
 from .attribute_set_api_response import AttributeSetApiResponse
+from .attribute_set_value import AttributeSetValue
+from .attribute_filter_value import AttributeFilterValue
 
 from .user_request_dto import UserRequestDto
 from .product_filter_question import ProductFilterQuestion
 
 __all__ = [
+    "SearchResponseItem",
+    "SearchApiResponse",
+    "AttributeFilterValue",
+    "AttributeSetValue",
+    "AttributeFilterDefinition",
+    "AttributeSetDefinition",
     "ElasticSuiteAttributeSet",
     "SetupServiceResult",
     "ContentType",

@@ -66,6 +66,9 @@ class Settings(BaseSettings):
     elastic_suite_attribute_set_endpoint:str
     elastic_suite_username:str
     elastic_suite_password:str
+    # Search
+    elastic_suite_search_api_base_url:str
+    elastic_suite_search_api_credentials:str
 
     rag_k: int = 3
     rag_score_threshold: float = 0.8

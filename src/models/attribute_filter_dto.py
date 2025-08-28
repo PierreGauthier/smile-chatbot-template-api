@@ -2,16 +2,11 @@ import uuid
 from typing import List
 from dataclasses import dataclass
 
-from models import FilterOptionDto
+from models import FilterOptionDto, AttributeFilterDefinition
 
 @dataclass
-class AttributeFilterDto:
+class AttributeFilterDto(AttributeFilterDefinition):
     id:str
-    attribute_id:int
-    label:str
-    code:str
-    type:str
-    description:str
     options:List[FilterOptionDto]
     
     def to_dict(self, attribute_id:int) -> dict:

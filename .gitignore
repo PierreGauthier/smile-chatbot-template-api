@@ -446,19 +446,7 @@ local.settings.json
 *.webm
 
 # Customer data files
-data/*.pdf
-data/*_clean-content.json
-data/*_vectorized.json
-data/*_layout.json
-data/*.jpg
-data/*.png
-data/*/*.jpg
-data/*/*.pdf
-data/*/*.png
-data/*/*.json
-data/*/*.csv
-data/*/*.txt
-data/*/vect.info
+data/
 
 #keys
 keys/

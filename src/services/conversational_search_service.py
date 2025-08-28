@@ -11,7 +11,12 @@ from agents import (
     FilterExtractionAgent,
     ElasticSuiteQuestionSummarizerAgent
 )
-from services import DatabaseHistoryService, ChatService, DatabaseAttributesSetupService, DatabaseRequestService
+from services import (
+    DatabaseHistoryService, 
+    ChatService, 
+    DatabaseAttributesSetupService, 
+    DatabaseRequestService
+)
 from models import (
     ChatServiceResult, 
     AttributeSetDto,
@@ -22,7 +27,11 @@ from models import (
     ProductFilterQuestion
 )
 from fields import AttributeField
-from dependencies import inject_history_service, inject_attribute_database_service, inject_request_service
+from dependencies import (
+    inject_history_service, 
+    inject_attribute_database_service, 
+    inject_request_service
+)
 
 class ConversationalSearchService(ChatService):
     def __init__(
@@ -92,17 +101,19 @@ class ConversationalSearchService(ChatService):
         print(f"[{detected_attribute_sets.is_intent}]: {detected_attribute_sets.chain_of_thoughts}")
 
         # Build a request for each product that the user is searching for
-        request_chain_results:List[ProductFilterQuestion] = [] # (attribute-set,ai-question)
-        for product in detected_attribute_sets.products:
-            # Get the filter list of the product
-            attribute_set_name = next((attr for attr in attribute_sets if attr.name == product), None)
-            if attribute_set_name:
-                filters:List[AttributeFilterDto] = self.attribute_set_db_service.get_filters(attribute_set_name.attribute_set_id)
-                result = self.filters_extraction_agent.invoke(exchange=exchange, filters=filters)
-                request_chain_results.append(ProductFilterQuestion(
-                    attribute_set_name=product, 
-                    ai_question=result.ai_question
-                ))
+        request_chain_results:List[ProductFilterQuestion] = self.__build_requests(
+            user_id=user_id, 
+            session_id=current_session_id,
+            attribute_sets=attribute_sets, 
+            detected_attribute_sets=detected_attribute_sets,
+            exchange=exchange,
+            requests=requests
+        )        
+
+        # Upsert the requests
+        for request in requests:
+            self.request_db_service.update_request(request)
+            
         if not request_chain_results:
             return ChatServiceResult(
                 user_id=user_id,
@@ -133,3 +144,48 @@ class ConversationalSearchService(ChatService):
             sources=[]
         )
     
+    # PRIVATE
+
+    def __build_requests(
+            self, 
+            user_id, 
+            session_id,
+            attribute_sets:List[AttributeSetDto], 
+            detected_attribute_sets:AttributeField,
+            exchange:str,
+            requests:List[UserRequestDto]) -> List[ProductFilterQuestion]:
+        request_chain_results:List[ProductFilterQuestion] = [] # (attribute-set,ai-question)
+        for product in detected_attribute_sets.products:
+            # Get the filter list of the product
+            attribute_set = next((attr for attr in attribute_sets if attr.name == product), None)
+            if attribute_set:
+                filters:List[AttributeFilterDto] = self.attribute_set_db_service.get_filters(attribute_set.attribute_set_id)
+                result = self.filters_extraction_agent.invoke(exchange=exchange, filters=filters)
+                request_chain_results.append(ProductFilterQuestion(
+                    attribute_set_name=product, 
+                    ai_question=result.ai_question
+                ))
+            # Find request corresponding to the attribute_set (or create it)
+            corresponding_request = next((req for req in requests if req.attribute_id == attribute_set.attribute_set_id), None)
+            if not corresponding_request:
+                corresponding_request = self.request_db_service.create_request(
+                    user_id=user_id,
+                    session_id=session_id,
+                    attribute_id=attribute_set.attribute_set_id,
+                    data={}
+                )
+                requests.append(corresponding_request)                
+            # Update the request with detected values
+            if attribute_set:
+                for filter in filters:
+                    result_dump = result.model_dump()
+                    if filter.type == "price":
+                        detected_filter_value = { 
+                            "min_price": result_dump.get("price")["min_price"],
+                            "max_price": result_dump.get("price")["max_price"]
+                        }
+                    else:
+                        detected_filter_value = result_dump.get(filter.code)
+                    if detected_filter_value:
+                        corresponding_request.data[filter.code] = detected_filter_value
+        return request_chain_results
