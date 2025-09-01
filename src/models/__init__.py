@@ -30,6 +30,7 @@ from .attribute_filter_value import AttributeFilterValue
 
 from .user_request_dto import UserRequestDto
 from .product_filter_detection_result import ProductFilterDetectionResult
+from .search_context import SearchContext
 
 __all__ = [
     "SearchServiceResult",
@@ -61,5 +62,6 @@ __all__ = [
     "AttributeSetDto",
     "AttributeSetApiResponse",
     "UserRequestDto",
-    "ProductFilterDetectionResult"
+    "ProductFilterDetectionResult",
+    "SearchContext"
 ]
