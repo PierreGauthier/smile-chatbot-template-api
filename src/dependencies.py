@@ -2,6 +2,7 @@ from fastapi import Depends
 
 from config import Settings, get_settings
 from ai import LlmProvider, EmbeddingsProvider, OpenAIEmbeddingsProvider, VectorStoreProvider
+from api_clients import ConversationalSearchClient
 from infrastructure.gcp.services import GoogleCloudStorageDocumentService, FirestoreHistoryService
 from infrastructure.gcp.ai import VertexLlmProvider, VertexVectorStoreProvider
 from infrastructure.azure.services import (
@@ -17,6 +18,7 @@ from services import (
     DatabaseAttributesSetupService, 
     DatabaseRequestService
 )
+from infrastructure.search.elastic_suite import ElasticSuiteSearchClient, ElasticSuiteSearchResponseBuilder
 
 def inject_embedding_provider(settings: Settings = Depends(get_settings)) -> EmbeddingsProvider:
     return OpenAIEmbeddingsProvider(settings)
@@ -83,3 +85,6 @@ def inject_vector_store_provider(settings: Settings = Depends(get_settings)) -> 
             )
         case _:
             raise ValueError(f"Unsupported vector store service provider: {provider}")
+
+def inject_conversational_search_api(settings: Settings = Depends(get_settings)) -> ConversationalSearchClient:
+    return ElasticSuiteSearchClient(settings, ElasticSuiteSearchResponseBuilder())

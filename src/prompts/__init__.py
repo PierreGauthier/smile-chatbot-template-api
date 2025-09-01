@@ -5,7 +5,8 @@ from .summary_prompt_provider import SummaryPromptProvider
 from .intent_extraction_prompt_provider import IntentExtractionPromptProvider
 from .attribute_set_extraction_prompt_provider import AttributeSetExtractionPromptProvider
 from .filters_extraction_prompt_provider import FiltersExtractionPromptProvider
-from .elastic_suite_question_summarizer_prompt_provider import ElasticSuiteQuestionSummarizerPromptProvider
+from .question_summarizer_prompt_provider import QuestionSummarizerPromptProvider
+from .empty_search_response_builder_prompt_provider import EmptySearchResponseBuilderPromptProvider
 
 __all__ = [
     "PromptProvider",
@@ -15,5 +16,6 @@ __all__ = [
     "IntentExtractionPromptProvider",
     "AttributeSetExtractionPromptProvider",
     "FiltersExtractionPromptProvider",
-    "ElasticSuiteQuestionSummarizerPromptProvider"
+    "QuestionSummarizerPromptProvider",
+    "EmptySearchResponseBuilderPromptProvider"
 ]

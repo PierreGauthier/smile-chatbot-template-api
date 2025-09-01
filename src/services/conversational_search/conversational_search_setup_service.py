@@ -34,6 +34,3 @@ class ConversationalSearchSetupService:
         return SetupServiceResult(
             message=f"{len(elastic_suite_result.attributes)} attributes received"
         )
-    
-
-

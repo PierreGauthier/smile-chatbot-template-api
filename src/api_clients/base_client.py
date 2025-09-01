@@ -1,6 +1,7 @@
 import uuid
 import requests
 from base64 import b64encode
+from abc import ABC
 
 CORRELATION_ID_HEADER_KEY = "X-CorrelationId"
 AUTHORIZATION_HEADER_KEY = "Authorization"
@@ -8,12 +9,15 @@ AUTHORIZATION_BASIC_TOKEN_PREFIX = "Basic"
 CONTENT_TYPE_KEY = "Content-Type"
 CONTENT_TYPE_JSON_VALUE = "application/json"
 
-class BaseClient():
+class BaseClient(ABC):
     def __init__(self, base_url: str):
         self.api_base_url = base_url
 
     def get(self, url:str, headers:dict):
         return requests.get(url, headers=headers)
+    
+    def post(self, url:str, headers:dict, json_data:dict = {}):
+        return requests.post(url=url, headers=headers, json=json_data)
 
     def create_x_correlation_id(self):
         key = CORRELATION_ID_HEADER_KEY

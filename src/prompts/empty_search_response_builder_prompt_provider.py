@@ -7,10 +7,9 @@ from langchain import hub
 
 from prompts import PromptProvider
 
-class IntentExtractionPromptProvider(PromptProvider):
-
+class EmptySearchResponseBuilderPromptProvider(PromptProvider):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
-        self.prompt_name = settings.langsmith_intent_extraction_prompt_name
+        self.prompt_name = settings.langsmith_empty_search_response_builder_prompt_name
 
     def get_prompt(self) -> ChatPromptTemplate:
         prompt = hub.pull(self.prompt_name)

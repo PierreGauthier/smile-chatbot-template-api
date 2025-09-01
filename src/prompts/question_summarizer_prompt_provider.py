@@ -9,7 +9,7 @@ from langchain import hub
 from prompts import PromptProvider
 from models import ChatMessage
 
-class ElasticSuiteQuestionSummarizerPromptProvider(PromptProvider):
+class QuestionSummarizerPromptProvider(PromptProvider):
 
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
         self.prompt_name = settings.langsmith_elastic_suite_question_summarizer_prompt_name

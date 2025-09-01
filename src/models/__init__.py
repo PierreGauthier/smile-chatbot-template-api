@@ -11,9 +11,10 @@ from .message_data import MessageData
 from .chat_message import ChatMessage
 from .search_scoring_profile import SearchScoringProfile
 from .index_filter_result import IndexFilterResult
+from .search_response_item import SearchResponseItem
+from .search_service_result import SearchServiceResult
 
 from .api_response import ApiResponse
-from .search_response_item import SearchResponseItem
 from .search_api_response import SearchApiResponse
 from .attribute_set_definition import AttributeSetDefinition
 from .attribute_filter_definition import AttributeFilterDefinition
@@ -28,9 +29,10 @@ from .attribute_set_value import AttributeSetValue
 from .attribute_filter_value import AttributeFilterValue
 
 from .user_request_dto import UserRequestDto
-from .product_filter_question import ProductFilterQuestion
+from .product_filter_detection_result import ProductFilterDetectionResult
 
 __all__ = [
+    "SearchServiceResult",
     "SearchResponseItem",
     "SearchApiResponse",
     "AttributeFilterValue",
@@ -59,5 +61,5 @@ __all__ = [
     "AttributeSetDto",
     "AttributeSetApiResponse",
     "UserRequestDto",
-    "ProductFilterQuestion"
+    "ProductFilterDetectionResult"
 ]
