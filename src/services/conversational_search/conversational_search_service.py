@@ -50,6 +50,13 @@ class ConversationalSearchService(SearchService):
 
         # (4) Get attributes from DB and detect from user message
         context = self.attribute_set_manager.detect(context)
+        if not context.detected_attribute_sets.products:
+            return SearchServiceResult(
+                user_id=user_id,
+                session_id=context.session_id,
+                answer="Sorry, we don't sell this product here.", # -> TODO: response agent
+                products=[]
+            )
 
         # (5) Build a request for each product that the user is searching for
         context = self.request_manager.build_requests(context)
@@ -57,11 +64,11 @@ class ConversationalSearchService(SearchService):
         # (6) Upsert the requests
         self.request_manager.upsert_requests(context)
 
-        # (7) If no product or filter detected -> TODO: separate attribute-set and filters
+        # (7) If no product or filter detected -> TODO: response agent
         if not context.request_chain_results:
             return SearchServiceResult(
                 user_id=user_id,
-                session_id=session_id,
+                session_id=context.session_id,
                 answer="Sorry, I couldn't find the product(s) you are searching for.",
                 products=[]
             )

@@ -13,4 +13,3 @@ class SearchApiResponse(ApiResponse):
         super().__init__(code=code, message=message, query=query)
         self.total_count = total_count
         self.items = items
-                

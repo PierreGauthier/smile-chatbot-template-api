@@ -18,7 +18,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         self.settings = settings
         self.search_response_builder = search_response_builder
 
-    def search_products(self, attribute_set:str, filters:List[AttributeFilterValue], page_size:int = 5) -> SearchApiResponse:
+    def search_products(self, attribute_set:str, filters:List[AttributeFilterValue], page_size:int = 10) -> SearchApiResponse:
         url = self.__insert_credentials(url=self.api_base_url, credentials=self.settings.elastic_suite_search_api_credentials)
         # query =
         (x_correlation_id_key, x_correlation_id_value) = self.create_x_correlation_id()

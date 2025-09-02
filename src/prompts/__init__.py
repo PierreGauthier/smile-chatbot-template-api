@@ -7,6 +7,7 @@ from .attribute_set_extraction_prompt_provider import AttributeSetExtractionProm
 from .filters_extraction_prompt_provider import FiltersExtractionPromptProvider
 from .question_summarizer_prompt_provider import QuestionSummarizerPromptProvider
 from .empty_search_response_builder_prompt_provider import EmptySearchResponseBuilderPromptProvider
+from .not_empty_search_response_builder_prompt_provider import NotEmptySearchResponseBuilderPromptProvider
 
 __all__ = [
     "PromptProvider",
@@ -17,5 +18,6 @@ __all__ = [
     "AttributeSetExtractionPromptProvider",
     "FiltersExtractionPromptProvider",
     "QuestionSummarizerPromptProvider",
-    "EmptySearchResponseBuilderPromptProvider"
+    "EmptySearchResponseBuilderPromptProvider",
+    "NotEmptySearchResponseBuilderPromptProvider"
 ]

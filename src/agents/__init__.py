@@ -5,7 +5,7 @@ from .intent_extraction_agent import IntentExtractionAgent
 from .attribute_set_extraction_agent import AttributeSetExtractionAgent
 from .filter_extraction_agent import FilterExtractionAgent
 from .questions_summarizer_agent import QuestionsSummarizerAgent
-from .empty_search_response_builder_agent import EmptySearchResponseBuilderAgent
+from .search_response_builder_agent import SearchResponseBuilderAgent
 
 __all__ = [
     "SummarizeExchangeAgent",
@@ -15,5 +15,5 @@ __all__ = [
     "AttributeSetExtractionAgent",
     "FilterExtractionAgent",
     "QuestionsSummarizerAgent",
-    "EmptySearchResponseBuilderAgent"
+    "SearchResponseBuilderAgent"
 ]
