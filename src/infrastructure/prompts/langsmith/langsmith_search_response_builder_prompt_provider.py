@@ -5,9 +5,10 @@ from config import Settings, get_settings
 from langchain_core.prompts import ChatPromptTemplate
 from langchain import hub
 
-from prompts import PromptProvider
+from prompts import StaticPromptProvider
 
-class NotEmptySearchResponseBuilderPromptProvider(PromptProvider):
+class LangsmithSearchResponseBuilderPromptProvider(StaticPromptProvider):
+    
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
         self.prompt_name = settings.langsmith_not_empty_search_response_builder_prompt_name
 

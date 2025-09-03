@@ -5,15 +5,15 @@ from config import Settings
 from config import Settings, get_settings
 from ai import LlmProvider
 from models import ChatMessage
-from prompts import PromptProvider, SummaryPromptProvider
-from dependencies import inject_llm_provider
+from prompts import StaticPromptProvider
+from dependencies import inject_llm_provider, inject_exchange_summarizer_prompt
 
-class SummarizeExchangeAgent:
+class ExchangeSummarizerAgent:
 
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
             llm_agent: Annotated[LlmProvider, Depends(inject_llm_provider)],
-            prompt_provider: Annotated[PromptProvider, Depends(SummaryPromptProvider)]):
+            prompt_provider: Annotated[StaticPromptProvider, Depends(inject_exchange_summarizer_prompt)]):
         self.settings = settings
         self.prompt_provider = prompt_provider
         self.llm_agent = llm_agent

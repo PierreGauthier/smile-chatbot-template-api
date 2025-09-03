@@ -2,14 +2,14 @@ from typing import Annotated, List
 from fastapi import Depends
 
 from models import SearchContext, ChatMessage
-from agents import SummarizeExchangeAgent, BasicPydanticChain
+from agents import ExchangeSummarizerAgent, BasicPydanticChain
 from services import DatabaseHistoryService
 from dependencies import inject_history_service
 
 class ConversationManager:
     def __init__(
             self,
-            summarize_exchange_agent : Annotated[BasicPydanticChain, Depends(SummarizeExchangeAgent)],
+            summarize_exchange_agent : Annotated[BasicPydanticChain, Depends(ExchangeSummarizerAgent)],
             history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service)]):
         self.history_db_service = history_db_service
         self.summarize_exchange_agent = summarize_exchange_agent

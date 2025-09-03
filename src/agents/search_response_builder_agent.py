@@ -6,16 +6,16 @@ from langchain_core.prompts import ChatPromptTemplate
 from config import Settings, get_settings
 from ai import LlmProvider
 from models import UserRequestDto, SearchResponseItem
-from prompts import PromptProvider, EmptySearchResponseBuilderPromptProvider, NotEmptySearchResponseBuilderPromptProvider
-from dependencies import inject_llm_provider
+from prompts import StaticPromptProvider
+from dependencies import inject_llm_provider, inject_search_response_prompt, inject_empty_search_response_prompt
 
 class SearchResponseBuilderAgent:
 
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
             llm_agent: Annotated[LlmProvider, Depends(inject_llm_provider)],
-            empty_search_prompt_provider: Annotated[PromptProvider, Depends(EmptySearchResponseBuilderPromptProvider)],
-            not_empty_search_prompt_provider: Annotated[PromptProvider, Depends(NotEmptySearchResponseBuilderPromptProvider)]):
+            empty_search_prompt_provider: Annotated[StaticPromptProvider, Depends(inject_empty_search_response_prompt)],
+            not_empty_search_prompt_provider: Annotated[StaticPromptProvider, Depends(inject_search_response_prompt)]):
         self.settings = settings
         self.empty_search_prompt_provider = empty_search_prompt_provider
         self.not_empty_search_prompt_provider = not_empty_search_prompt_provider

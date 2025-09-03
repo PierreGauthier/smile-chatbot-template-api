@@ -5,7 +5,7 @@ from config import Settings, get_settings
 from langchain_core.globals import set_verbose, set_debug
 
 from agents import (
-    SummarizeExchangeAgent,
+    ExchangeSummarizerAgent,
     RagAgent,
     BasicPydanticChain,
     IntentExtractionAgent
@@ -28,7 +28,7 @@ class DefaultRagChatService(ChatService):
             rag_agent: Annotated[RagAgent, Depends(RagAgent)],
             document_db_service: Annotated[DatabaseDocumentService, Depends(inject_document_service)],
             intent_extraction_agent: Annotated[BasicPydanticChain, Depends(IntentExtractionAgent)],
-            summarize_exchange_agent : Annotated[BasicPydanticChain, Depends(SummarizeExchangeAgent)],
+            summarize_exchange_agent : Annotated[BasicPydanticChain, Depends(ExchangeSummarizerAgent)],
             history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service)]):
         self.settings = settings
         self.intent_extraction_agent = intent_extraction_agent

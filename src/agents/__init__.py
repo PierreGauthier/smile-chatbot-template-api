@@ -1,4 +1,4 @@
-from .summarize_exchange_agent import SummarizeExchangeAgent
+from .exchange_summarizer_agent import ExchangeSummarizerAgent
 from .rag_agent import RagAgent
 from .basic_pydantic_chain import BasicPydanticChain
 from .intent_extraction_agent import IntentExtractionAgent
@@ -8,7 +8,7 @@ from .questions_summarizer_agent import QuestionsSummarizerAgent
 from .search_response_builder_agent import SearchResponseBuilderAgent
 
 __all__ = [
-    "SummarizeExchangeAgent",
+    "ExchangeSummarizerAgent",
     "RagAgent",
     "BasicPydanticChain",
     "IntentExtractionAgent",

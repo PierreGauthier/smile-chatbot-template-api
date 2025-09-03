@@ -1,4 +1,5 @@
 from fastapi import Depends
+from langchain_core.prompts import ChatPromptTemplate
 
 from config import Settings, get_settings
 from ai import LlmProvider, EmbeddingsProvider, OpenAIEmbeddingsProvider, VectorStoreProvider
@@ -19,6 +20,16 @@ from services import (
     DatabaseRequestService
 )
 from infrastructure.search.elastic_suite import ElasticSuiteSearchClient, ElasticSuiteSearchResponseBuilder
+from infrastructure.prompts.langsmith import (
+    LangsmithAttributeSetExtractionPromptProvider,
+    LangsmithFiltersExtractionPromptProvider,
+    LangsmithIntentExtractionPromptProvider,
+    LangsmithQuestionSummarizerPromptProvider,
+    LangsmithRagMainPromptProvider,
+    LangsmithSearchResponseBuilderPromptProvider,
+    LangsmithEmptySearchResponseBuilderPromptProvider,
+    LangsmithExchangeSummarizerPromptProvider
+) 
 
 def inject_embedding_provider(settings: Settings = Depends(get_settings)) -> EmbeddingsProvider:
     return OpenAIEmbeddingsProvider(settings)
@@ -88,3 +99,29 @@ def inject_vector_store_provider(settings: Settings = Depends(get_settings)) -> 
 
 def inject_conversational_search_api(settings: Settings = Depends(get_settings)) -> ConversationalSearchClient:
     return ElasticSuiteSearchClient(settings, ElasticSuiteSearchResponseBuilder())
+
+# PROMPTS
+
+def inject_attribute_set_extraction_prompt(settings: Settings = Depends(get_settings)) -> ChatPromptTemplate:
+    return LangsmithAttributeSetExtractionPromptProvider(settings)
+
+def inject_filters_extraction_prompt(settings: Settings = Depends(get_settings)) -> ChatPromptTemplate:
+    return LangsmithFiltersExtractionPromptProvider(settings)
+
+def inject_intent_extraction_prompt(settings: Settings = Depends(get_settings)) -> ChatPromptTemplate:
+    return LangsmithIntentExtractionPromptProvider(settings)
+
+def inject_question_summarizer_prompt(settings: Settings = Depends(get_settings)) -> ChatPromptTemplate:
+    return LangsmithQuestionSummarizerPromptProvider(settings)
+
+def inject_rag_main_prompt(settings: Settings = Depends(get_settings)) -> ChatPromptTemplate:
+    return LangsmithRagMainPromptProvider(settings)
+
+def inject_search_response_prompt(settings: Settings = Depends(get_settings)) -> ChatPromptTemplate:
+    return LangsmithSearchResponseBuilderPromptProvider(settings)
+
+def inject_empty_search_response_prompt(settings: Settings = Depends(get_settings)) -> ChatPromptTemplate:
+    return LangsmithEmptySearchResponseBuilderPromptProvider(settings)
+
+def inject_exchange_summarizer_prompt(settings: Settings = Depends(get_settings)) -> ChatPromptTemplate:
+    return LangsmithExchangeSummarizerPromptProvider(settings)

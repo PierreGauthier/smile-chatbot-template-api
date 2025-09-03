@@ -7,9 +7,14 @@ from langchain_core.messages import AIMessage
 from config import Settings, get_settings
 from models import RagChainResult, DocumentIdentifier, IndexFilterResult
 from ai import LlmProvider, VectorStoreProvider
-from prompts import PromptProvider, RagMainPromptProvider
+from prompts import RagMainPromptProvider
 from services import DatabaseDocumentService
-from dependencies import inject_vector_store_provider, inject_llm_provider, inject_document_service
+from dependencies import (
+    inject_vector_store_provider, 
+    inject_llm_provider, 
+    inject_document_service, 
+    inject_rag_main_prompt
+)
 
 # import logging
 # logging.basicConfig(level=logging.DEBUG)
@@ -20,7 +25,7 @@ class RagAgent:
             settings: Annotated[Settings, Depends(get_settings)],
             llm_agent: Annotated[LlmProvider, Depends(inject_llm_provider)],
             vector_store_provider: Annotated[VectorStoreProvider, Depends(inject_vector_store_provider)],
-            rag_prompt_provider: Annotated[PromptProvider, Depends(RagMainPromptProvider)],
+            rag_prompt_provider: Annotated[RagMainPromptProvider, Depends(inject_rag_main_prompt)],
             document_service: Annotated[DatabaseDocumentService, Depends(inject_document_service)]):
         self.settings = settings
         self.doc_ids = []

@@ -5,15 +5,15 @@ from config import Settings
 from config import Settings, get_settings
 from ai import LlmProvider
 from models import ChatMessage, ProductFilterDetectionResult
-from prompts import PromptProvider, QuestionSummarizerPromptProvider
-from dependencies import inject_llm_provider
+from prompts import QuestionSummarizerPromptProvider
+from dependencies import inject_llm_provider, inject_question_summarizer_prompt
 
 class QuestionsSummarizerAgent:
 
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
             llm_agent: Annotated[LlmProvider, Depends(inject_llm_provider)],
-            prompt_provider: Annotated[PromptProvider, Depends(QuestionSummarizerPromptProvider)]):
+            prompt_provider: Annotated[QuestionSummarizerPromptProvider, Depends(inject_question_summarizer_prompt)]):
         self.settings = settings
         self.prompt_provider = prompt_provider
         self.llm_agent = llm_agent
