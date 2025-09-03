@@ -42,7 +42,7 @@ class SearchManager:
             
             else:
                 not_empty_search_answer = self.search_response_agent.invoke_not_empty(context.requests, items, total_count)
-                context.ai_answer = not_empty_search_answer,
+                context.ai_answer = not_empty_search_answer
                 context.search_result = items
 
         else:
