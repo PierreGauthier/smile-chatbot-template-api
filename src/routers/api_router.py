@@ -26,6 +26,11 @@ from services import (
     ConversationalSearchService
 )
 
+import logging, os
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+logger = logging.getLogger("app.api")
+logger.setLevel(LOG_LEVEL)
+
 router = APIRouter(prefix="/api", tags=["augmented-chat"])
 
 SETTINGS = BotFrameworkAdapterSettings("", "")
@@ -96,9 +101,15 @@ async def chat(
     service: Annotated[ConversationalSearchService, Depends(ConversationalSearchService)],
     chat_request: ApiChatRequest = Body(...)
 ):
+    logger.info("POST /api/search | session_id=%s | user_id=%s | message_len=%s",
+                chat_request.session_id, chat_request.user_id,
+                len(chat_request.message) if chat_request and chat_request.message else 0)
+    
     response: ChatServiceResult = service.invoke(
         input_message = chat_request.message, 
         session_id=chat_request.session_id,
         user_id=chat_request.user_id
     )
+
+    logger.info("POST /api/search done")
     return response

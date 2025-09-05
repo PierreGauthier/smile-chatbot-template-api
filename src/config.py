@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     project_name:str
     environment: str = "local"
     debug: bool = False
+    log_level: str = "INFO"
 
     llm_provider:str
     
@@ -43,6 +44,8 @@ class Settings(BaseSettings):
     azure_ad_tenant_id: Optional[str] = None
 
     applicationinsights_connection_string: Optional[str] = None
+    pythonunbuffered:int
+    
     cors_allowed_origins: Optional[str] = "*"
     
     azure_search_endpoint: str

@@ -1,3 +1,4 @@
+import logging, sys
 from fastapi import Depends
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -29,7 +30,20 @@ from infrastructure.prompts.langsmith import (
     LangsmithSearchResponseBuilderPromptProvider,
     LangsmithEmptySearchResponseBuilderPromptProvider,
     LangsmithExchangeSummarizerPromptProvider
-) 
+)
+from logger import ContextLogger
+
+# settings = get_settings()
+# logger = logging.getLogger(__name__)
+
+
+def inject_logger(settings: Settings = Depends(get_settings)) -> ContextLogger:
+    logger = logging.getLogger("app")
+    logger.setLevel(logging.INFO if settings.log_level == "INFO" else logging.DEBUG)
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+    logger.addHandler(handler)
+    return ContextLogger(logger, {"component": "ConversationManager"})
 
 def inject_embedding_provider(settings: Settings = Depends(get_settings)) -> EmbeddingsProvider:
     return OpenAIEmbeddingsProvider(settings)
