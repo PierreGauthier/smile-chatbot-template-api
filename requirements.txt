@@ -12,6 +12,7 @@ azure-identity==1.15.0
 azure-keyvault-secrets==4.8.0
 python-jose==3.3.0
 azure-appconfiguration-provider==1.1.0
+#opencensus-ext-azure
 pydantic-settings
 pydantic
 pydub==0.25.1

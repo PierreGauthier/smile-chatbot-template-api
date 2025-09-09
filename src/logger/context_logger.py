@@ -8,31 +8,30 @@ class ContextLogger(logging.LoggerAdapter):
     and automatically merges context into `extra` so it lands in App Insights
     (customDimensions) and can also be prefixed into the message if desired.
     """
+    
     def process(self, msg, kwargs):
-        # Pull call-time context
+        # Extract call-time context
         user_id = kwargs.pop("user_id", None)
         session_id = kwargs.pop("session_id", None)
 
-        # Merge any existing extra with adapter's extra
-        call_extra = kwargs.pop("extra", {}) or {}
-        merged_extra = {**(self.extra or {}), **call_extra}
-        if user_id is not None:
+        # Merge extras (adapter + call + context)
+        merged_extra = {**(self.extra or {}), **(kwargs.pop("extra", {}) or {})}
+        if user_id: 
             merged_extra["user_id"] = user_id
-        if session_id is not None:
+        if session_id: 
             merged_extra["session_id"] = session_id
-
-        # Put back as the official logging 'extra'
         kwargs["extra"] = merged_extra
 
-        # (Optional) also prefix the message for nicer console output
-        prefix_bits = []
-        if "component" in merged_extra: prefix_bits.append(f"component={merged_extra['component']}")
-        if user_id is not None: prefix_bits.append(f"user_id={user_id}")
-        if session_id is not None: prefix_bits.append(f"session_id={session_id}")
-        prefix = " ".join(prefix_bits)
+        # Build prefix for console (optional)
+        prefix = " ".join(
+            f"{k}={merged_extra[k]}"
+            for k in ("component", "user_id", "session_id")
+            if k in merged_extra
+        )
         if prefix:
             msg = f"{msg} | {prefix}"
-
+        if self.logger.level == logging.DEBUG:
+            print(f"[DEBUG]: msg='{msg}', extra={merged_extra}")
         return msg, kwargs
 
     def debug_context(self, message:str, context:SearchContext):

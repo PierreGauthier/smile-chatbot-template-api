@@ -5,16 +5,19 @@ from fields import AttributeField
 from models import SearchContext, AttributeSetDto, ElasticSuiteAttributeSet
 from services import DatabaseAttributesSetupService
 from agents import AttributeSetExtractionAgent
-from dependencies import inject_attribute_database_service
+from dependencies import inject_attribute_database_service, inject_logger
+from logger import ContextLogger
 
 class AttributeDetectionManager:
 
     def __init__(
             self,
             attribute_set_db_service : Annotated[DatabaseAttributesSetupService, Depends(inject_attribute_database_service)],
-            attribute_set_extraction_agent: Annotated[AttributeSetExtractionAgent, Depends(AttributeSetExtractionAgent)]):
+            attribute_set_extraction_agent: Annotated[AttributeSetExtractionAgent, Depends(AttributeSetExtractionAgent)],
+            logger: Annotated[ContextLogger, Depends(inject_logger)]):
         self.attribute_set_db_service = attribute_set_db_service
         self.attribute_set_extraction_agent = attribute_set_extraction_agent
+        self.logger = logger
 
     def detect(self, context:SearchContext) -> SearchContext:
         # Get attribute set list
@@ -27,7 +30,18 @@ class AttributeDetectionManager:
             attribute_set=[ElasticSuiteAttributeSet(name=attr.name, description=attr.description) for attr in attribute_sets],
             product_counter_example="bicycle" # TODO
         )
-        print(f"[{detected_attribute_sets.is_intent}]: {detected_attribute_sets.chain_of_thoughts}")
+        
+        self.logger.debug_context(
+            message=f"[{detected_attribute_sets.is_intent}]: {detected_attribute_sets.chain_of_thoughts}",
+            context=context
+        )
+        if detected_attribute_sets.is_intent:
+            products = ", ".join(detected_attribute_sets.products)
+            self.logger.debug_context(
+                message=f"Attribute sets: {products}",
+                context=context
+            )
+        
         context.detected_attribute_sets = detected_attribute_sets
 
         return context

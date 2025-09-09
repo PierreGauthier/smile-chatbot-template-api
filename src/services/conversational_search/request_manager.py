@@ -4,7 +4,8 @@ from fastapi import Depends
 from models import SearchContext, UserRequestDto, ProductFilterDetectionResult, AttributeFilterDto, AttributeFilterValue
 from services import DatabaseRequestService, DatabaseAttributesSetupService
 from agents import FilterExtractionAgent
-from dependencies import inject_request_service, inject_attribute_database_service
+from dependencies import inject_request_service, inject_attribute_database_service, inject_logger
+from logger import ContextLogger
 
 class RequestManager:
 
@@ -12,10 +13,12 @@ class RequestManager:
             self, 
             attribute_set_db_service : Annotated[DatabaseAttributesSetupService, Depends(inject_attribute_database_service)],
             filters_extraction_agent: Annotated[FilterExtractionAgent, Depends(FilterExtractionAgent)],
-            request_db_service: Annotated[DatabaseRequestService, Depends(inject_request_service)]):
+            request_db_service: Annotated[DatabaseRequestService, Depends(inject_request_service)],
+            logger: Annotated[ContextLogger, Depends(inject_logger)]):
         self.request_db_service = request_db_service
         self.attribute_set_db_service = attribute_set_db_service
         self.filters_extraction_agent = filters_extraction_agent
+        self.logger = logger
 
     def get_requests(self, context:SearchContext) -> SearchContext:
         requests:List[UserRequestDto] = self.request_db_service.get_requests(
@@ -23,11 +26,19 @@ class RequestManager:
             session_id=context.session_id
         ) if not context.is_first_call else []
         context.requests = requests
+        self.logger.debug_context(
+            message=f"Got {len(requests)} requests." if not context.is_first_call else "No requests yet.",
+            context=context
+        )
         return context
     
     def upsert_requests(self, context:SearchContext):
         for request in context.requests:
             self.request_db_service.update_request(request)
+        self.logger.debug_context(
+            message=f"Upsert {len(context.requests)} requests.",
+            context=context
+        )
     
     def build_requests(self, context:SearchContext) -> SearchContext:
         request_chain_results:List[ProductFilterDetectionResult] = [] # (attribute-set,ai-question)
@@ -75,6 +86,12 @@ class RequestManager:
                     ))
                     if detected_filter_value:
                         corresponding_request.data[filter.code] = detected_filter_value
+
+                filters_log = ",  ".join([f"{f.code}:{f.value}" for f in detected_result.detected_filters])
+                self.logger.debug_context(
+                    message=f"Filters for attribute-set '{product}': [{filters_log}]",
+                    context=context
+                )
         
         context.request_chain_results = request_chain_results
         return context

@@ -48,7 +48,7 @@ class SearchManager:
         else:
             # Summarize the set of questions
             summarized_question = self.summarize_question_agent.invoke(
-                last_exchange=context.message_thread[:4],
+                last_exchange=context.message_thread,
                 questions=context.request_chain_results
             )
             context.ai_answer = summarized_question

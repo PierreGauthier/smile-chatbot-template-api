@@ -15,8 +15,8 @@ class ConversationManager:
             logger: Annotated[ContextLogger, Depends(inject_logger)]):
         self.history_db_service = history_db_service
         self.summarize_exchange_agent = summarize_exchange_agent
-        self.logger = logger
-
+        self.logger = logger 
+        
     def insert_or_create_thread(self, context:SearchContext) -> SearchContext:
         # Insert user message and get the message history
         current_session_id, message_thread = self.__get_history_thread(context)
@@ -37,7 +37,7 @@ class ConversationManager:
             content=context.ai_answer
         ))
         self.logger.debug_context(f"New AI message inserted: {context.ai_answer}", context)
-    
+            
     # PRIVATE 
 
     def __summarize_exchange(self, context:SearchContext):
