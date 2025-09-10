@@ -1,5 +1,6 @@
 from typing import Annotated, List
 from fastapi import Depends
+from functools import partial
 
 from models import SearchContext, UserRequestDto, ProductFilterDetectionResult, AttributeFilterDto, AttributeFilterValue
 from services import DatabaseRequestService, DatabaseAttributesSetupService
@@ -14,7 +15,7 @@ class RequestManager:
             attribute_set_db_service : Annotated[DatabaseAttributesSetupService, Depends(inject_attribute_database_service)],
             filters_extraction_agent: Annotated[FilterExtractionAgent, Depends(FilterExtractionAgent)],
             request_db_service: Annotated[DatabaseRequestService, Depends(inject_request_service)],
-            logger: Annotated[ContextLogger, Depends(inject_logger)]):
+            logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="RequestManager"))]):
         self.request_db_service = request_db_service
         self.attribute_set_db_service = attribute_set_db_service
         self.filters_extraction_agent = filters_extraction_agent

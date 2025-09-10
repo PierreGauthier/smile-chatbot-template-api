@@ -37,10 +37,9 @@ settings = get_settings()
 
 logger = logging.getLogger("app")
 logger.setLevel(logging.INFO if settings.log_level == "INFO" else logging.DEBUG)
-object_logger = ContextLogger(logger, {"component": "C-Search"})
 
-def inject_logger() -> ContextLogger:
-    return object_logger
+def inject_logger(module_name:str) -> ContextLogger:
+    return ContextLogger(logger, {"component": module_name})
 
 def inject_embedding_provider(settings: Settings = Depends(get_settings)) -> EmbeddingsProvider:
     return OpenAIEmbeddingsProvider(settings)

@@ -1,5 +1,6 @@
 from typing import Annotated, List
 from fastapi import Depends
+from functools import partial
 
 from models import SearchContext, ChatMessage
 from agents import ExchangeSummarizerAgent, BasicPydanticChain
@@ -12,7 +13,7 @@ class ConversationManager:
             self,
             summarize_exchange_agent : Annotated[BasicPydanticChain, Depends(ExchangeSummarizerAgent)],
             history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service)],
-            logger: Annotated[ContextLogger, Depends(inject_logger)]):
+            logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="ConversationManager"))]):
         self.history_db_service = history_db_service
         self.summarize_exchange_agent = summarize_exchange_agent
         self.logger = logger 
