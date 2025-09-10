@@ -8,7 +8,7 @@ class ContextLogger(logging.LoggerAdapter):
     and automatically merges context into `extra` so it lands in App Insights
     (customDimensions) and can also be prefixed into the message if desired.
     """
-    
+
     def process(self, msg, kwargs):
         # Extract call-time context
         user_id = kwargs.pop("user_id", None)
@@ -36,6 +36,13 @@ class ContextLogger(logging.LoggerAdapter):
 
     def debug_context(self, message:str, context:SearchContext):
         self.debug(
+            message,
+            user_id=context.user_id,
+            session_id=context.session_id
+        )
+
+    def info_context(self, message:str, context:SearchContext):
+        self.info(
             message,
             user_id=context.user_id,
             session_id=context.session_id

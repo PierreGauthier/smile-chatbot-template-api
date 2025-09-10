@@ -12,6 +12,8 @@ from services import (
     SearchService, 
 )
 from models import SearchContext, SearchServiceResult
+from logger import ContextLogger
+from dependencies import inject_logger
 
 class ConversationalSearchService(SearchService):
     def __init__(
@@ -20,19 +22,21 @@ class ConversationalSearchService(SearchService):
             conversation_manager:Annotated[ConversationManager, Depends(ConversationManager)],
             request_manager:Annotated[RequestManager, Depends(RequestManager)],
             attribute_set_manager:Annotated[AttributeDetectionManager, Depends(AttributeDetectionManager)],
-            search_manager:Annotated[SearchManager, Depends(SearchManager)]):
+            search_manager:Annotated[SearchManager, Depends(SearchManager)],
+            logger: Annotated[ContextLogger, Depends(inject_logger)]):
         self.settings = settings
         self.conversation_manager = conversation_manager
         self.request_manager = request_manager
         self.attribute_set_manager = attribute_set_manager
         self.search_manager = search_manager
+        self.logger = logger
 
         # Set the verbosity level based on the DEBUG environment variable
         set_verbose(settings.debug)
         set_debug(settings.debug)
 
     def invoke(self, input_message: str, user_id: str, session_id: str = None) -> SearchServiceResult:
-
+        
         context = SearchContext(
             input_message=input_message, 
             user_id=user_id, 
@@ -78,6 +82,8 @@ class ConversationalSearchService(SearchService):
         
         # (9) Insert the AI message in the DB
         self.conversation_manager.store_ai_answer(context)
+
+        self.logger.info_context("Search workflow complete.", context)
 
         return SearchServiceResult(
             user_id=context.user_id,
