@@ -25,13 +25,13 @@ from dependencies import (
 class RagAgent:
     def __init__(self,
             settings: Annotated[Settings, Depends(get_settings)],
-            llm_agent: Annotated[LlmProvider, Depends(inject_llm_provider)],
+            llm_provider: Annotated[LlmProvider, Depends(inject_llm_provider)],
             vector_store_provider: Annotated[VectorStoreProvider, Depends(inject_vector_store_provider)],
             rag_prompt_provider: Annotated[RagMainPromptProvider, Depends(inject_rag_main_prompt)],
             document_service: Annotated[DatabaseDocumentService, Depends(inject_document_service)]):
         self.settings = settings
         self.doc_ids = []
-        self.chat = llm_agent.get_llm()
+        self.chat = llm_provider.get_llm()
         self.rag_prompt_provider = rag_prompt_provider
         self.vector_store_provider = vector_store_provider
         self.document_service = document_service
