@@ -1,11 +1,12 @@
 from typing import Annotated
 from fastapi import Depends
-from config import Settings, get_settings
 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain import hub
 
-from prompts import StaticPromptProvider
+from application.prompts import StaticPromptProvider
+
+from config import Settings, get_settings
 
 class LangsmithSearchResponseBuilderPromptProvider(StaticPromptProvider):
     

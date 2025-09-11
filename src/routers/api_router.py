@@ -18,13 +18,10 @@ from botbuilder.core.integration import aiohttp_error_middleware
 from botbuilder.schema import Activity, ActivityTypes
 
 from routers import DefaultBot
-from models import ApiChatRequest, ChatServiceResult, SetupServiceResult
-from services import (
-    ChatService, 
-    DefaultRagChatService, 
-    ConversationalSearchSetupService, 
-    ConversationalSearchService
-)
+from domain.models import ApiChatRequest, ChatServiceResult, SetupServiceResult
+from domain.services.chatbot import ChatService
+from application.services.rag import DefaultRagChatService
+from application.services.conversational_search import ConversationalSearchSetupService, ConversationalSearchService
 
 router = APIRouter(prefix="/api", tags=["augmented-chat"])
 

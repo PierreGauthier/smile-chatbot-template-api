@@ -1,8 +1,8 @@
 from requests import Response
 from typing import List
 
-from api_clients import ApiResponseBuilder
-from models import SearchApiResponse, ApiResponse, SearchResponseItem
+from domain.api_client import ApiResponseBuilder
+from domain.models import SearchApiResponse, ApiResponse, SearchResponseItem
 
 class ElasticSuiteSearchResponseBuilder(ApiResponseBuilder):
     def __init__(self):
@@ -16,7 +16,7 @@ class ElasticSuiteSearchResponseBuilder(ApiResponseBuilder):
             return SearchApiResponse(response.status_code, message=error_message)
 
     def build_from_api_response(self, response:dict) -> SearchApiResponse:
-        if response:
+        if response and "data" in response:
             product = response["data"]["products"]
             total_count = product["total_count"] 
             items:List[SearchResponseItem] = []
@@ -31,8 +31,8 @@ class ElasticSuiteSearchResponseBuilder(ApiResponseBuilder):
             )
         else:
             return ApiResponse(
-                code=200,
-                message="No attribute set",
+                code=500,
+                message="We encounter a problem during external search.",
                 query=""
             )
         

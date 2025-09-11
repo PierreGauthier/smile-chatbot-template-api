@@ -3,10 +3,12 @@ from typing import Annotated, List
 from fastapi import Depends
 from google.cloud import firestore
 
-from config import Settings, get_settings
-from services import DatabaseHistoryService
-from models import ChatMessage
+from domain.services.database import DatabaseHistoryService
+from domain.models import ChatMessage
+
 from infrastructure.gcp.services import Firestore
+
+from config import Settings, get_settings
 
 class FirestoreHistoryService(DatabaseHistoryService):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):

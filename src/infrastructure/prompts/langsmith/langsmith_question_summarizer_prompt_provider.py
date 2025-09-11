@@ -1,12 +1,14 @@
 from typing import List, Annotated
 from fastapi import Depends
-from config import Settings, get_settings
 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain import hub
 
-from prompts import QuestionSummarizerPromptProvider
-from models import ChatMessage
+from domain.models import ChatMessage
+
+from application.prompts import QuestionSummarizerPromptProvider
+
+from config import Settings, get_settings
 
 class LangsmithQuestionSummarizerPromptProvider(QuestionSummarizerPromptProvider):
 

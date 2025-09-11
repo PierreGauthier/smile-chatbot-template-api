@@ -3,11 +3,12 @@ from typing import Annotated
 from fastapi import Depends
 from google.cloud.exceptions import NotFound
 
-from config import Settings, get_settings
+from domain.models import RagDocument, RagDocumentMetadata
+from domain.services.database import DatabaseDocumentService
 
-from models import RagDocument, RagDocumentMetadata
-from services import DatabaseDocumentService
 from infrastructure.gcp.services import GoogleCloudStorage
+
+from config import Settings, get_settings
 
 class GoogleCloudStorageDocumentService(DatabaseDocumentService):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):

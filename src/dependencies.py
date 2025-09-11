@@ -2,9 +2,16 @@ import logging, sys, os
 from fastapi import Depends
 from langchain_core.prompts import ChatPromptTemplate
 
-from config import Settings, get_settings
-from ai import LlmProvider, EmbeddingsProvider, OpenAIEmbeddingsProvider, VectorStoreProvider
-from api_clients import ConversationalSearchClient
+from domain.logger import ContextLogger
+from domain.ai import LlmProvider, EmbeddingsProvider, VectorStoreProvider
+from domain.api_client import ConversationalSearchClient
+from domain.services.database import (
+    DatabaseHistoryService, 
+    DatabaseDocumentService, 
+    DatabaseAttributesSetupService, 
+    DatabaseRequestService
+)
+
 from infrastructure.gcp.services import GoogleCloudStorageDocumentService, FirestoreHistoryService
 from infrastructure.gcp.ai import VertexLlmProvider, VertexVectorStoreProvider
 from infrastructure.azure.services import (
@@ -14,12 +21,7 @@ from infrastructure.azure.services import (
     CosmosDbRequestService
 )
 from infrastructure.azure.ai import AzureOpenAiLlmProvider, AzureSearchVectorStoreProvider
-from services import (
-    DatabaseHistoryService, 
-    DatabaseDocumentService, 
-    DatabaseAttributesSetupService, 
-    DatabaseRequestService
-)
+from infrastructure.openai.ai import OpenAIEmbeddingsProvider
 from infrastructure.search.elastic_suite import ElasticSuiteSearchClient, ElasticSuiteSearchResponseBuilder
 from infrastructure.prompts.langsmith import (
     LangsmithAttributeSetExtractionPromptProvider,
@@ -31,7 +33,10 @@ from infrastructure.prompts.langsmith import (
     LangsmithEmptySearchResponseBuilderPromptProvider,
     LangsmithExchangeSummarizerPromptProvider
 )
-from logger import ContextLogger
+from infrastructure.configuration.elastic_suite import ElasticSuiteAttributeSetClient, ElasticSuiteAttributeSetResponseBuilder
+
+
+from config import Settings, get_settings
 
 settings = get_settings()
 
@@ -40,6 +45,12 @@ logger.setLevel(logging.INFO if settings.log_level == "INFO" else logging.DEBUG)
 
 def inject_logger(module_name:str) -> ContextLogger:
     return ContextLogger(logger, {"component": module_name})
+
+def inject_configuration_client(settings: Settings = Depends(get_settings)) -> ElasticSuiteAttributeSetClient:
+    return ElasticSuiteAttributeSetClient(
+        settings=settings,
+        attribute_set_response_builder=ElasticSuiteAttributeSetResponseBuilder()
+    )
 
 def inject_embedding_provider(settings: Settings = Depends(get_settings)) -> EmbeddingsProvider:
     return OpenAIEmbeddingsProvider(settings)

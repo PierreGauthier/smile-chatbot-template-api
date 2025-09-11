@@ -4,7 +4,7 @@ from langchain_core.embeddings import Embeddings
 from langchain_openai import AzureOpenAIEmbeddings
 
 from config import Settings, get_settings
-from ai import EmbeddingsProvider
+from domain.ai import EmbeddingsProvider
 
 class AzureOpenAIEmbeddingsProvider(EmbeddingsProvider):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):

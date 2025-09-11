@@ -2,10 +2,12 @@ import uuid
 from typing import Annotated, List
 from fastapi import Depends
 
-from config import Settings, get_settings
-from services import DatabaseHistoryService
-from models import ChatMessage
+from domain.services.database import DatabaseHistoryService
+from domain.models import ChatMessage
+
 from infrastructure.azure.services import CosmosDb
+
+from config import Settings, get_settings
 
 class CosmosDbHistoryService(DatabaseHistoryService):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):

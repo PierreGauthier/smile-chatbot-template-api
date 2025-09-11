@@ -4,8 +4,9 @@ from fastapi import Depends
 from botbuilder.core import ActivityHandler, TurnContext
 from botbuilder.schema import ChannelAccount
 
-from services import ChatService, DefaultRagChatService
-from models import ChatServiceResult
+from domain.services.chatbot import ChatService
+from application.services.rag import DefaultRagChatService
+from domain.models import ChatServiceResult
 
 class DefaultBot(ActivityHandler):
     

@@ -3,8 +3,8 @@ import uuid
 from requests import Response
 from typing import List
 
-from api_clients import ApiResponseBuilder
-from models import (
+from domain.api_client import ApiResponseBuilder
+from domain.models import (
     ApiResponse, 
     AttributeSetApiResponse, 
     AttributeSetApiParam, 

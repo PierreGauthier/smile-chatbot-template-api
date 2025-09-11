@@ -1,12 +1,14 @@
 from typing import List, Annotated
 from fastapi import Depends
-from config import Settings, get_settings
 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain import hub
 
-from prompts import AttributeSetExtractionPromptProvider
-from models import ElasticSuiteAttributeSet
+from domain.models import ElasticSuiteAttributeSet
+
+from application.prompts import AttributeSetExtractionPromptProvider
+
+from config import Settings, get_settings
 
 class LangsmithAttributeSetExtractionPromptProvider(AttributeSetExtractionPromptProvider):
 

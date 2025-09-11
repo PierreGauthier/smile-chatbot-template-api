@@ -1,11 +1,12 @@
 from typing import List, Annotated
 from fastapi import Depends
-from config import Settings, get_settings
 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain import hub
 
-from prompts import RagMainPromptProvider
+from application.prompts import RagMainPromptProvider
+
+from config import Settings, get_settings
 
 class LangsmithRagMainPromptProvider(RagMainPromptProvider):
 

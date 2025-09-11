@@ -2,8 +2,9 @@ from typing import Annotated
 from fastapi import Depends
 from langchain_openai import AzureChatOpenAI
 
+from domain.ai import LlmProvider
+
 from config import Settings, get_settings
-from ai import LlmProvider
 
 class AzureOpenAiLlmProvider(LlmProvider):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):

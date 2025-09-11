@@ -1,10 +1,12 @@
 from typing import Annotated
 from fastapi import Depends
 
-from config import Settings, get_settings
-from models import RagDocument, RagDocumentMetadata
-from services import DatabaseDocumentService
+from domain.models import RagDocument, RagDocumentMetadata
+from domain.services.database import DatabaseDocumentService
+
 from infrastructure.gcp.services import Firestore
+
+from config import Settings, get_settings
 
 class FirestoreDocumentService(DatabaseDocumentService):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):

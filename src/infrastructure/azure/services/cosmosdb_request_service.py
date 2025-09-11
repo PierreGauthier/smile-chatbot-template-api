@@ -4,10 +4,12 @@ from fastapi import Depends
 
 from azure.cosmos import exceptions
 
-from services import DatabaseRequestService
-from models import UserRequestDto
-from config import Settings, get_settings
+from domain.services.database import DatabaseRequestService
+from domain.models import UserRequestDto
+
 from infrastructure.azure.services import CosmosDb
+
+from config import Settings, get_settings
 
 class CosmosDbRequestService(DatabaseRequestService):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):

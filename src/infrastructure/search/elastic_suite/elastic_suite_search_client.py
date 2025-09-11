@@ -1,12 +1,14 @@
-from api_clients import BaseClient
+from domain.api_client import BaseClient
 from typing import Annotated, List
 from fastapi import Depends
 from urllib.parse import urlparse, urlunparse
 
-from config import Settings, get_settings
-from models import SearchApiResponse, AttributeFilterValue
-from api_clients import ConversationalSearchClient
+from domain.models import SearchApiResponse, AttributeFilterValue
+from domain.api_client import ConversationalSearchClient
+
 from infrastructure.search.elastic_suite import ElasticSuiteSearchResponseBuilder
+
+from config import Settings, get_settings
 
 class ElasticSuiteSearchClient(ConversationalSearchClient):
 
@@ -46,7 +48,6 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
                 id
                 sku
                 name
-                brand_name
                 price_range {
                     minimum_price {
                         final_price {

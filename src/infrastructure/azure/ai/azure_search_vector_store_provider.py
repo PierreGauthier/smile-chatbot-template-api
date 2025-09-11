@@ -1,10 +1,13 @@
 from typing import Annotated
 from fastapi import Depends
 from langchain_community.vectorstores.azuresearch import AzureSearch, AzureSearchVectorStoreRetriever
-from config import Settings, get_settings
 
-from ai import OpenAIEmbeddingsProvider, EmbeddingsProvider, VectorStoreProvider
-from models import IndexFilterResult
+from domain.ai import EmbeddingsProvider, VectorStoreProvider
+from domain.models import IndexFilterResult
+
+from infrastructure.openai.ai import OpenAIEmbeddingsProvider
+
+from config import Settings, get_settings
     
 class AzureSearchVectorStoreProvider(VectorStoreProvider):
     def __init__(

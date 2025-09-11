@@ -4,10 +4,12 @@ from fastapi import Depends
 
 from azure.cosmos import exceptions as cosmos_exceptions
 
-from config import Settings, get_settings
-from models import AttributeSetDto, AttributeFilterDto
+from domain.models import AttributeSetDto, AttributeFilterDto
+from domain.services.database import DatabaseAttributesSetupService
+
 from infrastructure.azure.services import CosmosDb
-from services import DatabaseAttributesSetupService
+
+from config import Settings, get_settings
 
 class CosmosDBAttributesSetupService(DatabaseAttributesSetupService):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):

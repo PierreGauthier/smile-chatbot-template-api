@@ -6,9 +6,12 @@ from langchain_core.vectorstores.base import BaseRetriever
 from google.oauth2 import service_account
 from langchain_google_vertexai.vectorstores import VectorSearchVectorStore
 
-from ai import VectorStoreProvider, EmbeddingsProvider, OpenAIEmbeddingsProvider
+from domain.ai import VectorStoreProvider, EmbeddingsProvider
+from domain.models import IndexFilterResult
+
+from infrastructure.openai.ai import OpenAIEmbeddingsProvider
+
 from config import Settings, get_settings
-from models import IndexFilterResult
 
 class VertexVectorStoreProvider(VectorStoreProvider):
     """VectorStoreProvider that queries Vertex AI Vector Search and stores raw docs / metadata in GCS."""

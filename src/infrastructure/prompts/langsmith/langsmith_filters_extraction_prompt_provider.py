@@ -1,12 +1,14 @@
 from typing import List, Annotated
 from fastapi import Depends
-from config import Settings, get_settings
 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain import hub
 
-from prompts import FiltersExtractionPromptProvider
-from models import AttributeFilterDto
+from domain.models import AttributeFilterDto
+
+from application.prompts import FiltersExtractionPromptProvider
+
+from config import Settings, get_settings
 
 class LangsmithFiltersExtractionPromptProvider(FiltersExtractionPromptProvider):
 

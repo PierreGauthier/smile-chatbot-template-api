@@ -3,8 +3,9 @@ from fastapi import Depends
 from langchain_google_vertexai import ChatVertexAI
 from google.oauth2 import service_account
 
+from domain.ai import LlmProvider
+
 from config import Settings, get_settings
-from ai import LlmProvider
 
 class VertexLlmProvider(LlmProvider):
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
