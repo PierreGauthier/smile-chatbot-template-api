@@ -15,7 +15,7 @@ class AttributeDetectionManager:
             self,
             attribute_set_db_service : Annotated[DatabaseAttributesSetupService, Depends(inject_attribute_database_service)],
             attribute_set_extraction_agent: Annotated[AttributeSetExtractionAgent, Depends(AttributeSetExtractionAgent)],
-            logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="ConversationManager"))]):
+            logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="AttributeDetectionManager"))]):
         self.attribute_set_db_service = attribute_set_db_service
         self.attribute_set_extraction_agent = attribute_set_extraction_agent
         self.logger = logger
