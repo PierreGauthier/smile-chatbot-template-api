@@ -8,14 +8,14 @@ from domain.logger import ContextLogger
 
 from application.agents import QuestionsSummarizerAgent, SearchResponseBuilderAgent
 
-from dependencies import inject_conversational_search_api, inject_logger
+from dependencies import inject_conversational_search_api, inject_logger, inject_search_response_agent
 
 class SearchManager:
 
     def __init__(
             self,
             summarize_question_agent : Annotated[QuestionsSummarizerAgent, Depends(QuestionsSummarizerAgent)],
-            search_response_agent: Annotated[SearchResponseBuilderAgent, Depends(SearchResponseBuilderAgent)],
+            search_response_agent: Annotated[SearchResponseBuilderAgent, Depends(inject_search_response_agent)],
             conversational_search_client: Annotated[ConversationalSearchClient, Depends(inject_conversational_search_api)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="RequestManager"))]):
         self.summarize_question_agent = summarize_question_agent

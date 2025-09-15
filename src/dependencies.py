@@ -12,6 +12,9 @@ from domain.services.database import (
     DatabaseRequestService
 )
 
+# Avoid circular dependency injection
+from application.agents.search_response_builder_agent import SearchResponseBuilderAgent
+
 from infrastructure.gcp.services import GoogleCloudStorageDocumentService, FirestoreHistoryService
 from infrastructure.gcp.ai import VertexLlmProvider, VertexVectorStoreProvider
 from infrastructure.azure.services import (
@@ -34,7 +37,7 @@ from infrastructure.prompts.langsmith import (
     LangsmithExchangeSummarizerPromptProvider
 )
 from infrastructure.configuration.elastic_suite import ElasticSuiteAttributeSetClient, ElasticSuiteAttributeSetResponseBuilder
-
+from infrastructure.agents.elastic_suite import ElasticSuiteSearchResponseBuilderAgent
 
 from config import Settings, get_settings
 
@@ -120,6 +123,14 @@ def inject_vector_store_provider(settings: Settings = Depends(get_settings)) -> 
 
 def inject_conversational_search_api(settings: Settings = Depends(get_settings)) -> ConversationalSearchClient:
     return ElasticSuiteSearchClient(settings, ElasticSuiteSearchResponseBuilder())
+
+def inject_search_response_agent(settings: Settings = Depends(get_settings)) -> SearchResponseBuilderAgent:
+    return ElasticSuiteSearchResponseBuilderAgent(
+        settings=settings, 
+        llm_provider=inject_llm_provider(settings),
+        empty_search_prompt_provider=inject_empty_search_response_prompt(settings),
+        not_empty_search_prompt_provider=inject_search_response_prompt(settings)
+    )
 
 # PROMPTS
 
