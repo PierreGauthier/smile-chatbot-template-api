@@ -6,6 +6,7 @@ from domain.models import AttributeFilterDto, AttributeSetDefinition
 @dataclass
 class AttributeSetDto(AttributeSetDefinition):
     id:str
+    code:str
     description:str
     filters: List[AttributeFilterDto]
 
@@ -14,6 +15,7 @@ class AttributeSetDto(AttributeSetDefinition):
             partition_key:partition_value,
             "id":self.id,
             "attribute_set_id":self.attribute_set_id,
+            "code": self.code,
             "name":self.name,
             "description":self.description
         }

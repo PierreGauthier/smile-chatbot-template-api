@@ -1,16 +1,14 @@
-import uuid
-from typing import List
 from dataclasses import dataclass
 
-from domain.models import FilterOptionDto, AttributeFilterDefinition
+from domain.models import AttributeFilterDefinition
 
 @dataclass
 class AttributeFilterDto(AttributeFilterDefinition):
     id:str
-    options:List[FilterOptionDto]
+    options_type: str
+    options:list
     
     def to_dict(self, attribute_id:int) -> dict:
-        options = [option.to_dict() for option in self.options]
         return {
             "id":self.id,
             "attribute_id":attribute_id,
@@ -18,12 +16,12 @@ class AttributeFilterDto(AttributeFilterDefinition):
             "code":self.code,
             "type":self.type,
             "description":self.description,
-            "options":options
+            "options_type":self.options_type,
+            "options":self.options
         }
     
     def from_dto(dto:dict):
-        options_dict = dto.get("options") or []
-        options = [FilterOptionDto.from_dto(o) for o in options_dict]
+        options = dto.get("options") or []
         return AttributeFilterDto(
             id=dto.get("id"),
             attribute_id=dto.get("attribute_id"),
@@ -31,5 +29,6 @@ class AttributeFilterDto(AttributeFilterDefinition):
             code=dto.get("code"),
             type=dto.get("type"),
             description=dto.get("description"),
+            options_type=dto.get("options_type"),
             options=options,
         )

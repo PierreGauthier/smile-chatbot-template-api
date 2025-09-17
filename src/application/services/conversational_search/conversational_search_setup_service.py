@@ -26,7 +26,7 @@ class ConversationalSearchSetupService:
     def setup(self) -> SetupServiceResult:
         params = AttributeSetApiParam(
             page=1,
-            page_size=4
+            page_size=10
         )
         elastic_suite_result:AttributeSetApiResponse = self.api_client.get_attribute_set(params)
         for attribute_set in elastic_suite_result.attributes:

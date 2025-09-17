@@ -43,18 +43,22 @@ class ElasticSuiteAttributeSetResponseBuilder(ApiResponseBuilder):
                 query=params.query
             )
         
-    def _extract_name(self, text: str) -> str:
-        match = re.match(r'^[A-Za-z]{2,5}\s\[\d+\]\s(.+?)\s\(\d+\)$', text)
+    def _extract_name_and_code(self, text: str):
+        match = re.match(r'^Pim(?:\s\[\d+\])?\s(.+?)\s\((.+?)\)$', text)
         if match:
-            return match.group(1)
-        return None
+            return (match.group(1), match.group(2))
+        return (None, None)
 
     def _build_attribute_set_from_response(self, response:dict):
         attribute_set_id = response.get("attribute_set_id", 0)
         original_name = response.get("attribute_set_name", "-unknown-")
-        name = self._extract_name(original_name)
+        
+        matches = self._extract_name_and_code(original_name)
+        name = matches[0] or original_name
+        code = matches[1] or name
+        
         description = response.get("attribute_set_description", "-")
-
+        
         filters_dicts = response.get("filters", None)
         filters:List[AttributeFilterDto] = []
         if filters_dicts:
@@ -64,7 +68,8 @@ class ElasticSuiteAttributeSetResponseBuilder(ApiResponseBuilder):
         object =  AttributeSetDto(
             id=str(uuid.uuid4()),
             attribute_set_id=attribute_set_id,
-            name = name.lower() if name else original_name,
+            name = name,
+            code = code,
             description=description,
             filters=filters
         )
@@ -73,26 +78,25 @@ class ElasticSuiteAttributeSetResponseBuilder(ApiResponseBuilder):
     def _build_filter_from_response(self, response:dict, attribute_id:int):
         label = response.get("attribute_label", None)
         code = response.get("attribute_code", None)
-        type = response.get("attribute_type", None)
+        atr_type = response.get("attribute_type", None)
         description = response.get("filter_description", None)
         
-        options_dicts = response.get("attribute_options", None)
-        options:List[FilterOptionDto] = []
-        if options_dicts:
-            for option_dict in options_dicts:
-                options.append(self._build_builder_option_from_response(option_dict))
+        options = response.get("attribute_options", None)
+        options_type = None if not options else type(options[0]).__name__
+        
         return AttributeFilterDto(
             id=str(uuid.uuid4()),
             attribute_id=attribute_id,
             label=label,
             code=code,
-            type=type,
+            type=atr_type,
             description=description,
+            options_type=options_type,
             options=options
         )
     
-    def _build_builder_option_from_response(self, response:dict):
-        return FilterOptionDto(
-            key=response.get("key", None),
-            value=response.get("value", None)
-        )
+    # def _build_builder_option_from_response(self, response:dict):
+    #     return FilterOptionDto(
+    #         key=response.get("key", None),
+    #         value=response.get("value", None)
+    #     )
