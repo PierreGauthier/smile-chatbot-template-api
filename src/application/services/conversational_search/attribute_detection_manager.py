@@ -30,7 +30,7 @@ class AttributeDetectionManager:
         # Detect product (attribute set)
         detected_attribute_sets:AttributeField = self.attribute_set_extraction_agent.invoke(
             user_message=context.exchange,
-            attribute_set=[ElasticSuiteAttributeSet(name=attr.name, description=attr.description) for attr in attribute_sets],
+            attribute_set=[ElasticSuiteAttributeSet(name=attr.code, description=attr.description) for attr in attribute_sets],
             product_counter_example="bicycle" # TODO
         )
         

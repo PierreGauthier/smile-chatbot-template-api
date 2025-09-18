@@ -122,7 +122,11 @@ def inject_vector_store_provider(settings: Settings = Depends(get_settings)) -> 
             raise ValueError(f"Unsupported vector store service provider: {provider}")
 
 def inject_conversational_search_api(settings: Settings = Depends(get_settings)) -> ConversationalSearchClient:
-    return ElasticSuiteSearchClient(settings, ElasticSuiteSearchResponseBuilder())
+    return ElasticSuiteSearchClient(
+        settings, 
+        ElasticSuiteSearchResponseBuilder(), 
+        inject_logger(module_name="ElasticSuiteSearchClient")
+    )
 
 def inject_search_response_agent(settings: Settings = Depends(get_settings)) -> SearchResponseBuilderAgent:
     return ElasticSuiteSearchResponseBuilderAgent(

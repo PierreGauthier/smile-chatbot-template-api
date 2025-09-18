@@ -47,12 +47,13 @@ class RequestManager:
         request_chain_results:List[ProductFilterDetectionResult] = [] # (attribute-set,ai-question)
         for product in context.detected_attribute_sets.products:
             # Get the filter list of the product
-            attribute_set = next((attr for attr in context.attribute_sets if attr.name == product), None)
+            attribute_set = next((attr for attr in context.attribute_sets if attr.code == product), None)
             if attribute_set:
                 filters:List[AttributeFilterDto] = self.attribute_set_db_service.get_filters(attribute_set.attribute_set_id)
                 detected_filters = self.filters_extraction_agent.invoke(exchange=context.exchange, filters=filters)
                 detected_result = ProductFilterDetectionResult(
-                    attribute_set_name=product,
+                    attribute_set_name=attribute_set.name,
+                    attribute_set_code=product,
                     attribute_set_id = attribute_set.attribute_set_id,
                     ai_question=detected_filters.ai_question,
                     detected_filters=[]

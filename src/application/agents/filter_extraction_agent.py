@@ -1,13 +1,13 @@
 from typing import List, Annotated
 from fastapi import Depends
-from config import Settings
+import builtins
 
 from langchain.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
 from domain.ai import LlmProvider
 from domain.models import AttributeFilterDto
-from domain.fields import build_pydantic_model, PydanticSchema
+from domain.fields import build_pydantic_model, PydanticSchema, PriceRangeField
 
 from application.prompts import FiltersExtractionPromptProvider
 
@@ -29,7 +29,7 @@ class FilterExtractionAgent:
             PydanticSchema(
                 name=filter.code,
                 required=True,
-                type=filter.type,
+                field_type=PriceRangeField if filter.type == "price" else getattr(builtins, filter.options_type),
                 description=filter.description
             )
             for filter in filters
@@ -38,7 +38,7 @@ class FilterExtractionAgent:
             PydanticSchema(
                 name="ai_question",
                 required=True,
-                type="str",
+                field_type=str,
                 description="Corresponds to the question that you will ask the user, to find out the missing fields in the final JSON response."
             )
         )

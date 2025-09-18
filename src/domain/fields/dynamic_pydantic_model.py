@@ -13,7 +13,7 @@ def build_pydantic_model(schemas: List[PydanticSchema]) -> type[BaseModel]:
 
     for schema in schemas:
         description = schema.description or f"The {schema.name} of the product"
-        py_type = PriceRangeField if schema.type == "price" else str
+        py_type = schema.field_type
         default  = ... if schema.required else None
         field_defs[schema.name] = (
             py_type,

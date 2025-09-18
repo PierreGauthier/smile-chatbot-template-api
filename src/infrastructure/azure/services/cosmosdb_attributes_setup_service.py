@@ -68,18 +68,10 @@ class CosmosDBAttributesSetupService(DatabaseAttributesSetupService):
             raise ValueError(f"Attribute set {attribute_set_id} not found")
 
         attr_item = attr_items[0]
-        name = attr_item.get("name", "-unknown-")
-        description = attr_item.get("description", "-")
 
         # Fetch filters
         filters = self.get_filters(attribute_set_id)
-
-        return AttributeSetDto(
-            id=attribute_set_id,
-            name=name,
-            description=description,
-            filters=filters,
-        )
+        return self.build_dto(attr_item, filters)
     
     def get_attribute_set_by_name(self, attribute_set_name: str) -> AttributeSetDto:
         """
@@ -114,21 +106,11 @@ class CosmosDBAttributesSetupService(DatabaseAttributesSetupService):
             raise ValueError(f"Attribute set with name '{attribute_set_name}' not found")
 
         it = items[0]
-        id = it.get("id")
         attribute_set_id = it.get("attribute_set_id")
-        name = it.get("name", "-unknown-")
-        description = it.get("description", "-")
-
         # Fetch and attach filters
         filters: List[AttributeFilterDto] = self.get_filters(attribute_set_id)
 
-        return AttributeSetDto(
-            id=id,
-            attribute_set_id=attribute_set_id,
-            name=name,
-            description=description,
-            filters=filters,
-        )
+        return self.build_dto(items[0], filters)
         
 
     def list_attribute_sets(self) -> List[AttributeSetDto]:
@@ -139,7 +121,7 @@ class CosmosDBAttributesSetupService(DatabaseAttributesSetupService):
         attributes_container = self.attributes_database.get_container()
 
         # Only select what we need
-        query = "SELECT c.id, c.attribute_set_id, c.name, c.description FROM c"
+        query = "SELECT c.id, c.attribute_set_id, c.name, c.code, c.description FROM c"
         items = list(
             attributes_container.query_items(
                 query=query,
@@ -149,14 +131,7 @@ class CosmosDBAttributesSetupService(DatabaseAttributesSetupService):
         )
 
         results: List[AttributeSetDto] = [
-            AttributeSetDto(
-                id=it.get("id"),
-                attribute_set_id=it.get("attribute_set_id"),
-                name=it.get("name", "-unknown-"),
-                description=it.get("description", "-"),
-                filters=[],  # intentionally empty
-            ) 
-            for it in items
+            self.build_dto(it, []) for it in items
         ]
         return results
 
@@ -185,3 +160,13 @@ class CosmosDBAttributesSetupService(DatabaseAttributesSetupService):
 
         # Reconstruct DTOs
         return [AttributeFilterDto.from_dto(it) for it in items]
+    
+    def build_dto(self, item:dict, filters:List[AttributeFilterDto]):
+        return AttributeSetDto(
+                id=item.get("id"),
+                attribute_set_id=item.get("attribute_set_id"),
+                name=item.get("name", "-unknown-"),
+                code=item.get("code", "-unknown-"),
+                description=item.get("description", "-"),
+                filters=filters,  
+            ) 
