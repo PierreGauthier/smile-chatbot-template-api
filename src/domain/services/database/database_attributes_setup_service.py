@@ -18,7 +18,7 @@ class DatabaseAttributesSetupService(ABC):
         pass
 
     @abstractmethod
-    def list_attribute_sets(self) -> List[AttributeSetDto]:
+    def load_attribute_sets(self) -> List[AttributeSetDto]:
         pass
 
     @abstractmethod

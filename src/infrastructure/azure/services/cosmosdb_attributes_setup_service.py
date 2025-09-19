@@ -113,7 +113,7 @@ class CosmosDBAttributesSetupService(DatabaseAttributesSetupService):
         return self.build_dto(items[0], filters)
         
 
-    def list_attribute_sets(self) -> List[AttributeSetDto]:
+    def load_attribute_sets(self) -> List[AttributeSetDto]:
         """
         Return all AttributeSetDto without fetching filters.
         Uses a single cross-partition query.
@@ -130,9 +130,13 @@ class CosmosDBAttributesSetupService(DatabaseAttributesSetupService):
             )
         )
 
-        results: List[AttributeSetDto] = [
-            self.build_dto(it, []) for it in items
-        ]
+        results: List[AttributeSetDto] = []
+        for it in items:
+            attribute_set = self.build_dto(it, [])
+            filters = self.get_filters(attribute_set_id=attribute_set.attribute_set_id)
+            attribute_set.filters = filters
+            results.append(attribute_set)
+            
         return results
 
     def insert_filters(self, attribute_set_id: int, filters: List[AttributeFilterDto]):

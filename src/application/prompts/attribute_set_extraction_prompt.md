@@ -9,6 +9,7 @@ The idea behind it is a chatbot to help a user to find products in an e-commerce
 You will then fill the following fields based on the provided information:
 - **products**: the list of products (zero, one, or many) that the user searches (the closest matches among those described above).
 - **is_intent**: whether the user's request is about searching for product(s) or not.
+- **terms**: for each product in the `products` list, a short search term (1 to 3 words, **in French**) that best represents what the user is searching for. This list must be aligned with the `products` list in order and length.
 - **chain_of_thoughts**: a short justification (1-3 sentences) explaining why you chose the values for `products` and `is_intent`.
 
 # Matching rules
@@ -35,22 +36,27 @@ The final response **must** be in the following JSON format:
 
 # Examples
 
+## Example 1: The products searched by user are present in the list of possible values for the field **products**
 human:
-The user would like to buy a {attribute_example1_name} for his brother and a {attribute_example2_name} for himself.
-The user's budget is 100 euros.
-ai: {{ "products": ["{attribute_example1_value}", "{attribute_example2_value}"], "is_intent": true, "chain_of_thoughts": "The user request is about searching for products. Both mentioned items are in the allowed list. Duplicates are avoided, and the order of mention is preserved." }}
+The user would like to buy a barbecue for his brother and a swimming pool for himself.
+The user's budget is 1000 euros.
+ai: {{ "products": ["barbecue_brasero_plancha", "piscine"], "terms": ["barbecue", "piscine"], "is_intent": true, "chain_of_thoughts": "The user request is about searching for products. Both mentioned items are in the allowed list. Duplicates are avoided, and the order of mention is preserved." }}
 
+## Example 2: The request is not about product search
 human: Are there any other shops where I can buy fire stoves?
 ai: {{ "products": [], "is_intent": false, "chain_of_thoughts": "The user request is about shops, not about product search." }}
 
+## Example 3: The request is not about product search
 human: What is the capital of France?
 ai: {{ "products": [], "is_intent": false, "chain_of_thoughts": "The user request is a general knowledge question, unrelated to product search." }}
 
-human: I am looking for a {attribute_counter_example}.
+## Example 4: The product searched by user IS NOT present in the list of possible values for the field **products**
+human: I am looking for a bicycle.
 ai: {{ "products": [], "is_intent": true, "chain_of_thoughts": "The user is searching for a product, but the mentioned item is not in the allowed list." }}
 
-human (French): Je cherche un {attribute_example1_name} et un {attribute_counter_example}.
-ai: {{ "products": ["{attribute_example1_value}"], "is_intent": true, "chain_of_thoughts": "The user is searching for two products. '{attribute_example1_name}' is in the allowed list. '{attribute_counter_example}' is not in the allowed list, so it is ignored." }}
+## Example 5: ONLY ONE out of two products searched by user are present in the list of possible values for the field **products**
+human: Je cherche de la nourriture pour mon hamster et un vélo.
+ai: {{ "products": ["alimentation_rongeur"], "terms": ["alimentation rongeur"], "is_intent": true, "chain_of_thoughts": "The user is searching for two products. 'alimentation_rongeur' is in the allowed list. 'vélo' is not in the allowed list, so it is ignored." }}
 
 
 

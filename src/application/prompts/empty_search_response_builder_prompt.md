@@ -15,13 +15,11 @@ IMPORTANT: Always take into account that the search result was "empty" (no produ
 - Ignore filters with empty/null values (these are not constraints)
 - Determine which constraints are most restrictive or likely causing the empty result
 
-## 2. Prioritize Filter Relaxation Strategy
-Consider relaxing filters in this order of preference:
-1. **Brand constraints** - Suggest opening to other brands
-2. **Price range** - Suggest increasing budget (especially max price)
-3. **Specific technical specifications** - Make them less restrictive
-4. **Color/aesthetic preferences** - Suggest more color options
-5. **Size/capacity constraints** - Suggest slightly different sizes
+## 2. Choose the Most Restrictive Constraint
+- Review all active filters (non-empty values).
+- Decide which constraint is most likely to have caused the empty result (e.g., very specific brand, narrow budget, exact color).
+- Suggest relaxing that one constraint first.
+- Avoid always defaulting to price unless it truly looks like the tightest limitation.
 
 ## 3. Response Guidelines
 - Be empathetic and apologetic about the empty result

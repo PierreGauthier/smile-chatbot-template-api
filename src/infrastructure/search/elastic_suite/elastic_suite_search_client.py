@@ -4,7 +4,7 @@ from typing import Annotated, List
 from fastapi import Depends
 from urllib.parse import urlparse, urlunparse
 
-from domain.models import SearchApiResponse, AttributeFilterValue
+from domain.models import SearchApiResponse, AttributeFilterValue, ProductFilterDetectionResult, AttributeFilterDto
 from domain.api_client import ConversationalSearchClient
 from domain.logger import ContextLogger
 from infrastructure.search.elastic_suite import ElasticSuiteSearchResponseBuilder
@@ -22,7 +22,11 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         self.search_response_builder = search_response_builder
         self.logger = logger
 
-    def search_products(self, attribute_set: str, filters: List[AttributeFilterValue], page_size: int = 10) -> SearchApiResponse:
+    def search_products(
+            self,
+            filter_detection_result:ProductFilterDetectionResult,
+            filters_dto:List[AttributeFilterDto], #attribute_set: str, term:str, filters: List[AttributeFilterValue], 
+            page_size: int = 10) -> SearchApiResponse:
         url = self.__insert_credentials(
             url=self.api_base_url,
             credentials=self.settings.elastic_suite_search_api_credentials,
@@ -36,7 +40,11 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
             "Store": "lamaison",
         }
 
-        json_data = self.__build_data(product_name=attribute_set, filters=filters, page_size=page_size)
+        json_data = self.__build_data(
+            filter_detection_result=filter_detection_result, 
+            filters_dto=filters_dto, 
+            page_size=page_size
+        )
 
         # Log a compact, single-line payload
         log_payload = {
@@ -48,13 +56,21 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         response = self.post(url=url, headers=headers, json_data=json_data)
         return self.search_response_builder.build_response(response)
 
-    def __build_data(self, product_name: str, filters: List[AttributeFilterValue], page_size: int):
+    def __build_data(
+            self,
+            filter_detection_result:ProductFilterDetectionResult,
+            filters_dto:List[AttributeFilterDto], #attribute_set: str, term:str, filters: List[AttributeFilterValue], 
+            page_size: int):
         # Build variable param declarations (skip empties)
-        param_decls = [self.__build_param(f) for f in filters if f.value]
+        param_decls = [] 
+        for detected_filter in filter_detection_result.detected_filters:
+            f_dto = next((f for f in filters_dto if f.code == detected_filter.code), None)
+            if detected_filter.value and f_dto and detected_filter.value in f_dto.options: 
+                param_decls.append(self.__build_param(detected_filter))
         params_header = ", ".join(["$term: String!"] + param_decls + ["$pageSize: Int = 1"])
 
         # Build filter arguments (skip empties)
-        filter_args = [self.__build_param_definition(f) for f in filters if f.value]
+        filter_args = [self.__build_param_definition(f) for f in filter_detection_result.detected_filters if f.value] # TODO: if filter value is in the possible values 
         filter_args_str = ", ".join(filter_args)
 
         query_tale = """
@@ -84,7 +100,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         query = f"query ({params_header}) {{ {query_products} {query_tale} }}"
 
         variables = {}
-        for f in filters:
+        for f in filter_detection_result.detected_filters:
             if not f.value:
                 continue
             if f.type == "price":
@@ -93,7 +109,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
             else:
                 variables[f.code] = f.value
 
-        variables["term"] = product_name
+        variables["term"] = filter_detection_result.search_term
         variables["pageSize"] = page_size
 
         return {"query": query, "variables": variables}
@@ -107,9 +123,9 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         match filter.type:
             case "price":
                 return "price: { from: $min_price, to: $max_price }"
-            case "select":
+            case "select" | "multiselect":
                 return f"{filter.code}: {{ eq: ${filter.code} }}"
-            case "smile_custom_entity":
+            case "smile_custom_entity" | "text":
                 return f"{filter.code}: {{ match: ${filter.code} }}"
             case _:
                 raise ValueError(f"Unsupported filter data-type: {filter.type}")

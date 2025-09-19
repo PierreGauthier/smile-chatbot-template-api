@@ -45,7 +45,6 @@ class ElasticSuiteSearchResponseBuilder(ApiResponseBuilder):
             id=item["id"],
             sku=item["sku"],
             name=item["name"],
-            brand_name=item["brand_name"],
             price=price,
             image_url=item["image"]["url"]
         )

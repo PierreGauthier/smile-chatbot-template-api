@@ -3,23 +3,21 @@ from fastapi import Depends
 from functools import partial
 
 from domain.models import SearchContext, UserRequestDto, ProductFilterDetectionResult, AttributeFilterDto, AttributeFilterValue
-from domain.services.database import DatabaseRequestService, DatabaseAttributesSetupService
+from domain.services.database import DatabaseRequestService
 from domain.logger import ContextLogger
 
 from application.agents import FilterExtractionAgent
 
-from dependencies import inject_request_service, inject_attribute_database_service, inject_logger
+from dependencies import inject_request_service, inject_logger
 
 class RequestManager:
 
     def __init__(
             self, 
-            attribute_set_db_service : Annotated[DatabaseAttributesSetupService, Depends(inject_attribute_database_service)],
             filters_extraction_agent: Annotated[FilterExtractionAgent, Depends(FilterExtractionAgent)],
             request_db_service: Annotated[DatabaseRequestService, Depends(inject_request_service)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="RequestManager"))]):
         self.request_db_service = request_db_service
-        self.attribute_set_db_service = attribute_set_db_service
         self.filters_extraction_agent = filters_extraction_agent
         self.logger = logger
 
@@ -45,16 +43,19 @@ class RequestManager:
     
     def build_requests(self, context:SearchContext) -> SearchContext:
         request_chain_results:List[ProductFilterDetectionResult] = [] # (attribute-set,ai-question)
-        for product in context.detected_attribute_sets.products:
+        for i in range(len(context.detected_attribute_sets.products)):
+            product =  context.detected_attribute_sets.products[i]
+            term = context.detected_attribute_sets.terms[i]
             # Get the filter list of the product
             attribute_set = next((attr for attr in context.attribute_sets if attr.code == product), None)
             if attribute_set:
-                filters:List[AttributeFilterDto] = self.attribute_set_db_service.get_filters(attribute_set.attribute_set_id)
+                filters:List[AttributeFilterDto] = attribute_set.filters
                 detected_filters = self.filters_extraction_agent.invoke(exchange=context.exchange, filters=filters)
                 detected_result = ProductFilterDetectionResult(
                     attribute_set_name=attribute_set.name,
                     attribute_set_code=product,
                     attribute_set_id = attribute_set.attribute_set_id,
+                    search_term=term,
                     ai_question=detected_filters.ai_question,
                     detected_filters=[]
                 )

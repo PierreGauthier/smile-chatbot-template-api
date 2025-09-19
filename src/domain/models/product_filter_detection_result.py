@@ -8,5 +8,6 @@ class ProductFilterDetectionResult:
     attribute_set_name:str
     attribute_set_code:str
     attribute_set_id:int
+    search_term:str
     ai_question:str
     detected_filters:List[AttributeFilterValue]

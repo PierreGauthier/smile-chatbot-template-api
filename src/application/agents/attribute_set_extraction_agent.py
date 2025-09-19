@@ -25,13 +25,10 @@ class AttributeSetExtractionAgent:
         self.prompt_provider = prompt_provider
         self.pydantic_object = AttributeField
 
-    def invoke(self, user_message: str, attribute_set:List[ElasticSuiteAttributeSet], product_counter_example:str):
+    def invoke(self, user_message: str, attribute_set:List[ElasticSuiteAttributeSet]):
         output_parser = PydanticOutputParser(pydantic_object=self.pydantic_object)
         format_instructions = output_parser.get_format_instructions()
-        prompt_template:ChatPromptTemplate = self.prompt_provider.get_prompt(
-            attribute_set=attribute_set, 
-            product_counter_example=product_counter_example
-        )
+        prompt_template:ChatPromptTemplate = self.prompt_provider.get_prompt(attribute_set=attribute_set)
 
         prompt_template.append(message=("human", "{question}"))
         messages = prompt_template.format_messages(question=user_message, format_instructions=format_instructions)

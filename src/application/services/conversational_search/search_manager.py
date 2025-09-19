@@ -17,7 +17,7 @@ class SearchManager:
             summarize_question_agent : Annotated[QuestionsSummarizerAgent, Depends(QuestionsSummarizerAgent)],
             search_response_agent: Annotated[SearchResponseBuilderAgent, Depends(inject_search_response_agent)],
             conversational_search_client: Annotated[ConversationalSearchClient, Depends(inject_conversational_search_api)],
-            logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="RequestManager"))]):
+            logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="SearchManager"))]):
         self.summarize_question_agent = summarize_question_agent
         self.conversational_search_client = conversational_search_client
         self.search_response_agent = search_response_agent
@@ -34,6 +34,7 @@ class SearchManager:
         for product in context.request_chain_results:
             api_response:SearchApiResponse = self.conversational_search_client.search_products(
                 attribute_set=product.attribute_set_name,
+                term=product.search_term,
                 filters=product.detected_filters
             )
             if api_response.code == 200:
@@ -44,15 +45,15 @@ class SearchManager:
             
             # Create an answer calling to the right agent (no products, or products)
 
-            if len(items) == 0:
-                empty_search_answer = self.search_response_agent.invoke_empty(context.requests)
-                context.ai_answer = empty_search_answer
-                context.search_result = []
-            
-            else:
-                not_empty_search_answer = self.search_response_agent.invoke_not_empty(context.requests, items, total_count)
-                context.ai_answer = not_empty_search_answer
-                context.search_result = items
+        if len(items) == 0:
+            empty_search_answer = self.search_response_agent.invoke_empty(context)
+            context.ai_answer = empty_search_answer
+            context.search_result = []
+        
+        else:
+            not_empty_search_answer = self.search_response_agent.invoke_not_empty(context, items, total_count)
+            context.ai_answer = not_empty_search_answer
+            context.search_result = items
             
             # TODO: take into account all the result for the answer
 

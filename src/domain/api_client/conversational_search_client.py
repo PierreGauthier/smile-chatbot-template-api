@@ -12,6 +12,7 @@ class ConversationalSearchClient(BaseClient):
     def search_products(
             self, 
             attribute_set:str, 
+            term:str,
             filters:List[AttributeFilterValue], 
             page_size:int
         ) -> SearchApiResponse:
