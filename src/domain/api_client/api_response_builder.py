@@ -4,6 +4,7 @@ class ApiResponseBuilder:
         self.messages = {
             200: "",
             400: "We are having communicating with the external application.",
+            404: "Application not found",
             403: "We are having access problems.",
             500: "Internal server error."
         }

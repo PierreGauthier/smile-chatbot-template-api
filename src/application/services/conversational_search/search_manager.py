@@ -32,11 +32,18 @@ class SearchManager:
         # Launch the search
         items = []
         for product in context.request_chain_results:
+            attribute_set = next((attr for attr in context.attribute_sets if attr.attribute_set_id == product.attribute_set_id), None)
+            if not attribute_set:
+                raise KeyError(f"No attribute set found ({product.attribute_set_code})")
+            filters_dto = attribute_set.filters
             api_response:SearchApiResponse = self.conversational_search_client.search_products(
-                attribute_set=product.attribute_set_name,
-                term=product.search_term,
-                filters=product.detected_filters
+                filter_detection_result=product,
+                filters_dto=filters_dto
             )
+            #     attribute_set=product.attribute_set_name,
+            #     term=product.search_term,
+            #     filters=product.detected_filters
+            # )
             if api_response.code == 200:
                 items.extend(api_response.items)
                 total_count += api_response.total_count

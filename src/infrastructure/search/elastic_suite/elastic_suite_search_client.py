@@ -59,18 +59,18 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
     def __build_data(
             self,
             filter_detection_result:ProductFilterDetectionResult,
-            filters_dto:List[AttributeFilterDto], #attribute_set: str, term:str, filters: List[AttributeFilterValue], 
+            filters_dto:List[AttributeFilterDto], 
             page_size: int):
         # Build variable param declarations (skip empties)
         param_decls = [] 
+        filter_args = []
         for detected_filter in filter_detection_result.detected_filters:
             f_dto = next((f for f in filters_dto if f.code == detected_filter.code), None)
             if detected_filter.value and f_dto and detected_filter.value in f_dto.options: 
                 param_decls.append(self.__build_param(detected_filter))
+                filter_args.append(self.__build_param_definition(detected_filter))
         params_header = ", ".join(["$term: String!"] + param_decls + ["$pageSize: Int = 1"])
 
-        # Build filter arguments (skip empties)
-        filter_args = [self.__build_param_definition(f) for f in filter_detection_result.detected_filters if f.value] # TODO: if filter value is in the possible values 
         filter_args_str = ", ".join(filter_args)
 
         query_tale = """
@@ -83,36 +83,35 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
                 price_range { minimum_price { final_price { value currency } } }
                 image { url }
             }
-            page_info {
-                current_page
-                page_size
-                total_pages
-            }
-            aggregations {
-                attribute_code
-                frontend_input
-                options { label value }
-            }
+            page_info { current_page page_size total_pages }
+            aggregations { attribute_code frontend_input options { label value } }
         }
         """
 
         query_products = f"products(search: $term filter: {{ {filter_args_str} }} pageSize: $pageSize)"
         query = f"query ({params_header}) {{ {query_products} {query_tale} }}"
 
+        # Precompute DTOs by code for O(1) lookups
+        dto_by_code = {f.code: f for f in filters_dto}
+
         variables = {}
-        for f in filter_detection_result.detected_filters:
-            if not f.value:
-                continue
-            if f.type == "price":
-                variables["min_price"] = f.value["min_price"]
-                variables["max_price"] = f.value["max_price"]
-            else:
-                variables[f.code] = f.value
+        for detected_filter in [f for f in filter_detection_result.detected_filters if f.value]:
+            f_dto = dto_by_code.get(detected_filter.code, None)
+            if not f_dto:
+                raise KeyError(f"Wrong detected filter: {detected_filter.code}")
+            self.__fill_variables(variables, detected_filter, f_dto)
 
         variables["term"] = filter_detection_result.search_term
         variables["pageSize"] = page_size
 
         return {"query": query, "variables": variables}
+
+    def __fill_variables(self, variables:dict, detected_filter:AttributeFilterValue, f_dto:AttributeFilterDto):
+        if detected_filter.type == "price" and detected_filter.value["max_price"] > 0:
+            variables["min_price"] = detected_filter.value["min_price"]
+            variables["max_price"] = detected_filter.value["max_price"]
+        elif detected_filter.value in f_dto.options:
+            variables[detected_filter.code] = detected_filter.value
 
     def __build_param(self, filter: AttributeFilterValue) -> str:
         if filter.type == "price":

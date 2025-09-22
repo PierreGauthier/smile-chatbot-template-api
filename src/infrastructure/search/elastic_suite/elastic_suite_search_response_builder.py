@@ -13,7 +13,13 @@ class ElasticSuiteSearchResponseBuilder(ApiResponseBuilder):
             return self.build_from_api_response(response.json())
         else:
             error_message = self.messages.get(response.status_code, "Unknown error.")
-            return SearchApiResponse(response.status_code, message=error_message)
+            return SearchApiResponse(
+                code=response.status_code, 
+                message=error_message,
+                query="",
+                items=[],
+                total_count=0
+            )
 
     def build_from_api_response(self, response:dict) -> SearchApiResponse:
         if response and "data" in response:

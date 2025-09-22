@@ -47,7 +47,6 @@ class SearchResponseBuilderAgent(ABC):
         new_message = '\n'.join([search_items_str, request_items_str, f"Total Results:{total_count}"])
         return self.invoke(message=new_message, prompt_template=self.not_empty_search_prompt_provider.get_prompt())
 
-
     def invoke(self, message:str, prompt_template:ChatPromptTemplate):
         
         new_message = ("human", message)
