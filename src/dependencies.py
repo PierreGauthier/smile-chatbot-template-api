@@ -14,6 +14,7 @@ from domain.services.database import (
 
 # Avoid circular dependency injection
 from application.agents.search_response_builder_agent import SearchResponseBuilderAgent
+from application.models import RagChatMessage, SearchChatMessage
 
 from infrastructure.gcp.services import GoogleCloudStorageDocumentService, FirestoreHistoryService
 from infrastructure.gcp.ai import VertexLlmProvider, VertexVectorStoreProvider
@@ -76,13 +77,23 @@ def inject_attribute_database_service(settings: Settings = Depends(get_settings)
         case _:
             raise ValueError(f"Unsupported History DB service provider: {provider}")
 
-def inject_history_service(settings: Settings = Depends(get_settings)) -> DatabaseHistoryService:
+def inject_history_service_for_RAG(settings: Settings = Depends(get_settings)) -> DatabaseHistoryService:
     provider = settings.llm_provider.lower()
     match provider:
         case "azure":
-            return CosmosDbHistoryService(settings)
+            return CosmosDbHistoryService[RagChatMessage](RagChatMessage, settings)
         case "gcp":
-            return FirestoreHistoryService(settings)
+            return FirestoreHistoryService[RagChatMessage](RagChatMessage, settings)
+        case _:
+            raise ValueError(f"Unsupported History DB service provider: {provider}")
+
+def inject_history_service_for_search(settings: Settings = Depends(get_settings)) -> DatabaseHistoryService:
+    provider = settings.llm_provider.lower()
+    match provider:
+        case "azure":
+            return CosmosDbHistoryService[SearchChatMessage](SearchChatMessage, settings)
+        case "gcp":
+            return FirestoreHistoryService[SearchChatMessage](SearchChatMessage, settings)
         case _:
             raise ValueError(f"Unsupported History DB service provider: {provider}")
         

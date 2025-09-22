@@ -8,20 +8,21 @@ from domain.services.database import DatabaseDocumentService, DatabaseHistorySer
 from domain.services.chatbot import ChatService
 from domain.models import (
     ChatServiceResult, 
-    ChatMessage,
     IndexFilterResult,
     Source,
     RagDocument
 )
 from domain.fields import IntentDefinitionField
+
 from application.agents import (
     ExchangeSummarizerAgent,
     RagAgent,
     BasicPydanticChain,
     IntentExtractionAgent
 )
+from application.models import RagChatMessage
 
-from dependencies import inject_history_service, inject_document_service
+from dependencies import inject_history_service_for_RAG, inject_document_service
 
 class DefaultRagChatService(ChatService):
     def __init__(
@@ -31,7 +32,7 @@ class DefaultRagChatService(ChatService):
             document_db_service: Annotated[DatabaseDocumentService, Depends(inject_document_service)],
             intent_extraction_agent: Annotated[BasicPydanticChain, Depends(IntentExtractionAgent)],
             summarize_exchange_agent : Annotated[BasicPydanticChain, Depends(ExchangeSummarizerAgent)],
-            history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service)]):
+            history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service_for_RAG)]):
         self.settings = settings
         self.intent_extraction_agent = intent_extraction_agent
         self.rag_agent = rag_agent
@@ -53,16 +54,16 @@ class DefaultRagChatService(ChatService):
         # (1) Insert user message and get the message history
         current_session_id = session_id
         if current_session_id:
-            new_message = ChatMessage.build_human_message(
+            new_message = RagChatMessage.build_human_message(
                 session_id=current_session_id,
                 user_id=user_id, 
                 content=input_message
             )
             self.history_db_service.upsert_message(new_message)
         else:
-            new_message:ChatMessage = self.history_db_service.create_message_thread(user_id=user_id, message=input_message)
+            new_message:RagChatMessage = self.history_db_service.create_message_thread(user_id=user_id, message=input_message)
             current_session_id = new_message.session_id
-        message_thread:List[ChatMessage] = self.history_db_service.get_message_thread(user_id=user_id, session_id=current_session_id)
+        message_thread:List[RagChatMessage] = self.history_db_service.get_message_thread(user_id=user_id, session_id=current_session_id)
 
         # (2) Summarize exchange
         exchange = input_message
@@ -87,10 +88,11 @@ class DefaultRagChatService(ChatService):
         sources = [] if not intent.is_intent else self.__build_sources(document_references)
         
         # (5) Insert AI-RAG response
-        ai_response = ChatMessage.build_ai_message(
+        ai_response = RagChatMessage.build_ai_message(
             session_id=current_session_id,
             user_id=user_id, 
-            content=ai_answer
+            content=ai_answer,
+            sources=sources
         )
         self.history_db_service.upsert_message(ai_response)
         

@@ -2,19 +2,20 @@ from typing import Annotated, List
 from fastapi import Depends
 from functools import partial
 
-from domain.models import SearchContext, ChatMessage
+from domain.models import SearchContext
 from domain.services.database import DatabaseHistoryService
 from domain.logger import ContextLogger
 
 from application.agents import ExchangeSummarizerAgent, BasicPydanticChain
+from application.models import SearchChatMessage
 
-from dependencies import inject_history_service, inject_logger
+from dependencies import inject_history_service_for_search, inject_logger
 
 class ConversationManager:
     def __init__(
             self,
             summarize_exchange_agent : Annotated[BasicPydanticChain, Depends(ExchangeSummarizerAgent)],
-            history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service)],
+            history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service_for_search)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="ConversationManager"))]):
         self.history_db_service = history_db_service
         self.summarize_exchange_agent = summarize_exchange_agent
@@ -24,7 +25,7 @@ class ConversationManager:
         # Insert user message and get the message history
         current_session_id = context.session_id
         if current_session_id:
-            new_message = ChatMessage.build_human_message(
+            new_message = SearchChatMessage.build_human_message(
                 session_id=current_session_id,
                 user_id=context.user_id, 
                 content=context.input_message
@@ -33,14 +34,14 @@ class ConversationManager:
             context.session_id = current_session_id
             self.logger.debug_context(f"New HUMAN message inserted: {context.input_message}", context)
         else:
-            new_message:ChatMessage = self.history_db_service.create_message_thread(
+            new_message:SearchChatMessage = self.history_db_service.create_message_thread(
                 user_id=context.user_id, 
                 message=context.input_message
             )
             current_session_id = new_message.session_id
             context.session_id = current_session_id
             self.logger.debug_context(f"New thread created: {context.input_message}", context)
-        message_thread:List[ChatMessage] = self.history_db_service.get_message_thread(
+        message_thread:List[SearchChatMessage] = self.history_db_service.get_message_thread(
             user_id=context.user_id, 
             session_id=current_session_id
         )
@@ -54,10 +55,11 @@ class ConversationManager:
         return context
     
     def store_ai_answer(self, context:SearchContext):
-        self.history_db_service.upsert_message(message=ChatMessage.build_ai_message(
+        self.history_db_service.upsert_message(message=SearchChatMessage.build_ai_message(
             user_id=context.user_id,
             session_id=context.session_id,
-            content=context.ai_answer
+            content=context.ai_answer,
+            products=context.search_result
         ))
         self.logger.debug_context(f"New AI message inserted: {context.ai_answer}", context)
             

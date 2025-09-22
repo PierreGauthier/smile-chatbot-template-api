@@ -1,23 +1,23 @@
 import uuid
-from typing import Annotated, List
+from typing import Annotated, List, Type
 from fastapi import Depends
 from google.cloud import firestore
 
-from domain.services.database import DatabaseHistoryService
-from domain.models import ChatMessage
+from domain.services.database import DatabaseHistoryService, T
 
 from infrastructure.gcp.services import Firestore
 
 from config import Settings, get_settings
 
-class FirestoreHistoryService(DatabaseHistoryService):
-    def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
+class FirestoreHistoryService(DatabaseHistoryService[T]):
+    def __init__(self, message_class: Type[T], settings: Annotated[Settings, Depends(get_settings)]):
+        super().__init__(message_class)
         self.database = Firestore(
             collection=settings.firestore_history_collection,
             settings=settings
         )
 
-    def create_message_thread(self, user_id: str, message: str) -> ChatMessage:
+    def create_message_thread(self, user_id: str, message: str) -> T:
         collection_ref = self.database.get_collection()
         session_id = str(uuid.uuid4())
         message_id = str(uuid.uuid4())
@@ -36,9 +36,9 @@ class FirestoreHistoryService(DatabaseHistoryService):
         doc_ref.set(doc_data)
         
         # Return the created message
-        return ChatMessage.from_dict(doc_data)
+        return self.message_class.from_dict(doc_data)
     
-    def get_message_thread(self, user_id: str, session_id: str) -> List[ChatMessage]:
+    def get_message_thread(self, user_id: str, session_id: str) -> List[T]:
         """
         Fetch every chat message that belongs to a (user_id, session_id) pair 
         and return them as domain objects in chronological order.
@@ -58,18 +58,18 @@ class FirestoreHistoryService(DatabaseHistoryService):
         messages = []
         for doc in docs:
             doc_data = doc.to_dict()
-            messages.append(ChatMessage.from_dict(doc_data))
+            messages.append(self.message_class.from_dict(doc_data))
         
         return messages
     
-    def upsert_message(self, message: ChatMessage) -> ChatMessage:
+    def upsert_message(self, message: T) -> T:
         if not message.id:
             message.id = str(uuid.uuid4())
         
         collection_ref = self.database.get_collection()
         
         # Convert message to dictionary
-        message_dict = ChatMessage.to_dict(message)
+        message_dict = self.message_class.to_dict(message)
         
         # Add timestamp if not present (useful for ordering)
         if "timestamp" not in message_dict:

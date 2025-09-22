@@ -9,13 +9,13 @@ class ChatMessage:
     data:MessageData
     id:str = None
 
-    @classmethod
-    def build_human_message(cls, session_id:str, user_id:str, content:str, id:str=None):
-        return ChatMessage(id=id, session_id=session_id, user_id=user_id, type="human", data=MessageData(content=content))
+    # @classmethod
+    # def build_human_message(cls, session_id:str, user_id:str, content:str, id:str=None):
+    #     return ChatMessage(id=id, session_id=session_id, user_id=user_id, type="human", data=MessageData(content=content))
     
-    @classmethod
-    def build_ai_message(cls, session_id:str, user_id:str, content:str, id:str=None):
-        return ChatMessage(id=id, session_id=session_id, user_id=user_id, type="ai", data=MessageData(content=content))
+    # @classmethod
+    # def build_ai_message(cls, session_id:str, user_id:str, content:str, id:str=None):
+    #     return ChatMessage(id=id, session_id=session_id, user_id=user_id, type="ai", data=MessageData(content=content))
     
     def to_dict(self) -> dict:
         data = self.data.to_dict() if self.data else {}
