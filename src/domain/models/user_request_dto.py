@@ -6,7 +6,7 @@ class UserRequestDto:
     id:str
     user_id:str
     session_id:str
-    attribute_id:int
+    attribute_id:str
     data:dict
 
     def to_dict(self):
@@ -23,6 +23,6 @@ class UserRequestDto:
             id=document["id"],
             user_id=document["user_id"],
             session_id=document["session_id"],
-            attribute_id=int(document["attribute_id"]),
+            attribute_id=document["attribute_id"],
             data=document.get("data", {}) or {}
         )
