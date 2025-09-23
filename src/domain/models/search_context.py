@@ -7,7 +7,8 @@ from domain.models import (
     UserRequestDto,
     AttributeSetDto,
     ProductFilterDetectionResult,
-    SearchResponseItem
+    SearchResponseItem,
+    Language
 )
 
 @dataclass
@@ -16,6 +17,8 @@ class SearchContext:
     user_id: str
     session_id:str
     is_first_call:bool
+    search_lang:Language = None
+    chat_lang:Language = None
     message_thread: List[ChatMessage] = field(default_factory=list)
     exchange: str = ""
     requests: List[UserRequestDto] = field(default_factory=list)

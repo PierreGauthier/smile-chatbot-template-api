@@ -1,3 +1,4 @@
+from .language import Language
 from .setup_service_result import SetupServiceResult
 from .content_type import ContentType
 from .rag_document_metadata import RagDocumentMetadata
@@ -33,6 +34,7 @@ from .product_filter_detection_result import ProductFilterDetectionResult
 from .search_context import SearchContext
 
 __all__ = [
+    "Language",
     "SearchServiceResult",
     "SearchResponseItem",
     "SearchApiResponse",

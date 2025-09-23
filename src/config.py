@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     environment: str = "local"
     debug: bool = False
     log_level: str = "INFO"
-
+    search_lang:str = "FR"
     llm_provider:str
     
     openai_api_version: str = "2020-05-10"

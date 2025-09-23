@@ -9,6 +9,7 @@ from domain.models import SearchContext, SearchServiceResult
 from domain.logger import ContextLogger
 
 from application.services.conversational_search import (
+    LanguageManager,
     ConversationManager,
     RequestManager,
     AttributeDetectionManager,
@@ -22,12 +23,14 @@ class ConversationalSearchService(SearchService):
     def __init__(
             self,
             settings: Annotated[Settings, Depends(get_settings)],
+            language_manager:Annotated[LanguageManager, Depends(LanguageManager)],
             conversation_manager:Annotated[ConversationManager, Depends(ConversationManager)],
             request_manager:Annotated[RequestManager, Depends(RequestManager)],
             attribute_set_manager:Annotated[AttributeDetectionManager, Depends(AttributeDetectionManager)],
             search_manager:Annotated[SearchManager, Depends(SearchManager)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="ConversationalSearchService"))]):
         self.settings = settings
+        self.language_manager = language_manager
         self.conversation_manager = conversation_manager
         self.request_manager = request_manager
         self.attribute_set_manager = attribute_set_manager
@@ -43,9 +46,13 @@ class ConversationalSearchService(SearchService):
         context = SearchContext(
             input_message=input_message, 
             user_id=user_id, 
-            session_id=session_id, 
+            session_id=session_id,
             is_first_call= not session_id
         )
+
+        # (0) Detect chat language
+        context = self.language_manager.configure_languages(input_message, context)
+
         # (1) Get (or create) message thread
         context = self.conversation_manager.insert_or_create_thread(context)
         
