@@ -450,3 +450,6 @@ data/
 
 #keys
 keys/
+
+# Models
+*.bin

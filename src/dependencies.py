@@ -14,6 +14,7 @@ from domain.services.database import (
 
 # Avoid circular dependency injection
 from application.agents.search_response_builder_agent import SearchResponseBuilderAgent
+from application.agents.language_detector import LanguageDetector
 from application.models import RagChatMessage, SearchChatMessage
 
 from infrastructure.gcp.services import GoogleCloudStorageDocumentService, FirestoreHistoryService
@@ -39,6 +40,7 @@ from infrastructure.prompts.langsmith import (
 )
 from infrastructure.configuration.elastic_suite import ElasticSuiteAttributeSetClient, ElasticSuiteAttributeSetResponseBuilder
 from infrastructure.agents.elastic_suite import ElasticSuiteSearchResponseBuilderAgent
+from infrastructure.gcp.agents import LangDetectLanguageDetector
 
 from config import Settings, get_settings
 
@@ -54,6 +56,11 @@ def inject_configuration_client(settings: Settings = Depends(get_settings)) -> E
     return ElasticSuiteAttributeSetClient(
         settings=settings,
         attribute_set_response_builder=ElasticSuiteAttributeSetResponseBuilder()
+    )
+
+def inject_language_detector() -> LanguageDetector:
+    return LangDetectLanguageDetector(
+        logger=inject_logger(module_name="LangDetectLanguageDetector")
     )
 
 def inject_embedding_provider(settings: Settings = Depends(get_settings)) -> EmbeddingsProvider:
