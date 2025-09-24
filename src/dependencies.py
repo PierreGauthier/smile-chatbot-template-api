@@ -36,7 +36,7 @@ from infrastructure.prompts.langsmith import (
     LangsmithRagMainPromptProvider,
     LangsmithSearchResponseBuilderPromptProvider,
     LangsmithEmptySearchResponseBuilderPromptProvider,
-    LangsmithExchangeSummarizerPromptProvider
+    LangsmithSummarizeExchangePromptProvider
 )
 from infrastructure.configuration.elastic_suite import ElasticSuiteAttributeSetClient, ElasticSuiteAttributeSetResponseBuilder
 from infrastructure.agents.elastic_suite import ElasticSuiteSearchResponseBuilderAgent
@@ -178,4 +178,4 @@ def inject_empty_search_response_prompt(settings: Settings = Depends(get_setting
     return LangsmithEmptySearchResponseBuilderPromptProvider(settings)
 
 def inject_exchange_summarizer_prompt(settings: Settings = Depends(get_settings)) -> ChatPromptTemplate:
-    return LangsmithExchangeSummarizerPromptProvider(settings)
+    return LangsmithSummarizeExchangePromptProvider(settings)

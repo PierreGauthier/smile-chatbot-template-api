@@ -6,7 +6,7 @@ from domain.models import SearchContext
 from domain.services.database import DatabaseHistoryService
 from domain.logger import ContextLogger
 
-from application.agents import ExchangeSummarizerAgent, BasicPydanticChain
+from application.agents import ExchangeSummarizerAgent
 from application.models import SearchChatMessage
 
 from dependencies import inject_history_service_for_search, inject_logger
@@ -14,7 +14,7 @@ from dependencies import inject_history_service_for_search, inject_logger
 class ConversationManager:
     def __init__(
             self,
-            summarize_exchange_agent : Annotated[BasicPydanticChain, Depends(ExchangeSummarizerAgent)],
+            summarize_exchange_agent : Annotated[ExchangeSummarizerAgent, Depends(ExchangeSummarizerAgent)],
             history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service_for_search)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="ConversationManager"))]):
         self.history_db_service = history_db_service
@@ -68,7 +68,7 @@ class ConversationManager:
     def __summarize_exchange(self, context:SearchContext):
         exchange = context.input_message
         if len(context.message_thread) > 1:
-            exchange = self.summarize_exchange_agent.invoke(context.message_thread)
+            exchange = self.summarize_exchange_agent.invoke(context.message_thread, context.chat_lang)
             self.logger.debug_context(message=f"Exchange summary: {exchange}", context=context)
         else:
             self.logger.debug_context(message=f"Input message: {exchange}", context=context)

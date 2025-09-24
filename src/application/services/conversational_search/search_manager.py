@@ -40,10 +40,6 @@ class SearchManager:
                 filter_detection_result=product,
                 filters_dto=filters_dto
             )
-            #     attribute_set=product.attribute_set_name,
-            #     term=product.search_term,
-            #     filters=product.detected_filters
-            # )
             if api_response.code == 200:
                 items.extend(api_response.items)
                 total_count += api_response.total_count
