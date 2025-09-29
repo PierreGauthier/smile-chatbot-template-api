@@ -66,7 +66,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         filter_args = []
         for detected_filter in filter_detection_result.detected_filters:
             f_dto = next((f for f in filters_dto if f.code == detected_filter.code), None)
-            if detected_filter.value and f_dto and detected_filter.value in f_dto.options: 
+            if f_dto and (detected_filter.value or detected_filter.value in f_dto.options): 
                 param_decls.append(self.__build_param(detected_filter))
                 filter_args.append(self.__build_param_definition(detected_filter))
         params_header = ", ".join(["$term: String!"] + param_decls + ["$pageSize: Int = 1"])
@@ -95,7 +95,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         dto_by_code = {f.code: f for f in filters_dto}
 
         variables = {}
-        for detected_filter in [f for f in filter_detection_result.detected_filters if f.value]:
+        for detected_filter in filter_detection_result.detected_filters: #[f for f in filter_detection_result.detected_filters if f.value]:
             f_dto = dto_by_code.get(detected_filter.code, None)
             if not f_dto:
                 raise KeyError(f"Wrong detected filter: {detected_filter.code}")
@@ -110,7 +110,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         if detected_filter.type == "price" and detected_filter.value["max_price"] > 0:
             variables["min_price"] = detected_filter.value["min_price"]
             variables["max_price"] = detected_filter.value["max_price"]
-        elif detected_filter.value in f_dto.options:
+        elif detected_filter.value or(detected_filter.value in f_dto.options):
             variables[detected_filter.code] = detected_filter.value
 
     def __build_param(self, filter: AttributeFilterValue) -> str:

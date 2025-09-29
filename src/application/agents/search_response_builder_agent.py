@@ -24,12 +24,24 @@ class SearchResponseBuilderAgent(ABC):
     
     def invoke_empty(self, context: SearchContext):
         request_items = []
+        exchange_list = []
+        for message in context.message_thread:
+            message_type = "Assistant" if message.type == "ai" else "User"
+            exchange_list.append(f"- {message_type}: {message.data.content}")
+
         for request in context.requests:
             request_items.extend([
                 f"- {self.build_filter_value_expression(request, self.__find_filter(key, request, context))}" 
                 for key in request.data.keys()
-            ])        
-        new_message = '\n'.join(request_items)
+            ])
+
+        result_components = [
+            "Filters:\n" + '\n'.join(request_items),
+            "Exchange:\n" + '\n'.join(exchange_list),
+            f"Output Language: {context.chat_lang.lang_name}"
+        ]
+        
+        new_message = '\n'.join(result_components)
         return self.invoke(message=new_message, prompt_template=self.empty_search_prompt_provider.get_prompt())
     
     def invoke_not_empty(self, context: SearchContext, search_result:List[SearchResponseItem], total_count:int):
@@ -44,7 +56,11 @@ class SearchResponseBuilderAgent(ABC):
                 for key in request.data.keys()
             ])
         request_items_str = "Filters:\n" '\n'.join(request_items)
-        new_message = '\n'.join([search_items_str, request_items_str, f"Total Results:{total_count}"])
+        new_message = '\n'.join([
+            search_items_str, request_items_str, 
+            f"Total Results:{total_count}",
+            f"Output Language: {context.chat_lang.lang_name}"
+        ])
         return self.invoke(message=new_message, prompt_template=self.not_empty_search_prompt_provider.get_prompt())
 
     def invoke(self, message:str, prompt_template:ChatPromptTemplate):
