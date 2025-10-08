@@ -66,7 +66,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         filter_args = []
         for detected_filter in filter_detection_result.detected_filters:
             f_dto = next((f for f in filters_dto if f.code == detected_filter.code), None)
-            if f_dto and (detected_filter.value): # or detected_filter.value in f_dto.options): 
+            if f_dto and self.__not_empty_value(detected_filter): # or detected_filter.value in f_dto.options): 
                 param_decls.append(self.__build_param(detected_filter))
                 filter_args.append(self.__build_param_definition(detected_filter))
         params_header = ", ".join(["$term: String!"] + param_decls + ["$pageSize: Int = 1"])
@@ -107,9 +107,10 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         return {"query": query, "variables": variables}
 
     def __fill_variables(self, variables:dict, detected_filter:AttributeFilterValue, f_dto:AttributeFilterDto):
-        if detected_filter.type == "price" and detected_filter.value["max_price"] > 0:
-            variables["min_price"] = detected_filter.value["min_price"]
-            variables["max_price"] = detected_filter.value["max_price"]
+        if detected_filter.type == "price":
+            if detected_filter.value["max_price"] > 0:
+                variables["min_price"] = detected_filter.value["min_price"]
+                variables["max_price"] = detected_filter.value["max_price"]
         elif detected_filter.value: # or (detected_filter.value in f_dto.options): 
             variables[detected_filter.code] = detected_filter.value
 
@@ -135,3 +136,9 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         parsed = urlparse(url)
         netloc = f"{credentials}@{parsed.hostname}" + (f":{parsed.port}" if parsed.port else "")
         return urlunparse((parsed.scheme, netloc, parsed.path, parsed.params, parsed.query, parsed.fragment))
+
+    def __not_empty_value(self, filter:AttributeFilterValue):
+        if filter.type == "price":
+            return filter.value and (filter.value["min_price"] > 0 or filter.value["max_price"] > 0)
+        else:
+            return filter.value
