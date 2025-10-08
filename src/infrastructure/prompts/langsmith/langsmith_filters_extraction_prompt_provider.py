@@ -18,10 +18,17 @@ class LangsmithFiltersExtractionPromptProvider(FiltersExtractionPromptProvider):
     def get_prompt(self, filters:List[AttributeFilterDto]) -> ChatPromptTemplate:
         prompt: ChatPromptTemplate = hub.pull(self.prompt_name)
 
-        param_filters = "\n".join(
-            f"- **{filter.code}**: {filter.description or self._build_description(filter.type, filter.label.lower())}" 
-            for filter in filters
-        )
+        filters_declarations = []
+        for filter in filters:
+            data_type_str = ""
+            if filter.type == "price":
+                if filter.options_type  == "str":
+                    data_type_str = " (data-type = string)"
+                elif filter.options_type  == "int":
+                    data_type_str = " (data-type = integer)"           
+            filters_declarations.append(f"- **{filter.code}**: {filter.description or self._build_description(filter.type, filter.label.lower())}{data_type_str}")
+            
+        param_filters = "\n".join(filters_declarations)
 
         filter_options_items = []
         for filter in filters:

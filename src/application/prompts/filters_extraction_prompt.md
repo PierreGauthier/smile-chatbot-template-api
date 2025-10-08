@@ -26,6 +26,7 @@ Use the context to determine which fields have already been provided.
 - Analyze the current user query or conversation history to extract values for {filter_list}.
 - If a field cannot be determined from the current query or history, set its value to zero (for numerical fields) or empty (for string fields).
 - If the extracted value is in the list/range above (section **Possible values for each filter**), return it exactly as shown in the list (lowercase, no extra spaces).
+- The extracted value **MUST** respect the declared data type in the section `Structure`or in the filter's definition (`data-type =...`). Example: Even if a filter concerns quantities (ex. number_edges), if the declared data type is string, the extracted value must be a string (ex. "3" or "5", and not 3 or 5). If the value is value can't be extracted, the default value **MUST** be an empty string (""), not zero (0). 
 - To help you find missing values for {filter_list}, you can formulate a question for the user, in the `ai_question` field, in order to deduce the value for the missing field after a minimum of questions.
 - If the user does not know the answer to the question formulated in `ai_question`, or if he doesn't answer it, you will not ask again (you give up to find values for that field).
 
