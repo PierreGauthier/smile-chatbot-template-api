@@ -4,7 +4,7 @@ from fastapi import Depends
 from domain.ai import LlmProvider
 from domain.fields import IntentDefinitionField
 
-from application.agents import BasicPydanticChain
+from application.chains import BasicPydanticChain
 from application.prompts import StaticPromptProvider
 
 from dependencies import inject_llm_provider, inject_intent_extraction_prompt

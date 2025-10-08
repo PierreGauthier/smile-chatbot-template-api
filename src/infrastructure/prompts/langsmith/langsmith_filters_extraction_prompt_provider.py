@@ -19,7 +19,7 @@ class LangsmithFiltersExtractionPromptProvider(FiltersExtractionPromptProvider):
         prompt: ChatPromptTemplate = hub.pull(self.prompt_name)
 
         param_filters = "\n".join(
-            f"- **{filter.code}**: {filter.description or self._build_description(filter.label.lower())}" 
+            f"- **{filter.code}**: {filter.description or self._build_description(filter.type, filter.label.lower())}" 
             for filter in filters
         )
 
@@ -51,8 +51,10 @@ class LangsmithFiltersExtractionPromptProvider(FiltersExtractionPromptProvider):
 
         return prompt
     
-    def _build_description(self, value:str):
-        return f"Le {value} du produit."
+    def _build_description(self, type:str, value:str):
+        if type == "price":
+            return f"The {value} of the product. In this case, here is a price range logic (interpret common phrasing): \n\t- `budget of X`, `up to X`, `at most X`, `no more than X`, `under/less than X` → min_price = 0, max_price = X\n\t- `between X and Y`, `X-Y`, `from X to Y` → min_price = min(X, Y), max_price = max(X, Y)."
+        return f"The {value} of the product."
     
     def _get_filter_list(self, n:int, filters:List[AttributeFilterDto]):
         return ", ".join(f"`{filter.code}`" for filter in filters[:n])

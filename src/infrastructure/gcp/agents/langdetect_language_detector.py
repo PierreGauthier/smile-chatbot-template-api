@@ -2,7 +2,7 @@ from langdetect import detect, detect_langs
 
 from domain.models import Language
 from domain.logger import ContextLogger
-from application.agents import LanguageDetector
+from domain.agents import LanguageDetector
 
 class LangDetectLanguageDetector(LanguageDetector):
 

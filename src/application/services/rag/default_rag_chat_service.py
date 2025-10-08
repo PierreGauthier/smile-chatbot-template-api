@@ -17,10 +17,10 @@ from domain.fields import IntentDefinitionField
 from application.agents import (
     ExchangeSummarizerAgent,
     RagAgent,
-    BasicPydanticChain,
     IntentExtractionAgent
 )
 from application.models import RagChatMessage
+from application.chains import BasicPydanticChain
 
 from dependencies import inject_history_service_for_RAG, inject_document_service
 

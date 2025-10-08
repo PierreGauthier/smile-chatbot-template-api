@@ -58,6 +58,7 @@ class Settings(BaseSettings):
     langsmith_rag_system_prompt_name : str
     langsmith_summary_exchange_prompt_name: str
     langsmith_intent_extraction_prompt_name: str
+    langsmith_language_detector_prompt_name: str
 
 
     # Elastic suite

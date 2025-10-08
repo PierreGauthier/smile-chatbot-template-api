@@ -7,6 +7,7 @@ from .langsmith_question_summarizer_prompt_provider import LangsmithQuestionSumm
 from .langsmith_rag_main_prompt_provider import LangsmithRagMainPromptProvider
 from .langsmith_search_response_builder_prompt_provider import LangsmithSearchResponseBuilderPromptProvider
 from .langsmith_summarize_exchange_prompt_provider import LangsmithSummarizeExchangePromptProvider
+from .langsmith_language_detector_prompt_provider import LangsmithLanguageDetectorPromptProvider
 
 __all__ = [
     "LangsmithContextualizePromptProvider",
@@ -18,5 +19,6 @@ __all__ = [
     "LangsmithQuestionSummarizerPromptProvider",
     "LangsmithRagMainPromptProvider",
     "LangsmithSearchResponseBuilderPromptProvider",
-    "LangsmithSummarizeExchangePromptProvider"
+    "LangsmithSummarizeExchangePromptProvider",
+    "LangsmithLanguageDetectorPromptProvider"
 ]

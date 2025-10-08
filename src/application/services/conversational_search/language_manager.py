@@ -5,7 +5,7 @@ from functools import partial
 from domain.models import SearchContext, Language
 from domain.logger import ContextLogger
 
-from application.agents import LanguageDetector
+from domain.agents import LanguageDetector
 
 from config import Settings, get_settings
 from dependencies import inject_language_detector, inject_logger
