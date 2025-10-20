@@ -4,10 +4,20 @@ from typing import Annotated, List
 from fastapi import Depends
 from urllib.parse import urlparse, urlunparse
 
-from domain.models import SearchApiResponse, AttributeFilterValue, ProductFilterDetectionResult, AttributeFilterDto
+from domain.models import (
+    FilteredSearchApiResponse,
+    SearchApiResponse, 
+    AttributeFilterValue, 
+    ProductFilterDetectionResult, 
+    AttributeFilterDto
+)
 from domain.api_client import ConversationalSearchClient
 from domain.logger import ContextLogger
-from infrastructure.search.elastic_suite import ElasticSuiteSearchResponseBuilder
+from infrastructure.search.elastic_suite import (
+    ElasticSuiteSearchResponseBuilder, 
+    OneFilterSelectionStrategy,
+    ElasticSuiteGraphqlQueryFactory
+)
 from config import Settings, get_settings
 
 class ElasticSuiteSearchClient(ConversationalSearchClient):
@@ -21,28 +31,106 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         self.settings = settings
         self.search_response_builder = search_response_builder
         self.logger = logger
-
-    def search_products(
-            self,
-            filter_detection_result:ProductFilterDetectionResult,
-            filters_dto:List[AttributeFilterDto], #attribute_set: str, term:str, filters: List[AttributeFilterValue], 
-            page_size: int = 10) -> SearchApiResponse:
-        url = self.__insert_credentials(
+        self.url = self.__insert_credentials(
             url=self.api_base_url,
             credentials=self.settings.elastic_suite_search_api_credentials,
         )
         (x_correlation_id_key, x_correlation_id_value) = self.create_x_correlation_id()
         (content_type_key, content_type_value) = self.create_json_content_type()
-
-        headers = {
+        self.headers = {
             x_correlation_id_key: x_correlation_id_value,
             content_type_key: content_type_value,
             "Store": "lamaison",
         }
+        self.graphql_factory = ElasticSuiteGraphqlQueryFactory()
 
-        json_data = self.__build_data(
-            filter_detection_result=filter_detection_result, 
-            filters_dto=filters_dto, 
+    def search(self, 
+            filter_detection_result:ProductFilterDetectionResult,
+            filters_dto:List[AttributeFilterDto],
+            page_size: int = 10) -> FilteredSearchApiResponse:
+        valued_detected_filters = [f for f in filter_detection_result.detected_filters if f.value]
+
+        # Searching only with 'term'
+        if not valued_detected_filters:
+            response = self.search_products(valued_detected_filters, filters_dto, filter_detection_result.search_term, page_size)
+            return FilteredSearchApiResponse.build_from_search_api_response(
+                response=response,
+                filter_name=None,
+                is_filter_included=False
+            )
+        
+        # Search with all
+        response = self.search_products(valued_detected_filters, filters_dto, filter_detection_result.search_term, page_size)
+        if response.total_count > 0:
+            return FilteredSearchApiResponse.build_from_search_api_response(
+                response=response,
+                filter_name=None,
+                is_filter_included=False
+            )
+        
+        best_response = None
+        best_score = -1
+
+        filter_selection_strategy = OneFilterSelectionStrategy(valued_detected_filters)
+        
+        while filter_selection_strategy.has_next():
+            not_selected_filters, selected_filters = filter_selection_strategy.next() # invert result so we want all the rest filters
+            response = self.search_products(
+                detected_filters=selected_filters,
+                filters_dto=filters_dto,
+                search_term=filter_detection_result.search_term,
+                page_size=page_size,
+            )
+            score = response.total_count
+            if (best_response is None or score > best_score) and response.total_count > 0:
+                best_response = FilteredSearchApiResponse.build_from_search_api_response(
+                    response=response,
+                    filter_name=not_selected_filters[0].label,
+                    is_filter_included=False
+                )
+                best_score = score
+        
+        if best_score > 0:
+            return best_response
+        
+        filter_selection_strategy.reset()
+
+        while filter_selection_strategy.has_next():
+            selected_filters, _ = filter_selection_strategy.next()
+            response = self.search_products(
+                detected_filters=selected_filters,
+                filters_dto=filters_dto,
+                search_term=filter_detection_result.search_term,
+                page_size=page_size,
+            )
+            score = response.total_count
+            if (best_response is None or score > best_score) and response.total_count > 0:
+                best_response = FilteredSearchApiResponse.build_from_search_api_response(
+                    response=response,
+                    filter_name=selected_filters[0].label,
+                    is_filter_included=True
+                )
+                best_score = score
+        
+        if best_score <= 0:
+            response = self.search_products([], filters_dto, filter_detection_result.search_term, page_size)
+            return FilteredSearchApiResponse.build_from_search_api_response(
+                response=response,
+                filter_name=None,
+                is_filter_included=False
+            )
+
+    def search_products(
+            self,
+            detected_filters:List[AttributeFilterValue],
+            filters_dto:List[AttributeFilterDto], #attribute_set: str, term:str, filters: List[AttributeFilterValue],
+            search_term:str, 
+            page_size: int = 10) -> SearchApiResponse:
+        
+        json_data = self.graphql_factory.build_data(
+            detected_filters=detected_filters, 
+            filters_dto=filters_dto,
+            search_term=search_term,
             page_size=page_size
         )
 
@@ -53,92 +141,10 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         }
         self.logger.debug(msg=json.dumps(log_payload, ensure_ascii=False))
 
-        response = self.post(url=url, headers=headers, json_data=json_data)
+        response = self.post(url=self.url, headers=self.headers, json_data=json_data)
         return self.search_response_builder.build_response(response)
-
-    def __build_data(
-            self,
-            filter_detection_result:ProductFilterDetectionResult,
-            filters_dto:List[AttributeFilterDto], 
-            page_size: int):
-        # Build variable param declarations (skip empties)
-        param_decls = [] 
-        filter_args = []
-        for detected_filter in filter_detection_result.detected_filters:
-            f_dto = next((f for f in filters_dto if f.code == detected_filter.code), None)
-            if f_dto and self.__not_empty_value(detected_filter): # or detected_filter.value in f_dto.options): 
-                param_decls.append(self.__build_param(detected_filter))
-                filter_args.append(self.__build_param_definition(detected_filter))
-        params_header = ", ".join(["$term: String!"] + param_decls + ["$pageSize: Int = 1"])
-
-        filter_args_str = ", ".join(filter_args)
-
-        query_tale = """
-        {
-            total_count
-            items {
-                id
-                sku
-                name
-                price_range { minimum_price { final_price { value currency } } }
-                image { url }
-            }
-            page_info { current_page page_size total_pages }
-            aggregations { attribute_code frontend_input options { label value } }
-        }
-        """
-
-        query_products = f"products(search: $term filter: {{ {filter_args_str} }} pageSize: $pageSize)"
-        query = f"query ({params_header}) {{ {query_products} {query_tale} }}"
-
-        # Precompute DTOs by code for O(1) lookups
-        dto_by_code = {f.code: f for f in filters_dto}
-
-        variables = {}
-        for detected_filter in [f for f in filter_detection_result.detected_filters if f.value]: # Exclude filters with empty or zero value
-            f_dto = dto_by_code.get(detected_filter.code, None)
-            if not f_dto:
-                raise KeyError(f"Wrong detected filter: {detected_filter.code}")
-            self.__fill_variables(variables, detected_filter, f_dto)
-
-        variables["term"] = filter_detection_result.search_term
-        variables["pageSize"] = page_size
-
-        return {"query": query, "variables": variables}
-
-    def __fill_variables(self, variables:dict, detected_filter:AttributeFilterValue, f_dto:AttributeFilterDto):
-        if detected_filter.type == "price":
-            if detected_filter.value["max_price"] > 0:
-                variables["min_price"] = detected_filter.value["min_price"]
-                variables["max_price"] = detected_filter.value["max_price"]
-        elif detected_filter.value: # or (detected_filter.value in f_dto.options): 
-            variables[detected_filter.code] = detected_filter.value
-
-    def __build_param(self, filter: AttributeFilterValue) -> str:
-        if filter.type == "price":
-            return "$min_price: String!, $max_price: String!"
-        return f"${filter.code}: String!"
-
-    def __build_param_definition(self, filter: AttributeFilterValue) -> str:
-        match filter.type:
-            case "price":
-                return "price: { from: $min_price, to: $max_price }"
-            case "decimal":
-                return f"{filter.code}: {{ from: ${filter.code} }}"
-            case "select" | "multiselect":
-                return f"{filter.code}: {{ eq: ${filter.code} }}"
-            case "smile_custom_entity" | "text":
-                return f"{filter.code}: {{ match: ${filter.code} }}"
-            case _:
-                raise ValueError(f"Unsupported filter data-type: {filter.type}")
-
+        
     def __insert_credentials(self, url: str, credentials: str) -> str:
         parsed = urlparse(url)
         netloc = f"{credentials}@{parsed.hostname}" + (f":{parsed.port}" if parsed.port else "")
         return urlunparse((parsed.scheme, netloc, parsed.path, parsed.params, parsed.query, parsed.fragment))
-
-    def __not_empty_value(self, filter:AttributeFilterValue):
-        if filter.type == "price":
-            return filter.value and (filter.value["min_price"] > 0 or filter.value["max_price"] > 0)
-        else:
-            return filter.value

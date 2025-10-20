@@ -32,6 +32,7 @@ from .attribute_filter_value import AttributeFilterValue
 from .user_request_dto import UserRequestDto
 from .product_filter_detection_result import ProductFilterDetectionResult
 from .search_context import SearchContext
+from .filtered_search_api_response import FilteredSearchApiResponse
 
 __all__ = [
     "Language",
@@ -65,5 +66,6 @@ __all__ = [
     "AttributeSetApiResponse",
     "UserRequestDto",
     "ProductFilterDetectionResult",
-    "SearchContext"
+    "SearchContext",
+    "FilteredSearchApiResponse"
 ]

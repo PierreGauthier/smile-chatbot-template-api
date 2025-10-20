@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import Depends
 from functools import partial
 
-from domain.models import SearchContext, SearchApiResponse
+from domain.models import SearchContext, FilteredSearchApiResponse
 from domain.api_client import ConversationalSearchClient
 from domain.logger import ContextLogger
 
@@ -29,14 +29,16 @@ class SearchManager:
         
         #if no_question or too_many_questions:
         total_count = 0
-        # Launch the search
+        
+        # Launch the search (/!\ Only one product search hypothesis)
         items = []
+        api_response:FilteredSearchApiResponse = None
         for product in context.request_chain_results:
             attribute_set = next((attr for attr in context.attribute_sets if attr.attribute_set_id == product.attribute_set_id), None)
             if not attribute_set:
                 raise KeyError(f"No attribute set found ({product.attribute_set_code})")
             filters_dto = attribute_set.filters
-            api_response:SearchApiResponse = self.conversational_search_client.search_products(
+            api_response = self.conversational_search_client.search(
                 filter_detection_result=product,
                 filters_dto=filters_dto
             )
@@ -54,7 +56,12 @@ class SearchManager:
             context.search_result = []
         
         else:
-            not_empty_search_answer = self.search_response_agent.invoke_not_empty(context, items, total_count)
+            not_empty_search_answer = self.search_response_agent.invoke_not_empty(
+                context=context, 
+                search_result=items, 
+                filter_name=api_response.filter_name,
+                is_included=api_response.is_filter_included,
+                total_count=total_count)
             context.ai_answer = not_empty_search_answer
             context.search_result = items
             

@@ -44,7 +44,14 @@ class SearchResponseBuilderAgent(ABC):
         new_message = '\n'.join(result_components)
         return self.invoke(message=new_message, prompt_template=self.empty_search_prompt_provider.get_prompt())
     
-    def invoke_not_empty(self, context: SearchContext, search_result:List[SearchResponseItem], total_count:int):
+    def invoke_not_empty(
+            self, 
+            context: SearchContext, 
+            search_result:List[SearchResponseItem], 
+            filter_name:str,
+            is_included: bool,
+            total_count:int):
+ 
         search_items_str = "Search Result:\n" '\n'.join([
             f"* {self.build_product(item)}" 
             for item in search_result[:5]
@@ -59,7 +66,9 @@ class SearchResponseBuilderAgent(ABC):
         new_message = '\n'.join([
             search_items_str, request_items_str, 
             f"Total Results:{total_count}",
-            f"Output Language: {context.chat_lang.lang_name}"
+            f"Output Language: {context.chat_lang.lang_name}",
+            f"Relevant Filter: {filter_name}",
+            f"Is Included: {is_included}"
         ])
         return self.invoke(message=new_message, prompt_template=self.not_empty_search_prompt_provider.get_prompt())
 
