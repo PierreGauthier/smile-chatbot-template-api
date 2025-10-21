@@ -1,7 +1,7 @@
 from typing import Annotated, List
 from fastapi import Depends
 
-from langchain.output_parsers import PydanticOutputParser
+from langchain_core.output_parsers.pydantic import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
 from domain.models import ElasticSuiteAttributeSet

@@ -1,4 +1,4 @@
-from langchain.output_parsers import PydanticOutputParser
+from langchain_core.output_parsers.pydantic import PydanticOutputParser
 
 from domain.ai import LlmProvider
 from application.prompts import StaticPromptProvider

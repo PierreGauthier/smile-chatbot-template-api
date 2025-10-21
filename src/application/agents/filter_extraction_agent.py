@@ -2,7 +2,7 @@ from typing import List, Annotated
 from fastapi import Depends
 import builtins
 
-from langchain.output_parsers import PydanticOutputParser, RetryWithErrorOutputParser
+from langchain_core.output_parsers.pydantic import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
 from domain.ai import LlmProvider
@@ -45,21 +45,18 @@ class FilterExtractionAgent:
         model_type = build_pydantic_model(schemas)
         
         output_parser = PydanticOutputParser(pydantic_object=model_type)
-        retry_parser = RetryWithErrorOutputParser.from_llm(
-            parser=output_parser,
-            llm=self.llm_provider.get_llm()
-        )
         format_instructions = output_parser.get_format_instructions()
-        prompt_template:ChatPromptTemplate = self.prompt_provider.get_prompt(
+        prompt:ChatPromptTemplate = self.prompt_provider.get_prompt(
             filters=filters
         )
-
-        prompt_template.append(message=("human", "{question}"))
-        messages = prompt_template.format_messages(question=exchange, format_instructions=format_instructions)
-        output = self.llm_provider.invoke(messages)
-
-        response = retry_parser.parse_with_prompt(
-            completion=output.content,
-            prompt_value=messages
-        ) # output_parser.parse(output.content)
+        
+        prompt = prompt.partial(format_instructions=format_instructions)
+        prompt.append(message=("human", "{question}"))
+        chain = prompt | self.llm_provider.get_llm() | output_parser
+        chain_with_retry = chain.with_retry(
+            retry_if_exception_type=(ValueError, Exception),
+            wait_exponential_jitter=True,
+            stop_after_attempt=3
+        )
+        response = chain_with_retry.invoke(exchange)
         return response

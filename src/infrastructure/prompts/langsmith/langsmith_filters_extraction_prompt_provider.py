@@ -2,10 +2,9 @@ from typing import List, Annotated
 from fastapi import Depends
 
 from langchain_core.prompts import ChatPromptTemplate
-from langchain import hub
+from langsmith import Client
 
 from domain.models import AttributeFilterDto
-
 from application.prompts import FiltersExtractionPromptProvider
 
 from config import Settings, get_settings
@@ -13,10 +12,11 @@ from config import Settings, get_settings
 class LangsmithFiltersExtractionPromptProvider(FiltersExtractionPromptProvider):
 
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
+        self.client = Client(api_key=settings.langchain_api_key)
         self.prompt_name = settings.langsmith_filters_extraction_prompt_name
 
     def get_prompt(self, filters:List[AttributeFilterDto]) -> ChatPromptTemplate:
-        prompt: ChatPromptTemplate = hub.pull(self.prompt_name)
+        prompt: ChatPromptTemplate = self.client.pull_prompt(self.prompt_name)
 
         filters_declarations = []
         for filter in filters:

@@ -2,7 +2,7 @@ from typing import List, Annotated
 from fastapi import Depends
 
 from langchain_core.prompts import ChatPromptTemplate
-from langchain import hub
+from langsmith import Client
 
 from application.prompts import RagMainPromptProvider
 
@@ -11,10 +11,11 @@ from config import Settings, get_settings
 class LangsmithRagMainPromptProvider(RagMainPromptProvider):
 
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
+        self.client = Client(api_key=settings.langchain_api_key)
         self.prompt_name = settings.langsmith_rag_system_prompt_name
 
     def get_prompt(self, exchange:str, extra_info:List[str] = []) -> ChatPromptTemplate:
-        rag_prompt:ChatPromptTemplate = hub.pull(self.prompt_name)
+        rag_prompt:ChatPromptTemplate = self.client.pull_prompt(self.prompt_name)
         
         if extra_info:
             extra_info_text = "# Supplementary Information\n"
