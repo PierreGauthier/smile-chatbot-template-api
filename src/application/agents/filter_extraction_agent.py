@@ -2,7 +2,7 @@ from typing import List, Annotated
 from fastapi import Depends
 import builtins
 
-from langchain.output_parsers import PydanticOutputParser
+from langchain.output_parsers import PydanticOutputParser, RetryWithErrorOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
 from domain.ai import LlmProvider
@@ -18,11 +18,11 @@ class FilterExtractionAgent:
 
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
-            llm_agent: Annotated[LlmProvider, Depends(inject_llm_provider)],
+            llm_provider: Annotated[LlmProvider, Depends(inject_llm_provider)],
             prompt_provider: Annotated[FiltersExtractionPromptProvider, Depends(inject_filters_extraction_prompt)]):
         self.settings = settings
         self.prompt_provider = prompt_provider
-        self.llm_agent = llm_agent
+        self.llm_provider = llm_provider
 
     def invoke(self, exchange:str, filters:List[AttributeFilterDto]):
         schemas = [
@@ -45,6 +45,10 @@ class FilterExtractionAgent:
         model_type = build_pydantic_model(schemas)
         
         output_parser = PydanticOutputParser(pydantic_object=model_type)
+        retry_parser = RetryWithErrorOutputParser.from_llm(
+            parser=output_parser,
+            llm=self.llm_provider.get_llm()
+        )
         format_instructions = output_parser.get_format_instructions()
         prompt_template:ChatPromptTemplate = self.prompt_provider.get_prompt(
             filters=filters
@@ -52,7 +56,10 @@ class FilterExtractionAgent:
 
         prompt_template.append(message=("human", "{question}"))
         messages = prompt_template.format_messages(question=exchange, format_instructions=format_instructions)
-        output = self.llm_agent.invoke(messages)
+        output = self.llm_provider.invoke(messages)
 
-        response = output_parser.parse(output.content)
+        response = retry_parser.parse_with_prompt(
+            completion=output.content,
+            prompt_value=messages
+        ) # output_parser.parse(output.content)
         return response

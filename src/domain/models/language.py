@@ -18,4 +18,5 @@ class Language:
             case "de":
                 return Language(lang_code, "German")
             case _:
-                raise ValueError(f"Language not supported ({lang_code})")
+                return Language("FR", "French")
+                # raise ValueError(f"Language not supported ({lang_code})")
