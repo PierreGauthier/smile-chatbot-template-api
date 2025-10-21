@@ -2,8 +2,10 @@ from typing import List, Annotated
 from fastapi import Depends
 import builtins
 from functools import partial
+from pydantic import ValidationError
 
 from langchain_core.output_parsers.pydantic import PydanticOutputParser
+from langchain_core.exceptions import OutputParserException
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableLambda
 
@@ -68,13 +70,12 @@ class FilterExtractionAgent:
         def __run_chain(exchange:str):
             chain = prompt | self.llm_provider.get_llm() | output_parser
             response = chain.invoke(exchange)
-            self.logger.debug("[DEBUG] Parsing filter extraction ---")
+            self.logger.debug("Parsing filter extraction ---")
             return response
         
         runnable = RunnableLambda(__run_chain)
         response = runnable.with_retry(
             stop_after_attempt=3,
-            retry_if_exception_type=(ValueError,),
+            retry_if_exception_type=(OutputParserException, ValidationError, ValueError),
         ).invoke(exchange)
         return response
-    
