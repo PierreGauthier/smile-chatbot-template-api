@@ -68,9 +68,9 @@ class FilterExtractionAgent:
         # response = chain.invoke(exchange)
 
         def __run_chain(exchange:str):
+            self.logger.debug("Parsing filter extraction ---")
             chain = prompt | self.llm_provider.get_llm() | output_parser
             response = chain.invoke(exchange)
-            self.logger.debug("Parsing filter extraction ---")
             return response
         
         runnable = RunnableLambda(__run_chain)
