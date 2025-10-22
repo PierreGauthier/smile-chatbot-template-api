@@ -1,5 +1,7 @@
 # SMILE Chatbot Template API
-
+<a href="https://github.com/alrey-smile/smile-chatbot-template-api/actions">
+   <img src="https://img.shields.io/github/actions/workflow/status/alrey-smile/smile-chatbot-template-api/build.yml?branch=master&label=CI&logo=github&style=flat-square" height="20" alt="GitHub Workflow Status">
+</a>
 FastAPI service that exposes a Bot Framework-compatible chat endpoint backed by Retrieval-Augmented Generation (RAG) and Conversational Search pipelines for the SMILE virtual assistant. It orchestrates Azure and GCP services, and LangChain components to deliver grounded responses while emitting telemetry through Azure Monitor.
 
 ## Features
@@ -39,15 +41,15 @@ FastAPI service that exposes a Bot Framework-compatible chat endpoint backed by 
    ```
 4. Connect the RAG endpoint `http://localhost:3978/api/chat` or Conversational Search endpoint `http://localhost:3978/api/search` to exchange messages.
 5. In this version, the calls must be sent with a GUID `user_id`, and a `session_id` received after the first call to connect to the history:
-```bash
-curl --location 'http://localhost:3978/api/chat' \
---header 'Content-Type: application/json' \
---data '{
-   "user_id": "00000000-0000-0000-0000-000000000000",
-   "session_id": "00000000-0000-0000-0000-000000000000", 
-   "message": "This is a message"  
-}'
-```
+   ```bash
+   curl --location 'http://localhost:3978/api/chat' \
+   --header 'Content-Type: application/json' \
+   --data '{
+      "user_id": "00000000-0000-0000-0000-000000000000",
+      "session_id": "00000000-0000-0000-0000-000000000000", 
+      "message": "This is a message"  
+   }'
+   ```
 
 ## Configuration
 Refer to `docs/setup.md` for the detailed configuration matrix and `docs/deployment.md` for production guidance.
