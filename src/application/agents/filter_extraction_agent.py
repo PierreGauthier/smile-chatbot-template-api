@@ -13,6 +13,7 @@ from domain.ai import LlmProvider
 from domain.models import AttributeFilterDto
 from domain.fields import build_pydantic_model, PydanticSchema, PriceRangeField
 from domain.logger import ContextLogger
+from domain.tools import repair_llm_pydantic_answer
 
 from application.prompts import FiltersExtractionPromptProvider
 
@@ -30,6 +31,7 @@ class FilterExtractionAgent:
         self.prompt_provider = prompt_provider
         self.llm_provider = llm_provider
         self.logger = logger
+        self.attempt = 1
 
     def invoke(self, exchange:str, filters:List[AttributeFilterDto]):
         schemas = [
@@ -60,17 +62,14 @@ class FilterExtractionAgent:
         prompt = prompt.partial(format_instructions=format_instructions)
         prompt.append(message=("human", "{question}"))
 
-        # chain = (prompt | self.llm_provider.get_llm() | output_parser).with_retry(
-        #     retry_if_exception_type=(ValueError, Exception),
-        #     stop_after_attempt=3,
-        #     wait_exponential_jitter=True
-        # )
-        # response = chain.invoke(exchange)
-
+        self.attempt = 1
         def __run_chain(exchange:str):
-            self.logger.debug("Parsing filter extraction ---")
-            chain = prompt | self.llm_provider.get_llm() | output_parser
-            response = chain.invoke(exchange)
+            self.logger.debug(f"Parsing filter extraction... attempt {self.attempt}")
+            self.attempt += 1
+            chain = prompt | self.llm_provider.get_llm()
+            output = chain.invoke(exchange)
+            repaired_json = repair_llm_pydantic_answer(json=output.content, schemas=schemas)
+            response = output_parser.parse(repaired_json)
             return response
         
         runnable = RunnableLambda(__run_chain)
