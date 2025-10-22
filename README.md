@@ -1,7 +1,8 @@
 # SMILE Chatbot Template API
-<a href="https://github.com/alrey-smile/smile-chatbot-template-api/actions">
-   <img src="https://img.shields.io/github/actions/workflow/status/alrey-smile/smile-chatbot-template-api/build.yml?branch=master&label=CI&logo=github&style=flat-square" height="20" alt="GitHub Workflow Status">
+<a href="https://github.com/alrey-smile/smile-chatbot-template-api/actions/workflows/deploy.yml">
+   <img src="https://github.com/alrey-smile/smile-chatbot-template-api/actions/workflows/deploy.yml/badge.svg?branch=main" height="20" alt="GitHub Actions Status">
 </a>
+
 FastAPI service that exposes a Bot Framework-compatible chat endpoint backed by Retrieval-Augmented Generation (RAG) and Conversational Search pipelines for the SMILE virtual assistant. It orchestrates Azure and GCP services, and LangChain components to deliver grounded responses while emitting telemetry through Azure Monitor.
 
 ## Features
