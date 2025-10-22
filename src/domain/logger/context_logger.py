@@ -1,5 +1,5 @@
 import logging
-from domain.models import SearchContext
+from domain.models import BaseContext
 
 class ContextLogger(logging.LoggerAdapter):
     """
@@ -34,14 +34,14 @@ class ContextLogger(logging.LoggerAdapter):
             print(f"[DEBUG]: msg='{msg}', extra={merged_extra}")
         return msg, kwargs
 
-    def debug_context(self, message:str, context:SearchContext):
+    def debug_context(self, message:str, context:BaseContext):
         self.debug(
             message,
             user_id=context.user_id,
             session_id=context.session_id
         )
 
-    def info_context(self, message:str, context:SearchContext):
+    def info_context(self, message:str, context:BaseContext):
         self.info(
             message,
             user_id=context.user_id,

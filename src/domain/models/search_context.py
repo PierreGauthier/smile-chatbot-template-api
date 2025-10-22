@@ -8,14 +8,13 @@ from domain.models import (
     AttributeSetDto,
     ProductFilterDetectionResult,
     SearchResponseItem,
-    Language
+    Language,
+    BaseContext
 )
 
 @dataclass
-class SearchContext:
+class SearchContext(BaseContext):
     input_message: str
-    user_id: str
-    session_id:str
     is_first_call:bool
     search_lang:Language = None
     chat_lang:Language = None
