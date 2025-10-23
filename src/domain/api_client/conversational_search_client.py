@@ -10,6 +10,11 @@ from domain.models import (
 )
 
 class ConversationalSearchClient(BaseClient):
+    """Abstract client for conversational search APIs that expose filtered product search.
+
+    Implementations must call the platform's search endpoint and return a ``FilteredSearchApiResponse``
+    that reflects the provided filter detection results, selected filter DTOs, and requested page size.
+    """
     def __init__(self, base_url: str):
         super().__init__(base_url)
 

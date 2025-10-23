@@ -11,18 +11,21 @@ from application.prompts import StaticPromptProvider
 from config import Settings
 
 class SearchResponseBuilderAgent(ABC):
+    """Base agent responsible for crafting LLM-ready messages from search context data."""
 
     def __init__(self, 
             settings: Settings,
             llm_provider: LlmProvider,
             empty_search_prompt_provider: StaticPromptProvider,
             not_empty_search_prompt_provider: StaticPromptProvider):
+        """Store dependencies needed for preparing prompts and invoking the LLM."""
         self.settings = settings
         self.empty_search_prompt_provider = empty_search_prompt_provider
         self.not_empty_search_prompt_provider = not_empty_search_prompt_provider
         self.llm_provider = llm_provider
     
     def invoke_empty(self, context: SearchContext):
+        """Generate a response when search results are empty."""
         request_items = []
         exchange_list = []
         for message in context.message_thread:
@@ -73,6 +76,7 @@ class SearchResponseBuilderAgent(ABC):
         return self.invoke(message=new_message, prompt_template=self.not_empty_search_prompt_provider.get_prompt())
 
     def invoke(self, message:str, prompt_template:ChatPromptTemplate):
+        """Invoke the configured LLM with the provided message and prompt template."""
         
         new_message = ("human", message)
 
@@ -81,6 +85,7 @@ class SearchResponseBuilderAgent(ABC):
         return output.content
     
     def __find_filter(self, filter_code:str, request:UserRequestDto, context:SearchContext):
+        """Locate the filter metadata matching a request attribute."""
         attribute_set = next((attr for attr in context.attribute_sets if attr.attribute_set_id == request.attribute_id), None)
         if attribute_set:
             filter = next((f for f in attribute_set.filters if f.code == filter_code), None)
@@ -89,8 +94,10 @@ class SearchResponseBuilderAgent(ABC):
     
     @abstractmethod
     def build_filter_value_expression(self, request:UserRequestDto, filter:AttributeFilterDto):
+        """Return a string describing the request/filter pair for LLM consumption."""
         pass
         
     @abstractmethod
     def build_product(self, product:SearchResponseItem):
+        """Return a string representation of a product suitable for the LLM prompt."""
         pass

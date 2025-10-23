@@ -12,7 +12,7 @@ sudo apt install python3-dotenv
 
 Install required packages using `requirements.txt` file.
 
-**Crtl+Shift-P** > *Python: Create Environment*
+**Ctrl+Shift-P** > *Python: Create Environment*
 
 - Select Python installation (3.10.x)
 - Select the requirements file

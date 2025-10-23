@@ -9,26 +9,35 @@ CONTENT_TYPE_KEY = "Content-Type"
 CONTENT_TYPE_JSON_VALUE = "application/json"
 
 class BaseClient:
+    """HTTP client helper that centralizes header creation and basic request helpers."""
+
     def __init__(self, base_url: str):
+        """Store the API base URL for downstream clients."""
         self.api_base_url = base_url
 
-    def get(self, url:str, headers:dict):
+    def get(self, url: str, headers: dict):
+        """Perform a GET request with the supplied URL and headers."""
         return requests.get(url, headers=headers)
-    
-    def post(self, url:str, headers:dict, json_data:dict = {}):
+
+    def post(self, url: str, headers: dict, json_data: dict = {}):
+        """Perform a POST request with JSON payload support."""
         return requests.post(url=url, headers=headers, json=json_data)
 
     def create_x_correlation_id(self):
+        """Generate a correlation ID header tuple."""
         key = CORRELATION_ID_HEADER_KEY
         value = str(uuid.uuid4())
         return (key, value)
-    
+
     def create_basic_auth(self, username, password):
+        """Create an Authorization header using HTTP Basic auth."""
         return (AUTHORIZATION_HEADER_KEY, self._encode_basic_auth(username, password))
-    
+
     def create_json_content_type(self):
+        """Return a JSON content-type header tuple."""
         return (CONTENT_TYPE_KEY, CONTENT_TYPE_JSON_VALUE)
-    
+
     def _encode_basic_auth(self, username, password):
+        """Encode Basic auth credentials as required for HTTP headers."""
         token = b64encode(f"{username}:{password}".encode('utf-8')).decode("ascii")
         return f'{AUTHORIZATION_BASIC_TOKEN_PREFIX} {token}'

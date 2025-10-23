@@ -6,7 +6,26 @@ Ensure you have the following:
 2. **Azure CLI** installed - [Download here](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli).
 3. **GitHub Repository** - Your FastAPI app should be in a GitHub repo.
 4. **Python 3.10** installed locally.
-5. An **App Service** called `maya-dev-api` in a resource group calld `maya-dev-rg`
+5. An **App Service** called `maya-dev-api` in a resource group called `maya-dev-rg`
+
+### Create an App Service on Azure
+- Name: **maya-dev-api**
+- Runtime Stack: Python - 3.10
+- App Service Plan: Basic (B1)
+- SCM Basic Auth Publishing Credentials: On
+- Startup Command (Settings > Configuration > Stack settings > Startup command): 
+  ```BASH
+  PYTHONPATH= uvicorn app:app --host 0.0.0.0 --port $PORT --app-dir src --log-level info
+  ```
+- Managed Identity: Activated (Settings > Identity > System assigned > Status = On)
+- Run the script `data/helper.ipynb` to obtain the environment variables for the App Service. Paste it on (Settings > Environment variables > App Settings > Advanced edit). Make sure to enter the name of your key vault service (see below) in the script (KEYVAULT_NAME).
+
+### Create an App Key Vault
+- Name: **maya-dev-kv**
+- Role Assignments:
+	- Key Vault Administrator: (you)
+	- Key Vault Secrets User: App Service (`maya-dev-api`)
+- Run the script `data/helper.ipynb` to obtain the secrets for the Key Vault.
 
 ---
 

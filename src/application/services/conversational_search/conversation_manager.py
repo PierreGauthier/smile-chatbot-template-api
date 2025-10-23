@@ -12,6 +12,8 @@ from application.models import SearchChatMessage
 from dependencies import inject_history_service_for_search, inject_logger
 
 class ConversationManager:
+    """Coordinate message persistence and summarization for conversational search sessions."""
+
     def __init__(
             self,
             summarize_exchange_agent : Annotated[ExchangeSummarizerAgent, Depends(ExchangeSummarizerAgent)],
@@ -22,6 +24,7 @@ class ConversationManager:
         self.logger = logger 
         
     def insert_or_create_thread(self, context:SearchContext) -> SearchContext:
+        """Persist the user's message, creating a new thread when needed, and update context history."""
         # Insert user message and get the message history
         current_session_id = context.session_id
         if current_session_id:
@@ -49,12 +52,14 @@ class ConversationManager:
         return context
     
     def summarize_exchange(self, context:SearchContext) -> SearchContext:
+        """Attach a short exchange summary to the context for downstream agents."""
         # Summarize exchange
         exchange = self.__summarize_exchange(context)
         context.exchange = exchange
         return context
     
     def store_ai_answer(self, context:SearchContext):
+        """Store the AI answer in history so future exchanges have full context."""
         self.history_db_service.upsert_message(message=SearchChatMessage.build_ai_message(
             user_id=context.user_id,
             session_id=context.session_id,
@@ -66,6 +71,7 @@ class ConversationManager:
     # PRIVATE 
 
     def __summarize_exchange(self, context:SearchContext):
+        """Summarize the conversation thread when multiple messages exist, otherwise echo input."""
         exchange = context.input_message
         if len(context.message_thread) > 1:
             exchange = self.summarize_exchange_agent.invoke(context.message_thread, context.chat_lang)

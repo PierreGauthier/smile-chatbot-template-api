@@ -21,12 +21,14 @@ from dependencies import inject_llm_provider, inject_filters_extraction_prompt, 
 from config import Settings, get_settings
 
 class FilterExtractionAgent:
+    """Coordinate prompt-driven LLM calls to extract structured attribute filters from dialogues."""
 
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
             llm_provider: Annotated[LlmProvider, Depends(inject_llm_provider)],
             prompt_provider: Annotated[FiltersExtractionPromptProvider, Depends(inject_filters_extraction_prompt)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="FilterExtractionAgent"))]):
+        """Store injected dependencies used to generate prompts, call the LLM, and log attempts."""
         self.settings = settings
         self.prompt_provider = prompt_provider
         self.llm_provider = llm_provider
@@ -34,6 +36,7 @@ class FilterExtractionAgent:
         self.attempt = 1
 
     def invoke(self, exchange:str, filters:List[AttributeFilterDto]):
+        """Parse user input into a validated filter payload using retryable LLM invocations."""
         schemas = [
             PydanticSchema(
                 name=filter.code,

@@ -11,17 +11,20 @@ from application.agents import FilterExtractionAgent
 from dependencies import inject_request_service, inject_logger
 
 class RequestManager:
+    """Coordinates retrieval, enrichment, and persistence of conversational search requests."""
 
     def __init__(
             self, 
             filters_extraction_agent: Annotated[FilterExtractionAgent, Depends(FilterExtractionAgent)],
             request_db_service: Annotated[DatabaseRequestService, Depends(inject_request_service)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="RequestManager"))]):
+        """Persist injected dependencies used to process conversational requests."""
         self.request_db_service = request_db_service
         self.filters_extraction_agent = filters_extraction_agent
         self.logger = logger
 
     def get_requests(self, context:SearchContext) -> SearchContext:
+        """Populate the context with stored requests for the current user session."""
         requests:List[UserRequestDto] = self.request_db_service.get_requests(
             user_id=context.user_id, 
             session_id=context.session_id
@@ -34,6 +37,7 @@ class RequestManager:
         return context
     
     def upsert_requests(self, context:SearchContext):
+        """Persist the latest request payloads tracked on the context."""
         for request in context.requests:
             self.request_db_service.update_request(request)
         self.logger.debug_context(
@@ -42,6 +46,11 @@ class RequestManager:
         )
     
     def build_requests(self, context:SearchContext) -> SearchContext:
+        """
+        Derive detected filter values for each attribute set and update request objects.
+
+        Returns the context after attaching `request_chain_results` and updating request data.
+        """
         request_chain_results:List[ProductFilterDetectionResult] = [] # (attribute-set,ai-question)
         for i in range(len(context.detected_attribute_sets.products)):
             product =  context.detected_attribute_sets.products[i]
