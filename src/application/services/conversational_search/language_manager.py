@@ -26,7 +26,7 @@ class LanguageManager:
     def configure_languages(self, input_message:str, context:SearchContext) -> SearchContext:
         """Populate a search context with configured search language and detected chat language."""
         search_language:Language = Language.build_from_code(self.settings.search_lang)
-        chat_language:Language = self.language_detector.detect_lang(message=input_message)
+        chat_language:Language = self.language_detector.detect_lang(message=input_message, context=context)
         context.search_lang = search_language
         context.chat_lang = chat_language
         return context

@@ -59,7 +59,7 @@ class RequestManager:
             attribute_set = next((attr for attr in context.attribute_sets if attr.code == product), None)
             if attribute_set:
                 filters:List[AttributeFilterDto] = attribute_set.filters
-                detected_filters = self.filters_extraction_agent.invoke(exchange=context.exchange, filters=filters)
+                detected_filters = self.filters_extraction_agent.invoke(exchange=context.exchange, filters=filters, context=context)
                 detected_result = ProductFilterDetectionResult(
                     attribute_set_name=attribute_set.name,
                     attribute_set_code=product,

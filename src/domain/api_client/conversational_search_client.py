@@ -6,7 +6,8 @@ from domain.models import (
     FilteredSearchApiResponse, 
     AttributeFilterValue, 
     ProductFilterDetectionResult, 
-    AttributeFilterDto
+    AttributeFilterDto,
+    BaseContext
 )
 
 class ConversationalSearchClient(BaseClient):
@@ -26,6 +27,7 @@ class ConversationalSearchClient(BaseClient):
             #attribute_set:str, 
             #term:str,
             #filters:List[AttributeFilterValue], 
+            context:BaseContext,
             page_size:int
         ) -> FilteredSearchApiResponse:
         pass

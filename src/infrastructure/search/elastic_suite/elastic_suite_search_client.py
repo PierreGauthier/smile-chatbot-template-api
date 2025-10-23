@@ -9,7 +9,8 @@ from domain.models import (
     SearchApiResponse, 
     AttributeFilterValue, 
     ProductFilterDetectionResult, 
-    AttributeFilterDto
+    AttributeFilterDto,
+    BaseContext
 )
 from domain.api_client import ConversationalSearchClient
 from domain.logger import ContextLogger
@@ -47,12 +48,18 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
     def search(self, 
             filter_detection_result:ProductFilterDetectionResult,
             filters_dto:List[AttributeFilterDto],
+            context:BaseContext,
             page_size: int = 10) -> FilteredSearchApiResponse:
         valued_detected_filters = [f for f in filter_detection_result.detected_filters if f.value]
 
         # Searching only with 'term'
         if not valued_detected_filters:
-            response = self.search_products(valued_detected_filters, filters_dto, filter_detection_result.search_term, page_size)
+            response = self.search_products(
+                valued_detected_filters, 
+                filters_dto, 
+                filter_detection_result.search_term, 
+                context,
+                page_size)
             return FilteredSearchApiResponse.build_from_search_api_response(
                 response=response,
                 filter_name=None,
@@ -60,7 +67,12 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
             )
         
         # Search with all
-        response = self.search_products(valued_detected_filters, filters_dto, filter_detection_result.search_term, page_size)
+        response = self.search_products(
+            valued_detected_filters, 
+            filters_dto, 
+            filter_detection_result.search_term, 
+            context,
+            page_size)
         if response.total_count > 0:
             return FilteredSearchApiResponse.build_from_search_api_response(
                 response=response,
@@ -79,6 +91,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
                 detected_filters=selected_filters,
                 filters_dto=filters_dto,
                 search_term=filter_detection_result.search_term,
+                context=context,
                 page_size=page_size,
             )
             score = response.total_count
@@ -101,6 +114,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
                 detected_filters=selected_filters,
                 filters_dto=filters_dto,
                 search_term=filter_detection_result.search_term,
+                context=context,
                 page_size=page_size,
             )
             score = response.total_count
@@ -113,7 +127,12 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
                 best_score = score
         
         if best_score <= 0:
-            response = self.search_products([], filters_dto, filter_detection_result.search_term, page_size)
+            response = self.search_products(
+                [], 
+                filters_dto, 
+                filter_detection_result.search_term, 
+                context,
+                page_size)
             return FilteredSearchApiResponse.build_from_search_api_response(
                 response=response,
                 filter_name=None,
@@ -125,6 +144,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
             detected_filters:List[AttributeFilterValue],
             filters_dto:List[AttributeFilterDto], #attribute_set: str, term:str, filters: List[AttributeFilterValue],
             search_term:str, 
+            context:BaseContext,
             page_size: int = 10) -> SearchApiResponse:
         
         json_data = self.graphql_factory.build_data(
@@ -139,7 +159,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
             "query": re.sub(r"\s+", " ", json_data["query"]).strip(),
             "variables": json_data["variables"],
         }
-        self.logger.debug(msg=json.dumps(log_payload, ensure_ascii=False))
+        self.logger.debug_context(message=json.dumps(log_payload, ensure_ascii=False), context=context)
 
         response = self.post(url=self.url, headers=self.headers, json_data=json_data)
         return self.search_response_builder.build_response(response)

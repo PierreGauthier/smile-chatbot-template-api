@@ -1,6 +1,6 @@
 from langdetect import detect, detect_langs
 
-from domain.models import Language
+from domain.models import Language, BaseContext
 from domain.logger import ContextLogger
 from domain.agents import LanguageDetector
 
@@ -9,7 +9,7 @@ class LangDetectLanguageDetector(LanguageDetector):
     def __init__(self,logger:ContextLogger):
         self.logger = logger
 
-    def detect_lang(self, message:str) -> Language:
+    def detect_lang(self, message:str, context:BaseContext) -> Language:
         # Clean the text
         message = message.strip().replace('\n', ' ')
         
@@ -25,7 +25,7 @@ class LangDetectLanguageDetector(LanguageDetector):
             probabilities = detect_langs(message)
             confidence = next((prob.prob for prob in probabilities if prob.lang == language_code), 0.0)
             
-            self.logger.debug(f"Language detection confidence: {float(confidence)}")
+            self.logger.debug_context(f"Language detection confidence: {float(confidence)}", context)
             return Language.build_from_code(language_code)
             
         except Exception as e:

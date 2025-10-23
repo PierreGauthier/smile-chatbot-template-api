@@ -10,7 +10,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableLambda
 
 from domain.ai import LlmProvider
-from domain.models import AttributeFilterDto
+from domain.models import AttributeFilterDto, BaseContext
 from domain.fields import build_pydantic_model, PydanticSchema, PriceRangeField
 from domain.logger import ContextLogger
 from domain.tools import repair_llm_pydantic_answer
@@ -35,7 +35,7 @@ class FilterExtractionAgent:
         self.logger = logger
         self.attempt = 1
 
-    def invoke(self, exchange:str, filters:List[AttributeFilterDto]):
+    def invoke(self, exchange:str, filters:List[AttributeFilterDto], context:BaseContext):
         """Parse user input into a validated filter payload using retryable LLM invocations."""
         schemas = [
             PydanticSchema(
@@ -67,7 +67,7 @@ class FilterExtractionAgent:
 
         self.attempt = 1
         def __run_chain(exchange:str):
-            self.logger.debug(f"Parsing filter extraction... attempt {self.attempt}")
+            self.logger.debug_context(f"Parsing filter extraction... attempt {self.attempt}", context)
             self.attempt += 1
             chain = prompt | self.llm_provider.get_llm()
             output = chain.invoke(exchange)

@@ -54,7 +54,8 @@ class SearchManager:
             filters_dto = attribute_set.filters
             api_response = self.conversational_search_client.search(
                 filter_detection_result=product,
-                filters_dto=filters_dto
+                filters_dto=filters_dto,
+                context=context
             )
             if api_response.code == 200:
                 items.extend(api_response.items)
