@@ -33,39 +33,83 @@ The different sources are loaded following a predefined order. If a configuratio
 
 ## Used configurations
 
-| Key | Type | Secret | Location | Description | Default values |
-|-|-|-|-|-|-|
-| ENVIRONMENT | string | | - | Execution environment |`Development`, `Staging`, `Production` |
-| OPENAI_API_VERSION | string | | App Settings | OpenAI API version | `2023-05-15` |
-| OPENAI_API_KEY | string | X | Key Vault (via App Settings) | OpenAI account key | |
-| AZURE_COSMOS_URL | string | | App Settings | CosmosDB endpoint | |
-| AZURE_COSMOS_KEY | string | X | Key Vault (via App Settings) | CosmosDB account key| |
-| AZURE_COSMOS_DATABASE | string | | App Settings | CosmosDB database name | `chatbot`|
-| AZURE_COSMOS_DOCUMENT_CONTAINER | string | | App Settings | Documents (embeddings) container name | `embeddings` |
-| AZURE_COSMOS_DOCUMENT_PARTITION_KEY | string | | App Settings | Documents partition key | `doc_type` | 
-| AZURE_COSMOS_HISTORY_CONTAINER | string| | App Settings | Message historization container name | `history` |
-| AZURE_COSMOS_HISTORY_PARTITION_KEY | string | | App Settings | Message historization partition key | `user_id` | 
-| AZURE_COSMOS_REQUEST_CONTAINER | string| | App Settings | Request historization container name | `request` |
-| AZURE_COSMOS_REQUEST_PARTITION_KEY | string | | App Settings | Request historization partition key | `user_id` | 
-| AZURE_OPENAI_ENDPOINT | string | | App Settings | Azure OpenAI endpoint | | 
-| AZURE_OPENAI_API_KEY | string | X | Key Vault (via App Settings) | Azure OpenAI account key | | 
-| AZURE_OPENAI_API_VERSION | string | | App Settings | Azure OpenAI API version | `2023-06-01-preview`|
-| AZURE_OPENAI_DEPLOYMENT | string | | App Settings | Azure OpenAI LLM deployment name | `gpt-4o-mini` |
-| AZURE_OPENAI_EMBEDDING_DEPLOYMENT | string | | App Settings | Azure OpenAI deployment name for embeddings | |
-| AZURE_OPENAI_TEMPERATURE | float | | App Settings | LLM temperature | `0.2` |
-| MAX_HISTORY_SIZE | int | | App Settings | Maximum number of history messages in the context| `10` |
-| MAX_HISTORY_TOKEN | int | | App Settings | Maximum number of tokens in the history context | `500` |
-| AZURE_SEARCH_ENDPOINT | string | | App Settings | Azure Search service endpoint | | 
-| AZURE_SEARCH_KEY | string | X | Key Vault (via App Settings) | Azure Search account key | | 
-| AZURE_SEARCH_INDEX | string | | App Settings | Name of the Azure Search index to use for document vectorial search | `main_rag_index`|
-| RAG_K | int | | App Settings | Number of retrieved documents | `3` | 
-| RAG_SCORE_THRESHOLD | float | | App Settings | Confidence threshold at which a document is accepted as relevant by Azure AI Search | `0.8` |
-| LANGCHAIN_API_KEY | string | X | Key Vault (via App Settings) | LangSmith account key | |
-| LANGSMITH_CONTEXTUALIZE_QUESTION_PROMPT_NAME | string | | App Settings | Name of LangSmith system prompt for contextualizing questions | | 
-| LANGSMITH_EXTRACT_REQUEST_DEFINITION_PROMPT_NAME | string | | App Settings | Name of LangSmith system prompt for request information extraction | | 
-| LANGSMITH_RAG_SYSTEM_PROMPT_NAME | string | | App Settings | Name of LangSmith system prompt for RAG | | 
-| CONTEXTUALIZE_QUESTION_SYSTEM_PROMPT | string | | App Settings | System prompt for contextualizing questions | | 
-| RAG_SYSTEM_PROMPT | string | | App Settings | System prompt for RAG | | 
+| Key | Type | Secret | Description | Default values |
+|-|-|-|-|-|
+|PROJECT_NAME|str| |None| |
+|ENVIRONMENT|str| |Execution environment|`local`|
+|DEBUG|bool| |Langchain debug level|`False`|
+|LOG_LEVEL|str| |General log level|`INFO`|
+|SEARCH_LANG|str| |Preferred language for the conversational search|`FR`|
+|LLM_PROVIDER|str| |Name of the infrastructure for LLMaaS| |
+|OPENAI_API_VERSION|str| |OpenAI API version|`2020-05-10`|
+|OPENAI_API_KEY|str|X|OpenAI API key| |
+|AZURE_COSMOS_URL|str| |Cosmos DB Endpoint| |
+|AZURE_COSMOS_KEY|str|X|Cosmos DB key| |
+|AZURE_COSMOS_DATABASE|str| |Database name|`chatbot`|
+|AZURE_COSMOS_DOCUMENT_CONTAINER|str| |Container name for content and embeddings (vectors)|`embeddings`|
+|AZURE_COSMOS_DOCUMENT_PARTITION_KEY|str| |Document container's partition key|`doc_type`|
+|AZURE_COSMOS_HISTORY_CONTAINER|str| |Container name for history (chat memory)|`history`|
+|AZURE_COSMOS_HISTORY_PARTITION_KEY|str| |Container history's partition key|`user_id`|
+|AZURE_COSMOS_ATTRIBUTES_CONTAINER|str| |Container name for attributes (search)|`attributes`|
+|AZURE_COSMOS_ATTRIBUTES_PARTITION_KEY|str| |Container attribute's partition key|`project_id`|
+|AZURE_COSMOS_FILTERS_CONTAINER|str| |Container name for filters (search)|`filters`|
+|AZURE_COSMOS_FILTERS_PARTITION_KEY|str| |Container filter's partition key|`attribute_id`|
+|AZURE_COSMOS_REQUEST_CONTAINER|str| |Container name for the requests (filters structure and detected values)|`requests`|
+|AZURE_COSMOS_REQUEST_PARTITION_KEY|str| |Container request's partition key|`user_id`|
+|AZURE_OPENAI_ENDPOINT|str| |Azure OpenAI endpoint| |
+|AZURE_OPENAI_API_KEY|str|X|Azure OpenAI key| |
+|AZURE_OPENAI_API_VERSION|str| |Azure OpenAI API version| |
+|AZURE_OPENAI_DEPLOYMENT|str| |Azure OpenAI deployment name for completion (model)| |
+|AZURE_OPENAI_EMBEDDING_DEPLOYMENT|str| |Azure OpenAI deployment name for embeddings (model)| |
+|AZURE_OPENAI_TEMPERATURE|float| |# Azure OpenAI model temperature|`0.2`|
+|MAX_HISTORY_SIZE|int| |History memory size|`10`|
+|MAX_HISTORY_TOKEN|int| |maximum of history tokens|`200`|
+|MICROSOFT_APP_ID|Optional[str]| |None|`None`|
+|MICROSOFT_APP_PASSWORD|Optional[str]|X|None|`None`|
+|AZURE_AD_CLIENT_ID|Optional[str]| |None|`None`|
+|AZURE_AD_TENANT_ID|Optional[str]| |None|`None`|
+|APPLICATIONINSIGHTS_CONNECTION_STRING|Optional[str]|X|App Insights connection string|`None`|
+|PYTHONUNBUFFERED|int| |None|`1`|
+|CORS_ALLOWED_ORIGINS|Optional[str]| |CORS configuration|`*`|
+|AZURE_SEARCH_ENDPOINT|str| |Azure AI Search endpoint| |
+|AZURE_SEARCH_KEY|str|X|Azure AI Search key| |
+|AZURE_SEARCH_INDEX|str| |Azure AI Search default index name| |
+|LANGCHAIN_API_KEY|str|X|Langchain API key| |
+|LANGSMITH_CONTEXTUALIZE_QUESTION_PROMPT_NAME|str| |Name of the prompt for contextualizing messages| |
+|LANGSMITH_EXTRACT_REQUEST_DEFINITION_PROMPT_NAME|str| |Name of the prompt for extracting a structured request| |
+|LANGSMITH_RAG_SYSTEM_PROMPT_NAME|str| |Name of the main system prompt for RAG| |
+|LANGSMITH_SUMMARY_EXCHANGE_PROMPT_NAME|str| |Name of the prompt for message history summarization| |
+|LANGSMITH_INTENT_EXTRACTION_PROMPT_NAME|str| |Name of the prompt for intent detection| |
+|LANGSMITH_LANGUAGE_DETECTOR_PROMPT_NAME|str| |Name of the prompt for language detection| |
+|LANGSMITH_ATTRIBUTE_SET_EXTRACTION_PROMPT_NAME|str| |Name of the prompt for attribute extraction from user request| |
+|LANGSMITH_FILTERS_EXTRACTION_PROMPT_NAME|str| |Name of the prompt for filters extraction from a user request| |
+|LANGSMITH_ELASTIC_SUITE_QUESTION_SUMMARIZER_PROMPT_NAME|str| |Name of the prompt for user question summarization| |
+|LANGSMITH_EMPTY_SEARCH_RESPONSE_BUILDER_PROMPT_NAME|str| |Name of the prompt for empty response (no product found) generation| |
+|LANGSMITH_NOT_EMPTY_SEARCH_RESPONSE_BUILDER_PROMPT_NAME|str| |Name of the prompt for NOT empty response (some product found) generation| |
+|ELASTIC_SUITE_API_BASE_URL|str| |Base URL for Elastic Suite attributes and filter retrieval| |
+|ELASTIC_SUITE_ATTRIBUTE_SET_ENDPOINT|str| |Elastic Suite endpoint| |
+|ELASTIC_SUITE_USERNAME|str| |Elastic Suite API username| |
+|ELASTIC_SUITE_PASSWORD|str|X|Elastic Suite API password| |
+|ELASTIC_SUITE_SEARCH_API_BASE_URL|str| |Elastic Suite search API base URL| |
+|ELASTIC_SUITE_SEARCH_API_CREDENTIALS|str|X|Elastic Suite search API credentials| |
+|RAG_K|int| |None|`3`|
+|RAG_SCORE_THRESHOLD|float| |None|`0.8`|
+|MAX_TOKENS|Optional[int]| |None|`2048`|
+|TOP_P|Optional[float]| |None|`0.95`|
+|TOP_K|Optional[int]| |None|`40`|
+|GCP_PROJECT_ID|str| |GCP project ID| |
+|GCP_CREDENTIALS_PATH|str| |GCP credential file path| |
+|FIRESTORE_DATABASE_ID|str| |GCP Firestore database ID| |
+|FIRESTORE_DOCUMENT_COLLECTION|str| |GCP Firestore document collection name|`documents`|
+|FIRESTORE_HISTORY_COLLECTION|str| |GCP Firestore history collection name|`chat_history`|
+|GCP_VERTEX_MODEL_NAME|str| |GCP Vertex model name| |
+|GCP_VERTEX_LOCATION|str| |GCP Vertex location (region)| |
+|GCP_VERTEX_TEMPERATURE|str| |None| |
+|GCP_VERTEX_VECTOR_LOCATION|str| |GCP Vertex Vector Search location| |
+|GCP_VERTEX_VECTOR_INDEX_ID|str| |GCP Vertex Vector Search default index ID| |
+|GCP_VERTEX_VECTOR_ENDPOINT_ID|str| |GCP Vertex Vector Search endpoint| |
+|GCP_STORAGE_DOCUMENT_BUCKET_NAME|str| |GCP GCS bucket name| |
+|GCP_STORAGE_DOCUMENT_BUCKET_COLLECTION|str| |GCP GCS bucket collection name (for content)|`documents`|
 
 # Launch
 
