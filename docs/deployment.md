@@ -21,7 +21,7 @@ Ensure you have the following:
 - Run the script `data/helper.ipynb` to obtain the environment variables for the App Service. Paste it on (Settings > Environment variables > App Settings > Advanced edit). Make sure to enter the name of your key vault service (see below) in the script (KEYVAULT_NAME).
 
 ### Create an AppInsights service on Azure
-- Name: maya-dev-ais
+- Name: **maya-dev-ais**
 - Get the connection string (Overview > Connection string)
 
 ### Create a Cosmos DB service on Azure
@@ -30,11 +30,11 @@ Ensure you have the following:
 - Capacity mode: Serverless
 - Databases:
 	- Name: `chatbot`
-		- Container: `embeddings` - Partition Key: `/doc_type`
+    - Container: `embeddings` - Partition Key: `/doc_type`
     - Container: `history` - Partition key: `/user_id`
     - Container: `attributes` - Partition key: `/project_id`
     - Container: `filters` - Partition key: `attribute_id`
-		- Container: `requests` - Partition Key: `/user_id`
+    - Container: `requests` - Partition Key: `/user_id`
 - Get the endpoint and access key (Settings > Keys)
 
 ## Create an OpenAI service on Azure
@@ -42,7 +42,10 @@ Ensure you have the following:
 - Pricing tier: Standard
 - Add Deployments (Overview > Go to Azure Ai Foundry portal -> Shared resources > Deployments):
 	- Embedding Model Name: Ada, Model: text-embedding-ada-002, Version: 2
-	- Completion Model Name: gpt-4o-mini, Model: gpt-4o-mini (for staging, set 1M tokens per minute)
+	- Completion Model:
+        - Name: `gpt-4o-mini`, 
+        - Model: `gpt-4o-mini`. 
+        - Set 1M tokens per minute
 - Get key and endpoint (Resource Management > Keys and Endpoint)
 
 ### Create an App Key Vault on Azure
