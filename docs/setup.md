@@ -35,7 +35,7 @@ The different sources are loaded following a predefined order. If a configuratio
 
 | Key | Type | Secret | Description | Default values |
 |-|-|-|-|-|
-|PROJECT_NAME|str| |None| |
+|PROJECT_NAME|str| | | |
 |ENVIRONMENT|str| |Execution environment|`local`|
 |DEBUG|bool| |Langchain debug level|`False`|
 |LOG_LEVEL|str| |General log level|`INFO`|
@@ -61,7 +61,7 @@ The different sources are loaded following a predefined order. If a configuratio
 |AZURE_OPENAI_API_VERSION|str| |Azure OpenAI API version| |
 |AZURE_OPENAI_DEPLOYMENT|str| |Azure OpenAI deployment name for completion (model)| |
 |AZURE_OPENAI_EMBEDDING_DEPLOYMENT|str| |Azure OpenAI deployment name for embeddings (model)| |
-|AZURE_OPENAI_TEMPERATURE|float| |# Azure OpenAI model temperature|`0.2`|
+|AZURE_OPENAI_TEMPERATURE|float| | Azure OpenAI model temperature|`0.2`|
 |MAX_HISTORY_SIZE|int| |History memory size|`10`|
 |MAX_HISTORY_TOKEN|int| |maximum of history tokens|`200`|
 |MICROSOFT_APP_ID|Optional[str]| |None|`None`|

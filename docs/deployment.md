@@ -6,7 +6,6 @@ Ensure you have the following:
 2. **Azure CLI** installed - [Download here](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli).
 3. **GitHub Repository** - Your FastAPI app should be in a GitHub repo.
 4. **Python 3.10** installed locally.
-5. An **App Service** called `maya-dev-api` in a resource group called `maya-dev-rg`
 
 ### Create an App Service on Azure
 - Name: **maya-dev-api**
@@ -35,7 +34,7 @@ Ensure you have the following:
     - Container: `attributes` - Partition key: `/project_id`
     - Container: `filters` - Partition key: `attribute_id`
 		- Container: `requests` - Partition Key: `/user_id`
-- Get the endpoint and access key (Settings > Keys)
+- Get the endpoint and access key (*Settings > Keys*)
 
 ### Create an OpenAI service on Azure
 - Name: **maya-dev-openai**
