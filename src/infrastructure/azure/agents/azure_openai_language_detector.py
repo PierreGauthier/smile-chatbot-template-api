@@ -1,4 +1,4 @@
-from domain.models import Language
+from domain.models import Language, BaseContext
 from domain.fields import LanguageField
 from domain.logger import ContextLogger
 from domain.agents import LanguageDetector
@@ -23,6 +23,6 @@ class AzureOpenAILanguageDetector(LanguageDetector):
             pydantic_object=LanguageField
         )
 
-    def detect_lang(self, message:str) -> Language:
+    def detect_lang(self, message:str, context:BaseContext) -> Language:
         lang:LanguageField = self.detector_chain.invoke(user_message=message)
         return Language.build_from_code(lang.code)

@@ -1,4 +1,4 @@
-name: Deploy SMILE-Chatbot-API to Azure
+name: Deploy (dev) Azure
 
 on:
   push:

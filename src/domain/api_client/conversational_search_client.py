@@ -6,10 +6,16 @@ from domain.models import (
     FilteredSearchApiResponse, 
     AttributeFilterValue, 
     ProductFilterDetectionResult, 
-    AttributeFilterDto
+    AttributeFilterDto,
+    BaseContext
 )
 
 class ConversationalSearchClient(BaseClient):
+    """Abstract client for conversational search APIs that expose filtered product search.
+
+    Implementations must call the platform's search endpoint and return a ``FilteredSearchApiResponse``
+    that reflects the provided filter detection results, selected filter DTOs, and requested page size.
+    """
     def __init__(self, base_url: str):
         super().__init__(base_url)
 
@@ -21,6 +27,7 @@ class ConversationalSearchClient(BaseClient):
             #attribute_set:str, 
             #term:str,
             #filters:List[AttributeFilterValue], 
+            context:BaseContext,
             page_size:int
         ) -> FilteredSearchApiResponse:
         pass

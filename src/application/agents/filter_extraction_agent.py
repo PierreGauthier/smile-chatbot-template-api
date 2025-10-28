@@ -10,7 +10,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableLambda
 
 from domain.ai import LlmProvider
-from domain.models import AttributeFilterDto
+from domain.models import AttributeFilterDto, BaseContext
 from domain.fields import build_pydantic_model, PydanticSchema, PriceRangeField
 from domain.logger import ContextLogger
 from domain.tools import repair_llm_pydantic_answer
@@ -21,19 +21,22 @@ from dependencies import inject_llm_provider, inject_filters_extraction_prompt, 
 from config import Settings, get_settings
 
 class FilterExtractionAgent:
+    """Coordinate prompt-driven LLM calls to extract structured attribute filters from dialogues."""
 
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
             llm_provider: Annotated[LlmProvider, Depends(inject_llm_provider)],
             prompt_provider: Annotated[FiltersExtractionPromptProvider, Depends(inject_filters_extraction_prompt)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="FilterExtractionAgent"))]):
+        """Store injected dependencies used to generate prompts, call the LLM, and log attempts."""
         self.settings = settings
         self.prompt_provider = prompt_provider
         self.llm_provider = llm_provider
         self.logger = logger
         self.attempt = 1
 
-    def invoke(self, exchange:str, filters:List[AttributeFilterDto]):
+    def invoke(self, exchange:str, filters:List[AttributeFilterDto], context:BaseContext):
+        """Parse user input into a validated filter payload using retryable LLM invocations."""
         schemas = [
             PydanticSchema(
                 name=filter.code,
@@ -64,7 +67,7 @@ class FilterExtractionAgent:
 
         self.attempt = 1
         def __run_chain(exchange:str):
-            self.logger.debug(f"Parsing filter extraction... attempt {self.attempt}")
+            self.logger.debug_context(f"Parsing filter extraction... attempt {self.attempt}", context)
             self.attempt += 1
             chain = prompt | self.llm_provider.get_llm()
             output = chain.invoke(exchange)

@@ -23,12 +23,15 @@ from dependencies import (
 # logger = logging.getLogger(__name__)
 
 class RagAgent:
+    """Coordinates retrieval-augmented generation for chat exchanges."""
+
     def __init__(self,
             settings: Annotated[Settings, Depends(get_settings)],
             llm_provider: Annotated[LlmProvider, Depends(inject_llm_provider)],
             vector_store_provider: Annotated[VectorStoreProvider, Depends(inject_vector_store_provider)],
             rag_prompt_provider: Annotated[RagMainPromptProvider, Depends(inject_rag_main_prompt)],
             document_service: Annotated[DatabaseDocumentService, Depends(inject_document_service)]):
+        """Initialize the agent with FastAPI-injected dependencies."""
         self.settings = settings
         self.doc_ids = []
         self.chat = llm_provider.get_llm()
@@ -37,6 +40,7 @@ class RagAgent:
         self.document_service = document_service
 
     def invoke(self, input_message:str, exchange:str, index: IndexFilterResult) -> RagChainResult:
+        """Run the RAG pipeline to answer a user question and record cited documents."""
 
         # 1) fetch docs
         retriever = self.vector_store_provider.get_vector_store_as_retriever(index)
@@ -58,9 +62,11 @@ class RagAgent:
         return RagChainResult(answer=ai_message, documents=self.doc_ids)
     
     def __format_docs_with_source(self, docs: List[Document]) -> str:
+        """Concatenate retrieved documents while capturing provenance metadata."""
         return "\n\n".join(self.__format_doc_with_source(doc) for doc in docs)
     
     def __format_doc_with_source(self, doc: Document) -> str:
+        """Attach metadata for a single document and return its content."""
         if "id" in doc.metadata.keys():
             doc_id = DocumentIdentifier(id=doc.metadata['id'], doc_type=doc.metadata['doc_type'])
             self.doc_ids.append(doc_id)

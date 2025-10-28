@@ -18,8 +18,9 @@ from application.services.conversational_search import (
 )
 
 from dependencies import inject_logger
-
 class ConversationalSearchService(SearchService):
+    """Coordinates the end-to-end conversational product search workflow."""
+
     def __init__(
             self,
             settings: Annotated[Settings, Depends(get_settings)],
@@ -29,6 +30,18 @@ class ConversationalSearchService(SearchService):
             attribute_set_manager:Annotated[AttributeDetectionManager, Depends(AttributeDetectionManager)],
             search_manager:Annotated[SearchManager, Depends(SearchManager)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="ConversationalSearchService"))]):
+        """
+        Initialize the conversational search service with its required dependencies.
+
+        Args:
+            settings: Application settings that control runtime flags such as debug mode.
+            language_manager: Service responsible for language detection and configuration.
+            conversation_manager: Handles conversation state persistence and summarization.
+            request_manager: Builds and upserts user product requests.
+            attribute_set_manager: Detects product attributes from the conversation.
+            search_manager: Executes the product search workflow.
+            logger: Context-aware logger for workflow tracing.
+        """
         self.settings = settings
         self.language_manager = language_manager
         self.conversation_manager = conversation_manager
@@ -42,6 +55,17 @@ class ConversationalSearchService(SearchService):
         set_debug(settings.debug)
 
     def invoke(self, input_message: str, user_id: str, session_id: str = None) -> SearchServiceResult:
+        """
+        Run the conversational search workflow for the given user input.
+
+        Args:
+            input_message: Raw message supplied by the user.
+            user_id: Identifier for the user issuing the request.
+            session_id: Existing conversation thread identifier, if any.
+
+        Returns:
+            SearchServiceResult populated with the AI answer and matched products.
+        """
         
         context = SearchContext(
             input_message=input_message, 

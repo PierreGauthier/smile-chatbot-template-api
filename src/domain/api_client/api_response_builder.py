@@ -1,5 +1,9 @@
 class ApiResponseBuilder:
+    """Builds a reusable map of HTTP status codes to user-facing messages.
 
+    Populates default messages for common error codes while allowing the caller
+    to override the `404` message at instantiation time.
+    """
     def __init__(self, message_404:str):
         self.messages = {
             200: "",

@@ -25,6 +25,8 @@ from application.chains import BasicPydanticChain
 from dependencies import inject_history_service_for_RAG, inject_document_service
 
 class DefaultRagChatService(ChatService):
+    """Coordinates intent detection, RAG retrieval, and history management for chat exchanges."""
+
     def __init__(
             self,
             settings: Annotated[Settings, Depends(get_settings)],
@@ -33,6 +35,7 @@ class DefaultRagChatService(ChatService):
             intent_extraction_agent: Annotated[BasicPydanticChain, Depends(IntentExtractionAgent)],
             summarize_exchange_agent : Annotated[BasicPydanticChain, Depends(ExchangeSummarizerAgent)],
             history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service_for_RAG)]):
+        """Inject required agents and services used to execute RAG chat workflows."""
         self.settings = settings
         self.intent_extraction_agent = intent_extraction_agent
         self.rag_agent = rag_agent
@@ -45,7 +48,7 @@ class DefaultRagChatService(ChatService):
         set_debug(settings.debug)
 
     def invoke(self, input_message: str, user_id: str, session_id: str = None) -> ChatServiceResult:
-        """Get RAG response"""
+        """Run a full RAG turn: detect intent, persist history, summarize, retrieve, and respond."""
 
         # (0) Detect intent
         intent:IntentDefinitionField = self.intent_extraction_agent.invoke(input_message)
@@ -106,6 +109,7 @@ class DefaultRagChatService(ChatService):
     ### PRIVATE
         
     def __build_sources(self, document_references:List[RagDocument]):
+        """Deduplicate retrieved documents and convert them into user-facing source metadata."""
         sources: List[Source] = []
         seen: set[tuple[str, int]] = set()
 

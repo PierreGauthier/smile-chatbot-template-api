@@ -10,7 +10,9 @@ from application.agents import QuestionsSummarizerAgent, SearchResponseBuilderAg
 
 from dependencies import inject_conversational_search_api, inject_logger, inject_search_response_agent
 
+
 class SearchManager:
+    """Coordinates conversational product search by invoking summarization, retrieval, and response agents."""
 
     def __init__(
             self,
@@ -18,12 +20,24 @@ class SearchManager:
             search_response_agent: Annotated[SearchResponseBuilderAgent, Depends(inject_search_response_agent)],
             conversational_search_client: Annotated[ConversationalSearchClient, Depends(inject_conversational_search_api)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="SearchManager"))]):
+        """Store injected dependencies used to prepare and execute conversational search queries."""
         self.summarize_question_agent = summarize_question_agent
         self.conversational_search_client = conversational_search_client
         self.search_response_agent = search_response_agent
         self.logger = logger
 
     def search(self, context:SearchContext) -> SearchContext:
+        """Execute the conversational search flow and enrich the provided context with results.
+
+        Args:
+            context: Carries conversation history, filter hypotheses, and required attribute sets.
+
+        Returns:
+            The same context instance updated with `ai_answer` and `search_result`.
+
+        Raises:
+            KeyError: When an attribute set referenced by a filter hypothesis is missing.
+        """
         # no_question =  all([not request.ai_question.strip() for request in context.request_chain_results])
         # too_many_questions = any([message.type == "ai" for message in context.message_thread])
         
@@ -40,7 +54,8 @@ class SearchManager:
             filters_dto = attribute_set.filters
             api_response = self.conversational_search_client.search(
                 filter_detection_result=product,
-                filters_dto=filters_dto
+                filters_dto=filters_dto,
+                context=context
             )
             if api_response.code == 200:
                 items.extend(api_response.items)
