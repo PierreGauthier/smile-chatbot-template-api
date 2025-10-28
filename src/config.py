@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     azure_openai_api_version: str # Azure OpenAI API version
     azure_openai_deployment: str # Azure OpenAI deployment name for completion (model)
     azure_openai_embedding_deployment: str # Azure OpenAI deployment name for embeddings (model)
-    azure_openai_temperature : float = 0.2 # # Azure OpenAI model temperature
+    azure_openai_temperature : float = 0.2 # Azure OpenAI model temperature
 
     max_history_size: int = 10 # History memory size  
     max_history_token: int = 200 # maximum of history tokens 
