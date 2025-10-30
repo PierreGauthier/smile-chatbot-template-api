@@ -140,6 +140,8 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
                 filter_name=None,
                 is_filter_included=False
             )
+        else:
+            return best_response
 
     def search_products(
             self,
