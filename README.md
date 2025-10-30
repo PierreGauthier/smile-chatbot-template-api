@@ -71,3 +71,4 @@ Ensure a `.env` file sits beside `docker-compose.yml`; the API exposes port `397
 ## Additional Resources
 - [`docs/setup.md`](docs/setup.md): Environment provisioning, configuration flow, and secrets management.
 - [`docs/azure_deployment.md`](docs/azure_deployment.md): Azure deployment checklist and operational tips.
+- [`docs/ollama.md`](docs/ollama.md): Install Ollama (LLM) locally

@@ -5,6 +5,7 @@
         "lamaison",
         "langchain",
         "LANGSMITH",
+        "Ollama",
         "openai",
         "Padel",
         "vectorstore",

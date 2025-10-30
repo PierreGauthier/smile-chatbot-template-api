@@ -73,6 +73,8 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
             filter_detection_result.search_term, 
             context,
             page_size)
+        
+        # TODO: manage search error (no total_count)
         if response.total_count > 0:
             return FilteredSearchApiResponse.build_from_search_api_response(
                 response=response,

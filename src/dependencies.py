@@ -38,6 +38,7 @@ from infrastructure.prompts.langsmith import (
     LangsmithEmptySearchResponseBuilderPromptProvider,
     LangsmithSummarizeExchangePromptProvider
 )
+from infrastructure.ollama.ai import OllamaLlmProvider
 from infrastructure.configuration.elastic_suite import ElasticSuiteAttributeSetClient, ElasticSuiteAttributeSetResponseBuilder
 from infrastructure.agents.elastic_suite import ElasticSuiteSearchResponseBuilderAgent
 #from infrastructure.gcp.agents import LangDetectLanguageDetector
@@ -71,8 +72,10 @@ def inject_embedding_provider(settings: Settings = Depends(get_settings)) -> Emb
 def inject_llm_provider(settings: Settings = Depends(get_settings)) -> LlmProvider:
     provider = settings.llm_provider.lower()
     match provider:
+        case "local":
+            return OllamaLlmProvider(settings)
         case "azure":
-            return AzureOpenAiLlmProvider(settings)
+            return  AzureOpenAiLlmProvider(settings)
         case "gcp":
             return VertexLlmProvider(settings)
         case _:
