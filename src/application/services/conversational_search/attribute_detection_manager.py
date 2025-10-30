@@ -9,14 +9,14 @@ from domain.logger import ContextLogger
 
 from application.agents import AttributeSetExtractionAgent
 
-from dependencies import inject_attribute_database_service, inject_logger
+from dependencies import inject_attribute_db_service, inject_logger
 
 class AttributeDetectionManager:
     """Coordinates the retrieval of attribute set metadata and detection of user intent."""
 
     def __init__(
             self,
-            attribute_set_db_service : Annotated[DatabaseAttributesSetupService, Depends(inject_attribute_database_service)],
+            attribute_set_db_service : Annotated[DatabaseAttributesSetupService, Depends(inject_attribute_db_service)],
             attribute_set_extraction_agent: Annotated[AttributeSetExtractionAgent, Depends(AttributeSetExtractionAgent)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="AttributeDetectionManager"))]):
         """Store collaborators required for attribute detection."""

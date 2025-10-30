@@ -9,7 +9,7 @@ from domain.logger import ContextLogger
 from application.agents import ExchangeSummarizerAgent
 from application.models import SearchChatMessage
 
-from dependencies import inject_history_service_for_search, inject_logger
+from dependencies import inject_history_db_service_for_search, inject_logger
 
 class ConversationManager:
     """Coordinate message persistence and summarization for conversational search sessions."""
@@ -17,7 +17,7 @@ class ConversationManager:
     def __init__(
             self,
             summarize_exchange_agent : Annotated[ExchangeSummarizerAgent, Depends(ExchangeSummarizerAgent)],
-            history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service_for_search)],
+            history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_db_service_for_search)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="ConversationManager"))]):
         self.history_db_service = history_db_service
         self.summarize_exchange_agent = summarize_exchange_agent

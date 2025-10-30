@@ -17,7 +17,7 @@ from domain.tools import repair_llm_pydantic_answer
 
 from application.prompts import FiltersExtractionPromptProvider
 
-from dependencies import inject_llm_provider, inject_filters_extraction_prompt, inject_logger
+from dependencies import inject_deep_llm_provider, inject_filters_extraction_prompt, inject_logger
 from config import Settings, get_settings
 
 class FilterExtractionAgent:
@@ -25,7 +25,7 @@ class FilterExtractionAgent:
 
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
-            llm_provider: Annotated[LlmProvider, Depends(inject_llm_provider)],
+            llm_provider: Annotated[LlmProvider, Depends(inject_deep_llm_provider)],
             prompt_provider: Annotated[FiltersExtractionPromptProvider, Depends(inject_filters_extraction_prompt)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="FilterExtractionAgent"))]):
         """Store injected dependencies used to generate prompts, call the LLM, and log attempts."""

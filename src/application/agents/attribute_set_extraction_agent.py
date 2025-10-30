@@ -10,7 +10,7 @@ from domain.fields import AttributeField
 
 from application.prompts import AttributeSetExtractionPromptProvider
 
-from dependencies import inject_llm_provider, inject_attribute_set_extraction_prompt
+from dependencies import inject_deep_llm_provider, inject_attribute_set_extraction_prompt
 from config import Settings, get_settings
 
 
@@ -19,7 +19,7 @@ class AttributeSetExtractionAgent:
 
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
-            llm_agent: Annotated[LlmProvider, Depends(inject_llm_provider)],
+            llm_agent: Annotated[LlmProvider, Depends(inject_deep_llm_provider)],
             prompt_provider: Annotated[AttributeSetExtractionPromptProvider, Depends(inject_attribute_set_extraction_prompt)]):
         """Store injected dependencies used to build the attribute extraction pipeline."""
         self.settings = settings

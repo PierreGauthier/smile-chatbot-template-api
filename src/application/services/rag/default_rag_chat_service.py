@@ -22,7 +22,7 @@ from application.agents import (
 from application.models import RagChatMessage
 from application.chains import BasicPydanticChain
 
-from dependencies import inject_history_service_for_RAG, inject_document_service
+from dependencies import inject_history_db_service_for_RAG, inject_content_db_service
 
 class DefaultRagChatService(ChatService):
     """Coordinates intent detection, RAG retrieval, and history management for chat exchanges."""
@@ -31,10 +31,10 @@ class DefaultRagChatService(ChatService):
             self,
             settings: Annotated[Settings, Depends(get_settings)],
             rag_agent: Annotated[RagAgent, Depends(RagAgent)],
-            document_db_service: Annotated[DatabaseDocumentService, Depends(inject_document_service)],
+            document_db_service: Annotated[DatabaseDocumentService, Depends(inject_content_db_service)],
             intent_extraction_agent: Annotated[BasicPydanticChain, Depends(IntentExtractionAgent)],
             summarize_exchange_agent : Annotated[BasicPydanticChain, Depends(ExchangeSummarizerAgent)],
-            history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_service_for_RAG)]):
+            history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_db_service_for_RAG)]):
         """Inject required agents and services used to execute RAG chat workflows."""
         self.settings = settings
         self.intent_extraction_agent = intent_extraction_agent

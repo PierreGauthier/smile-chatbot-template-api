@@ -7,7 +7,7 @@ from domain.models import ChatMessage, Language
 
 from application.prompts import SummarizeExchangePromptProvider
 
-from dependencies import inject_llm_provider, inject_exchange_summarizer_prompt
+from dependencies import inject_deep_llm_provider, inject_exchange_summarizer_prompt
 from config import Settings, get_settings
 
 class ExchangeSummarizerAgent:
@@ -15,7 +15,7 @@ class ExchangeSummarizerAgent:
 
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
-            llm_agent: Annotated[LlmProvider, Depends(inject_llm_provider)],
+            llm_agent: Annotated[LlmProvider, Depends(inject_deep_llm_provider)],
             prompt_provider: Annotated[SummarizeExchangePromptProvider, Depends(inject_exchange_summarizer_prompt)]):
         """Initialize with configuration, language model provider, and prompt builder."""
         self.settings = settings

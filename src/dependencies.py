@@ -67,13 +67,18 @@ def inject_language_detector() -> LanguageDetector:
     )
 
 def inject_embedding_provider(settings: Settings = Depends(get_settings)) -> EmbeddingsProvider:
-    return OpenAIEmbeddingsProvider(settings)
-
-def inject_llm_provider(settings: Settings = Depends(get_settings)) -> LlmProvider:
-    provider = settings.llm_provider.lower()
+    """Injects an LLMaaS for Embeddings"""
+    provider = settings.embeddings_llm_provider.lower()
     match provider:
-        case "local":
-            return OllamaLlmProvider(settings)
+        case "openai":
+            return OpenAIEmbeddingsProvider(settings)
+        case _:
+            raise ValueError(f"Unsupported Embeddings LLM provider: {provider}")
+
+def inject_deep_llm_provider(settings: Settings = Depends(get_settings)) -> LlmProvider:
+    """Injects an LLMaaS for completion (reasoning)"""
+    provider = settings.deep_llm_provider.lower()
+    match provider:
         case "azure":
             return  AzureOpenAiLlmProvider(settings)
         case "gcp":
@@ -81,16 +86,51 @@ def inject_llm_provider(settings: Settings = Depends(get_settings)) -> LlmProvid
         case _:
             raise ValueError(f"Unsupported LLM provider: {provider}")
 
-def inject_attribute_database_service(settings: Settings = Depends(get_settings)) -> DatabaseAttributesSetupService:
-    provider = settings.llm_provider.lower()
+def inject_light_llm_provider(settings: Settings = Depends(get_settings)) -> LlmProvider:
+    """Injects an lightweight LLMaaS for completion (reasoning)"""
+    provider = settings.light_llm_provider.lower()
+    match provider:
+        case "ollama":
+            return OllamaLlmProvider(settings)
+        case "azure":
+            return  AzureOpenAiLlmProvider(settings)
+        case "gcp":
+            return VertexLlmProvider(settings)
+        case _:
+            raise ValueError(f"Unsupported LLM provider: {provider}")
+        
+def inject_vector_store_provider(settings: Settings = Depends(get_settings)) -> VectorStoreProvider:
+    """Injects a Vector Search provider"""
+    provider = settings.retriever_provider.lower()
     match provider:
         case "azure":
-            return CosmosDBAttributesSetupService(settings)
+            return AzureSearchVectorStoreProvider(
+                settings=settings,
+                embeddings_provider=inject_embedding_provider(settings)
+            )
+        case "gcp":
+            return VertexVectorStoreProvider(
+                settings=settings,
+                embeddings_provider=inject_embedding_provider(settings)
+            )
         case _:
-            raise ValueError(f"Unsupported History DB service provider: {provider}")
+            raise ValueError(f"Unsupported vector store service provider: {provider}")
 
-def inject_history_service_for_RAG(settings: Settings = Depends(get_settings)) -> DatabaseHistoryService:
-    provider = settings.llm_provider.lower()
+def inject_content_db_service(settings: Settings = Depends(get_settings)) -> DatabaseDocumentService:
+    """Injects content database service"""
+    provider = settings.content_db_provider.lower()
+    match provider:
+        case "azure":
+            return CosmosDbDocumentService(settings)
+        case "gcp":
+            return GoogleCloudStorageDocumentService(settings)
+            #return FirestoreDocumentService(FirestoreDocumentDb(settings))
+        case _:
+            raise ValueError(f"Unsupported Content DB service provider: {provider}")
+
+def inject_history_db_service_for_RAG(settings: Settings = Depends(get_settings)) -> DatabaseHistoryService:
+    """Injects history database service for RAG"""
+    provider = settings.history_db_provider.lower()
     match provider:
         case "azure":
             return CosmosDbHistoryService[RagChatMessage](RagChatMessage, settings)
@@ -99,8 +139,9 @@ def inject_history_service_for_RAG(settings: Settings = Depends(get_settings)) -
         case _:
             raise ValueError(f"Unsupported History DB service provider: {provider}")
 
-def inject_history_service_for_search(settings: Settings = Depends(get_settings)) -> DatabaseHistoryService:
-    provider = settings.llm_provider.lower()
+def inject_history_db_service_for_search(settings: Settings = Depends(get_settings)) -> DatabaseHistoryService:
+    """Injects history database service for Conversational Search"""
+    provider = settings.history_db_provider.lower()
     match provider:
         case "azure":
             return CosmosDbHistoryService[SearchChatMessage](SearchChatMessage, settings)
@@ -108,41 +149,24 @@ def inject_history_service_for_search(settings: Settings = Depends(get_settings)
             return FirestoreHistoryService[SearchChatMessage](SearchChatMessage, settings)
         case _:
             raise ValueError(f"Unsupported History DB service provider: {provider}")
-        
-def inject_document_service(settings: Settings = Depends(get_settings)) -> DatabaseDocumentService:
-    provider = settings.llm_provider.lower()
-    match provider:
-        case "azure":
-            return CosmosDbDocumentService(settings)
-        case "gcp":
-            return GoogleCloudStorageDocumentService(settings)
-            #return FirestoreDocumentService(FirestoreDocumentDb(settings))
-        case _:
-            raise ValueError(f"Unsupported Document DB service provider: {provider}")
-        
-def inject_request_service(settings: Settings = Depends(get_settings)) -> DatabaseRequestService:
-    provider = settings.llm_provider.lower()
+
+def inject_request_db_service(settings: Settings = Depends(get_settings)) -> DatabaseRequestService:
+    """Injects request database service"""
+    provider = settings.request_db_provider.lower()
     match provider:
         case "azure":
             return CosmosDbRequestService(settings)
         case _:
             raise ValueError(f"Unsupported Request DB service provider: {provider}")
         
-def inject_vector_store_provider(settings: Settings = Depends(get_settings)) -> VectorStoreProvider:
-    provider = settings.llm_provider.lower()
+def inject_attribute_db_service(settings: Settings = Depends(get_settings)) -> DatabaseAttributesSetupService:
+    """Injects database service for attribute-set and filters (Conversational Search)"""
+    provider = settings.attribute_set_db_provider.lower()
     match provider:
         case "azure":
-            return AzureSearchVectorStoreProvider(
-                settings=settings,
-                embeddings_provider=OpenAIEmbeddingsProvider(settings)
-            )
-        case "gcp":
-            return VertexVectorStoreProvider(
-                settings=settings,
-                embeddings_provider=OpenAIEmbeddingsProvider(settings)
-            )
+            return CosmosDBAttributesSetupService(settings)
         case _:
-            raise ValueError(f"Unsupported vector store service provider: {provider}")
+            raise ValueError(f"Unsupported History DB service provider: {provider}")
 
 def inject_conversational_search_api(settings: Settings = Depends(get_settings)) -> ConversationalSearchClient:
     return ElasticSuiteSearchClient(
@@ -154,7 +178,7 @@ def inject_conversational_search_api(settings: Settings = Depends(get_settings))
 def inject_search_response_agent(settings: Settings = Depends(get_settings)) -> SearchResponseBuilderAgent:
     return ElasticSuiteSearchResponseBuilderAgent(
         settings=settings, 
-        llm_provider=inject_llm_provider(settings),
+        llm_provider=inject_deep_llm_provider(settings),
         empty_search_prompt_provider=inject_empty_search_response_prompt(settings),
         not_empty_search_prompt_provider=inject_search_response_prompt(settings)
     )

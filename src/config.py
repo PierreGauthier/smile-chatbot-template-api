@@ -8,8 +8,16 @@ class Settings(BaseSettings):
     debug: bool = False # Langchain debug level
     log_level: str = "INFO" # General log level
     search_lang:str = "FR" # Preferred language for the conversational search
-    llm_provider:str # Name of the infrastructure for LLMaaS
     
+    embeddings_llm_provider:str # Name if the embeddings LLMaaS provider
+    deep_llm_provider:str # Name of the reasoning LLMaaS provider
+    light_llm_provider:str # Name of the lightweight LLMaaS provider
+    retriever_provider:str # Name of the Vector Search provider
+    content_db_provider:str # name of the content database provider
+    history_db_provider:str # Name of the history database provider
+    request_db_provider:str # Name of the request structure database provider
+    attribute_set_db_provider:str # Name of the database provider for attribute-sets and filters
+
     openai_api_version: str = "2020-05-10" # OpenAI API version
     openai_api_key: str # OpenAI API key
 

@@ -7,7 +7,7 @@ from domain.models import ChatMessage, ProductFilterDetectionResult
 
 from application.prompts import QuestionSummarizerPromptProvider
 
-from dependencies import inject_llm_provider, inject_question_summarizer_prompt
+from dependencies import inject_deep_llm_provider, inject_question_summarizer_prompt
 from config import Settings, get_settings
 
 
@@ -16,7 +16,7 @@ class QuestionsSummarizerAgent:
 
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
-            llm_agent: Annotated[LlmProvider, Depends(inject_llm_provider)],
+            llm_agent: Annotated[LlmProvider, Depends(inject_deep_llm_provider)],
             prompt_provider: Annotated[QuestionSummarizerPromptProvider, Depends(inject_question_summarizer_prompt)]):
         """
         Initialize the agent with configuration, LLM gateway, and prompt templates.

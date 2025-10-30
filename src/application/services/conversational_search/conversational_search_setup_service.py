@@ -9,7 +9,7 @@ from domain.models import (
 from domain.api_client.configuration_client import ConfigurationClient
 from domain.services.database import DatabaseAttributesSetupService
 
-from dependencies import inject_attribute_database_service, inject_configuration_client
+from dependencies import inject_attribute_db_service, inject_configuration_client
 from application.agents import AttributeSetExtractionAgent
 
 class ConversationalSearchSetupService:
@@ -18,7 +18,7 @@ class ConversationalSearchSetupService:
     def __init__(
             self,
             api_client:Annotated[ConfigurationClient, Depends(inject_configuration_client)],
-            attribute_db_service: Annotated[DatabaseAttributesSetupService, Depends(inject_attribute_database_service)],
+            attribute_db_service: Annotated[DatabaseAttributesSetupService, Depends(inject_attribute_db_service)],
             attribute_extraction_agent:Annotated[AttributeSetExtractionAgent, Depends(AttributeSetExtractionAgent)]):
         """
         Initialize the setup service with the required dependencies.

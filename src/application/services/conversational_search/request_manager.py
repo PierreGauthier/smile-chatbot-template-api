@@ -8,7 +8,7 @@ from domain.logger import ContextLogger
 
 from application.agents import FilterExtractionAgent
 
-from dependencies import inject_request_service, inject_logger
+from dependencies import inject_request_db_service, inject_logger
 
 class RequestManager:
     """Coordinates retrieval, enrichment, and persistence of conversational search requests."""
@@ -16,7 +16,7 @@ class RequestManager:
     def __init__(
             self, 
             filters_extraction_agent: Annotated[FilterExtractionAgent, Depends(FilterExtractionAgent)],
-            request_db_service: Annotated[DatabaseRequestService, Depends(inject_request_service)],
+            request_db_service: Annotated[DatabaseRequestService, Depends(inject_request_db_service)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="RequestManager"))]):
         """Persist injected dependencies used to process conversational requests."""
         self.request_db_service = request_db_service

@@ -13,8 +13,8 @@ from application.prompts import RagMainPromptProvider
 from config import Settings, get_settings
 from dependencies import (
     inject_vector_store_provider, 
-    inject_llm_provider, 
-    inject_document_service, 
+    inject_deep_llm_provider, 
+    inject_content_db_service, 
     inject_rag_main_prompt
 )
 
@@ -27,10 +27,10 @@ class RagAgent:
 
     def __init__(self,
             settings: Annotated[Settings, Depends(get_settings)],
-            llm_provider: Annotated[LlmProvider, Depends(inject_llm_provider)],
+            llm_provider: Annotated[LlmProvider, Depends(inject_deep_llm_provider)],
             vector_store_provider: Annotated[VectorStoreProvider, Depends(inject_vector_store_provider)],
             rag_prompt_provider: Annotated[RagMainPromptProvider, Depends(inject_rag_main_prompt)],
-            document_service: Annotated[DatabaseDocumentService, Depends(inject_document_service)]):
+            document_service: Annotated[DatabaseDocumentService, Depends(inject_content_db_service)]):
         """Initialize the agent with FastAPI-injected dependencies."""
         self.settings = settings
         self.doc_ids = []
