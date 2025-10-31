@@ -12,6 +12,7 @@ from domain.models import (
     AttributeFilterDto,
     BaseContext
 )
+from domain.fields import PriceRangeField
 from domain.api_client import ConversationalSearchClient
 from domain.logger import ContextLogger
 from infrastructure.search.elastic_suite import (
@@ -50,7 +51,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
             filters_dto:List[AttributeFilterDto],
             context:BaseContext,
             page_size: int = 10) -> FilteredSearchApiResponse:
-        valued_detected_filters = [f for f in filter_detection_result.detected_filters if f.value]
+        valued_detected_filters = [f for f in filter_detection_result.detected_filters if self.__is_valued(f.value)]
 
         # Searching only with 'term'
         if not valued_detected_filters:
@@ -172,3 +173,12 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         parsed = urlparse(url)
         netloc = f"{credentials}@{parsed.hostname}" + (f":{parsed.port}" if parsed.port else "")
         return urlunparse((parsed.scheme, netloc, parsed.path, parsed.params, parsed.query, parsed.fragment))
+
+    def __is_valued(self, filter_value):
+        if isinstance(filter_value, dict):
+            # handle case where PriceRangeField is represented as dict
+            min_price = filter_value.get("min_price") or 0
+            max_price = filter_value.get("max_price") or 0
+            return max_price > 0 or min_price > 0
+        else:
+            return True if filter_value else False

@@ -1,8 +1,7 @@
-import json
 from pydantic import BaseModel, Field, create_model
 from typing import Any, List
 
-from domain.fields import PriceRangeField, PydanticSchema
+from domain.fields import PydanticSchema
 
 def build_pydantic_model(schemas: List[PydanticSchema]) -> type[BaseModel]:
     """
