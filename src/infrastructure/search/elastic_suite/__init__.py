@@ -3,6 +3,7 @@ from .filter_selection_strategy import FilterSelectionStrategy
 from .one_filter_selection_strategy import OneFilterSelectionStrategy
 from .elastic_suite_search_response_builder import ElasticSuiteSearchResponseBuilder
 from .elastic_suite_search_client import ElasticSuiteSearchClient
+from .elastic_suite_search_client_mock import ElasticSuiteSearchClientMock
 
 __all__ = [
     "ElasticSuiteGraphqlQueryFactory",
@@ -10,4 +11,5 @@ __all__ = [
     "OneFilterSelectionStrategy",
     "ElasticSuiteSearchResponseBuilder",
     "ElasticSuiteSearchClient",
+    "ElasticSuiteSearchClientMock"
 ]

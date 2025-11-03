@@ -14,6 +14,7 @@ from domain.services.database import (
 
 # Avoid circular dependency injection
 from application.agents.search_response_builder_agent import SearchResponseBuilderAgent
+from application.agents.search_response.search_response_builder_lot_no_filter_strategy_agent import SearchResponseBuilderLotNoFilterStrategyAgent
 from domain.agents.language_detector import LanguageDetector
 from application.models import RagChatMessage, SearchChatMessage
 
@@ -27,7 +28,7 @@ from infrastructure.azure.services import (
 )
 from infrastructure.azure.ai import AzureOpenAiLlmProvider, AzureSearchVectorStoreProvider
 from infrastructure.openai.ai import OpenAIEmbeddingsProvider
-from infrastructure.search.elastic_suite import ElasticSuiteSearchClient, ElasticSuiteSearchResponseBuilder
+from infrastructure.search.elastic_suite import ElasticSuiteSearchClient, ElasticSuiteSearchClientMock, ElasticSuiteSearchResponseBuilder
 from infrastructure.prompts.langsmith import (
     LangsmithAttributeSetExtractionPromptProvider,
     LangsmithFiltersExtractionPromptProvider,
@@ -36,7 +37,8 @@ from infrastructure.prompts.langsmith import (
     LangsmithRagMainPromptProvider,
     LangsmithSearchResponseBuilderPromptProvider,
     LangsmithEmptySearchResponseBuilderPromptProvider,
-    LangsmithSummarizeExchangePromptProvider
+    LangsmithSummarizeExchangePromptProvider,
+    LangsmithSearchResponseLotNoFilterPromptProvider
 )
 from infrastructure.ollama.ai import OllamaLlmProvider
 from infrastructure.configuration.elastic_suite import ElasticSuiteAttributeSetClient, ElasticSuiteAttributeSetResponseBuilder
@@ -169,10 +171,15 @@ def inject_attribute_db_service(settings: Settings = Depends(get_settings)) -> D
             raise ValueError(f"Unsupported History DB service provider: {provider}")
 
 def inject_conversational_search_api(settings: Settings = Depends(get_settings)) -> ConversationalSearchClient:
-    return ElasticSuiteSearchClient(
+    # return ElasticSuiteSearchClient(
+    #     settings, 
+    #     ElasticSuiteSearchResponseBuilder(), 
+    #     inject_logger(module_name="ElasticSuiteSearchClient")
+    # )
+    return ElasticSuiteSearchClientMock(
         settings, 
         ElasticSuiteSearchResponseBuilder(), 
-        inject_logger(module_name="ElasticSuiteSearchClient")
+        inject_logger(module_name="ElasticSuiteSearchClientMock")
     )
 
 def inject_search_response_agent(settings: Settings = Depends(get_settings)) -> SearchResponseBuilderAgent:
@@ -182,6 +189,14 @@ def inject_search_response_agent(settings: Settings = Depends(get_settings)) -> 
         empty_search_prompt_provider=inject_empty_search_response_prompt(settings),
         not_empty_search_prompt_provider=inject_search_response_prompt(settings)
     )
+
+def inject_search_response_builder_agents():
+    return [
+        SearchResponseBuilderLotNoFilterStrategyAgent(
+            prompt_provider=LangsmithSearchResponseLotNoFilterPromptProvider(settings),
+            llm_provider=inject_deep_llm_provider(settings)
+        )
+    ]
 
 # PROMPTS
 

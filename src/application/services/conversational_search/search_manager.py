@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, List
 from fastapi import Depends
 from functools import partial
 
@@ -6,9 +6,14 @@ from domain.models import SearchContext, FilteredSearchApiResponse
 from domain.api_client import ConversationalSearchClient
 from domain.logger import ContextLogger
 
-from application.agents import QuestionsSummarizerAgent, SearchResponseBuilderAgent
+from application.agents import QuestionsSummarizerAgent, SearchResponseBuilderAgent, SearchResponseBuilderStrategyAgent
 
-from dependencies import inject_conversational_search_api, inject_logger, inject_search_response_agent
+from dependencies import (
+    inject_conversational_search_api, 
+    inject_logger, 
+    inject_search_response_agent, 
+    inject_search_response_builder_agents
+)
 
 
 class SearchManager:
@@ -24,6 +29,9 @@ class SearchManager:
         self.summarize_question_agent = summarize_question_agent
         self.conversational_search_client = conversational_search_client
         self.search_response_agent = search_response_agent
+
+        self.search_response_agent_strategies:List[SearchResponseBuilderStrategyAgent] = inject_search_response_builder_agents()
+
         self.logger = logger
 
     def search(self, context:SearchContext) -> SearchContext:
@@ -65,20 +73,28 @@ class SearchManager:
             
             # Create an answer calling to the right agent (no products, or products)
 
-        if len(items) == 0:
-            empty_search_answer = self.search_response_agent.invoke_empty(context)
-            context.ai_answer = empty_search_answer
-            context.search_result = []
+        context.search_total_count = total_count
+        context.search_result = items
+        for response_strategy in self.search_response_agent_strategies:
+            if response_strategy.apply(context):
+                answer = response_strategy.invoke(context)
+                context.ai_answer = answer                
+                break
+
+        # if len(items) == 0:
+        #     empty_search_answer = self.search_response_agent.invoke_empty(context)
+        #     context.ai_answer = empty_search_answer
+        #     context.search_result = []
         
-        else:
-            not_empty_search_answer = self.search_response_agent.invoke_not_empty(
-                context=context, 
-                search_result=items, 
-                filter_name=api_response.filter_name,
-                is_included=api_response.is_filter_included,
-                total_count=total_count)
-            context.ai_answer = not_empty_search_answer
-            context.search_result = items
+        # else:
+        #     not_empty_search_answer = self.search_response_agent.invoke_not_empty(
+        #         context=context, 
+        #         search_result=items, 
+        #         filter_name=api_response.filter_name,
+        #         is_included=api_response.is_filter_included,
+        #         total_count=total_count)
+        #     context.ai_answer = not_empty_search_answer
+        #     context.search_result = items
             
             # TODO: take into account all the result for the answer
 

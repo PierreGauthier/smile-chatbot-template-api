@@ -10,7 +10,7 @@ from domain.models import (
     AttributeFilterValue, 
     ProductFilterDetectionResult, 
     AttributeFilterDto,
-    BaseContext
+    SearchContext
 )
 from domain.fields import PriceRangeField
 from domain.api_client import ConversationalSearchClient
@@ -49,7 +49,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
     def search(self, 
             filter_detection_result:ProductFilterDetectionResult,
             filters_dto:List[AttributeFilterDto],
-            context:BaseContext,
+            context:SearchContext,
             page_size: int = 10) -> FilteredSearchApiResponse:
         valued_detected_filters = [f for f in filter_detection_result.detected_filters if self.__is_valued(f.value)]
 
@@ -61,6 +61,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
                 filter_detection_result.search_term, 
                 context,
                 page_size)
+            context.search_used_filters = []
             return FilteredSearchApiResponse.build_from_search_api_response(
                 response=response,
                 filter_name=None,
@@ -77,6 +78,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         
         # TODO: manage search error (no total_count)
         if response.total_count > 0:
+            context.search_used_filters = context.get_valued_filters()
             return FilteredSearchApiResponse.build_from_search_api_response(
                 response=response,
                 filter_name=None,
@@ -87,6 +89,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
         best_score = -1
 
         filter_selection_strategy = OneFilterSelectionStrategy(valued_detected_filters)
+        search_selected_filters = []
         
         while filter_selection_strategy.has_next():
             not_selected_filters, selected_filters = filter_selection_strategy.next() # invert result so we want all the rest filters
@@ -105,8 +108,10 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
                     is_filter_included=False
                 )
                 best_score = score
+                search_selected_filters = selected_filters
         
         if best_score > 0:
+            context.search_used_filters = search_selected_filters
             return best_response
         
         filter_selection_strategy.reset()
@@ -128,6 +133,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
                     is_filter_included=True
                 )
                 best_score = score
+                search_selected_filters = selected_filters
         
         if best_score <= 0:
             response = self.search_products(
@@ -136,12 +142,14 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
                 filter_detection_result.search_term, 
                 context,
                 page_size)
+            context.search_used_filters = []
             return FilteredSearchApiResponse.build_from_search_api_response(
                 response=response,
                 filter_name=None,
                 is_filter_included=False
             )
         else:
+            context.search_used_filters = search_selected_filters
             return best_response
 
     def search_products(
@@ -149,7 +157,7 @@ class ElasticSuiteSearchClient(ConversationalSearchClient):
             detected_filters:List[AttributeFilterValue],
             filters_dto:List[AttributeFilterDto], #attribute_set: str, term:str, filters: List[AttributeFilterValue],
             search_term:str, 
-            context:BaseContext,
+            context:SearchContext,
             page_size: int = 10) -> SearchApiResponse:
         
         json_data = self.graphql_factory.build_data(
