@@ -15,6 +15,8 @@ from domain.services.database import (
 # Avoid circular dependency injection
 from application.agents.search_response_builder_agent import SearchResponseBuilderAgent
 from application.agents.search_response.search_response_builder_lot_no_filter_strategy_agent import SearchResponseBuilderLotNoFilterStrategyAgent
+from application.agents.search_response.search_response_builder_lot_one_filter_strategy_agent import SearchResponseBuilderLotOneFilterStrategyAgent
+from application.agents.search_response.search_response_builder_lot_m1_filter_strategy_agent import SearchResponseBuilderLotM1FilterStrategyAgent
 from domain.agents.language_detector import LanguageDetector
 from application.models import RagChatMessage, SearchChatMessage
 
@@ -38,7 +40,9 @@ from infrastructure.prompts.langsmith import (
     LangsmithSearchResponseBuilderPromptProvider,
     LangsmithEmptySearchResponseBuilderPromptProvider,
     LangsmithSummarizeExchangePromptProvider,
-    LangsmithSearchResponseLotNoFilterPromptProvider
+    LangsmithSearchResponseLotNoFilterPromptProvider,
+    LangsmithSearchResponseLotOneFilterPromptProvider,
+    LangsmithSearchResponseLotM1FilterPromptProvider
 )
 from infrastructure.ollama.ai import OllamaLlmProvider
 from infrastructure.configuration.elastic_suite import ElasticSuiteAttributeSetClient, ElasticSuiteAttributeSetResponseBuilder
@@ -194,6 +198,14 @@ def inject_search_response_builder_agents():
     return [
         SearchResponseBuilderLotNoFilterStrategyAgent(
             prompt_provider=LangsmithSearchResponseLotNoFilterPromptProvider(settings),
+            llm_provider=inject_deep_llm_provider(settings)
+        ),
+        SearchResponseBuilderLotOneFilterStrategyAgent(
+            prompt_provider=LangsmithSearchResponseLotOneFilterPromptProvider(settings),
+            llm_provider=inject_deep_llm_provider(settings)
+        ),
+        SearchResponseBuilderLotM1FilterStrategyAgent(
+            prompt_provider=LangsmithSearchResponseLotM1FilterPromptProvider(settings),
             llm_provider=inject_deep_llm_provider(settings)
         )
     ]

@@ -77,6 +77,8 @@ class Settings(BaseSettings):
     langsmith_not_empty_search_response_builder_prompt_name:str # Name of the prompt for NOT empty response (some product found) generation
 
     elastic_suite_search_response_lot_no_filter:str
+    elastic_suite_search_response_lot_one_filter:str
+    elastic_suite_search_response_lot_m1_filter:str
 
     elastic_suite_api_base_url: str # Base URL for Elastic Suite attributes and filter retrieval 
     elastic_suite_attribute_set_endpoint:str # Elastic Suite endpoint

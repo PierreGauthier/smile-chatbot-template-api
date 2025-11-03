@@ -55,7 +55,32 @@ class ElasticSuiteSearchClientMock(ConversationalSearchClient):
                 response_data = json.load(response_file)
             self._mock_search_response = self.search_response_builder.build_from_api_response(response_data)
 
-        context.search_used_filters = []
+        # context.search_used_filters = []
+        context.search_used_filters = [AttributeFilterValue(
+            attribute_id=2545,
+            label="Price",
+            code="price",
+            type="price",
+            description="",
+            value=PriceRangeField(min_price=0, max_price=300)
+        ),
+        AttributeFilterValue(
+            attribute_id=2545,
+            label="Marque",
+            code="marque",
+            type="text",
+            description="",
+            value="WEBER"
+        ),
+        AttributeFilterValue(
+            attribute_id=2545,
+            label="Type de produit",
+            code="type_produit",
+            type="text",
+            description="",
+            value="Barbecue"
+        )
+        ]
         return FilteredSearchApiResponse.build_from_search_api_response(
             response=self._mock_search_response,
             filter_name=None,

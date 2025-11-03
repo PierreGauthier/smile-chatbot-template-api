@@ -47,12 +47,14 @@ Provide a helpful response that includes:
 
 3. **Provide the answer in the following language:** {lang}
 
+# Tone
+Be helpful, clear, and constructive. Acknowledge the challenge while empowering the user to find what they need.
+
+---
+
 # Example
 If the user searched for "red bike, for woman, for the city" using filters: `color` (red), `gender` (woman), `type` (city), but only `gender` (woman) returned results, and available filters include `traction`, `frame_material`, `wheel_size`:
 - ✅ GOOD: Suggest `gender` (woman) + `traction` + `wheel_size`
 - ✅ GOOD: Suggest `gender` (woman) + `frame_material` + `type` (city)
 - ❌ BAD: Suggest `gender` (woman) + `color` (blue) + `type` (mountain) - only changes values of original filters, no new filter dimension
 - ❌ BAD: Suggest `color` (red) + `type` (city) - doesn't include the successfully used filter (`gender`)
-
-# Tone
-Be helpful, clear, and constructive. Acknowledge the challenge while empowering the user to find what they need.
