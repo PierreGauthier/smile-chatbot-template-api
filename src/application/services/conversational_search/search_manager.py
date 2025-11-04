@@ -6,7 +6,7 @@ from domain.models import SearchContext, FilteredSearchApiResponse
 from domain.api_client import ConversationalSearchClient
 from domain.logger import ContextLogger
 
-from application.agents import QuestionsSummarizerAgent, SearchResponseBuilderAgent, SearchResponseBuilderStrategyAgent
+from application.agents import QuestionsSummarizerAgent, SearchResponseBuilderAgent, SearchResponseBuilderStrategyAgentDecorator
 
 from dependencies import (
     inject_conversational_search_api, 
@@ -30,7 +30,7 @@ class SearchManager:
         self.conversational_search_client = conversational_search_client
         self.search_response_agent = search_response_agent
 
-        self.search_response_agent_strategies:List[SearchResponseBuilderStrategyAgent] = inject_search_response_builder_agents()
+        self.search_response_agent_strategies:List[SearchResponseBuilderStrategyAgentDecorator] = inject_search_response_builder_agents()
 
         self.logger = logger
 

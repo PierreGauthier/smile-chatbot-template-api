@@ -6,9 +6,13 @@ from .filter_extraction_agent import FilterExtractionAgent
 from .questions_summarizer_agent import QuestionsSummarizerAgent
 from .search_response_builder_agent import SearchResponseBuilderAgent
 
+from .search_response.search_response_builder_strategy_agent_decorator import SearchResponseBuilderStrategyAgentDecorator
 from .search_response.search_response_builder_strategy_agent import SearchResponseBuilderStrategyAgent
-from .search_response.search_response_builder_lot_one_filter_strategy_agent import SearchResponseBuilderLotOneFilterStrategyAgent
-from .search_response.search_response_builder_lot_m1_filter_strategy_agent import SearchResponseBuilderLotM1FilterStrategyAgent
+from .search_response.default_search_response_builder_strategy_agent import DefaultSearchResponseBuilderStrategyAgent
+
+from .search_response.nb_used_filters_strategy_agent_decorator import NbUsedFiltersStrategyAgentDecorator
+from .search_response.nb_detected_filters_strategy_agent_decorator import NbDetectedFiltersStrategyAgentDecorator
+from .search_response.result_number_strategy_agent_decorator import ResultNumberStrategyAgentDecorator
 
 __all__ = [
     "ExchangeSummarizerAgent",
@@ -19,6 +23,9 @@ __all__ = [
     "QuestionsSummarizerAgent",
     "SearchResponseBuilderAgent",
     "SearchResponseBuilderStrategyAgent",
-    "SearchResponseBuilderLotOneFilterStrategyAgent",
-    "SearchResponseBuilderLotM1FilterStrategyAgent"
+    "DefaultSearchResponseBuilderStrategyAgent",
+    "SearchResponseBuilderStrategyAgentDecorator",
+    "NbUsedFiltersStrategyAgentDecorator",
+    "NbDetectedFiltersStrategyAgentDecorator",
+    "ResultNumberStrategyAgentDecorator"
 ]
