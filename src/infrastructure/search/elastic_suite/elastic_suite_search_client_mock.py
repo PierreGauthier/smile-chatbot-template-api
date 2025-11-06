@@ -70,7 +70,7 @@ class ElasticSuiteSearchClientMock(ConversationalSearchClient):
                 label="Marque",
                 code="marque",
                 type="text",
-                description="",
+                description="", 
                 value="WEBER"
             ),
             AttributeFilterValue(
@@ -80,7 +80,15 @@ class ElasticSuiteSearchClientMock(ConversationalSearchClient):
                 type="text",
                 description="",
                 value="Barbecue"
-            )
+            ),
+            # AttributeFilterValue(
+            #     attribute_id=2545,
+            #     label="Couleur",
+            #     code="couleur",
+            #     type="text",
+            #     description="",
+            #     value="Noir"
+            # )
         ]
         return FilteredSearchApiResponse.build_from_search_api_response(
             response=self._mock_search_response,

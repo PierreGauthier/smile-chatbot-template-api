@@ -14,11 +14,6 @@ from domain.services.database import (
 
 # Avoid circular dependency injection
 from application.agents.search_response_builder_agent import SearchResponseBuilderAgent
-from application.agents.search_response.default_search_response_builder_strategy_agent import DefaultSearchResponseBuilderStrategyAgent
-
-from application.agents.search_response.nb_used_filters_strategy_agent_decorator import NbUsedFiltersStrategyAgentDecorator
-from application.agents.search_response.nb_detected_filters_strategy_agent_decorator import NbDetectedFiltersStrategyAgentDecorator
-from application.agents.search_response.result_number_strategy_agent_decorator import ResultNumberStrategyAgentDecorator
 
 from domain.agents.language_detector import LanguageDetector
 from application.models import RagChatMessage, SearchChatMessage
@@ -33,7 +28,11 @@ from infrastructure.azure.services import (
 )
 from infrastructure.azure.ai import AzureOpenAiLlmProvider, AzureSearchVectorStoreProvider
 from infrastructure.openai.ai import OpenAIEmbeddingsProvider
-from infrastructure.search.elastic_suite import ElasticSuiteSearchClient, ElasticSuiteSearchClientMock, ElasticSuiteSearchResponseBuilder
+from infrastructure.search.elastic_suite import (
+    ElasticSuiteSearchClient, 
+    ElasticSuiteSearchClientMock, 
+    ElasticSuiteSearchResponseBuilder
+)
 from infrastructure.prompts.langsmith import (
     LangsmithAttributeSetExtractionPromptProvider,
     LangsmithFiltersExtractionPromptProvider,
@@ -42,10 +41,7 @@ from infrastructure.prompts.langsmith import (
     LangsmithRagMainPromptProvider,
     LangsmithSearchResponseBuilderPromptProvider,
     LangsmithEmptySearchResponseBuilderPromptProvider,
-    LangsmithSummarizeExchangePromptProvider,
-    LangsmithSearchResponseLotNoFilterPromptProvider,
-    LangsmithSearchResponseLotOneFilterPromptProvider,
-    LangsmithSearchResponseLotM1FilterPromptProvider
+    LangsmithSummarizeExchangePromptProvider
 )
 from infrastructure.ollama.ai import OllamaLlmProvider
 from infrastructure.configuration.elastic_suite import ElasticSuiteAttributeSetClient, ElasticSuiteAttributeSetResponseBuilder
@@ -196,53 +192,6 @@ def inject_search_response_agent(settings: Settings = Depends(get_settings)) -> 
         empty_search_prompt_provider=inject_empty_search_response_prompt(settings),
         not_empty_search_prompt_provider=inject_search_response_prompt(settings)
     )
-
-def inject_search_response_builder_agents():
-    return [
-        NbDetectedFiltersStrategyAgentDecorator.with_detected_filter(
-            search_response_builder = NbUsedFiltersStrategyAgentDecorator.no_used_filter(
-                search_response_builder = ResultNumberStrategyAgentDecorator.a_lot(
-                    search_response_builder = DefaultSearchResponseBuilderStrategyAgent(
-                        prompt_provider=LangsmithSearchResponseLotNoFilterPromptProvider(settings),
-                        llm_provider=inject_deep_llm_provider(settings)
-                    )
-                )
-            )
-        ),
-        NbDetectedFiltersStrategyAgentDecorator.with_detected_filter(
-            search_response_builder = NbUsedFiltersStrategyAgentDecorator.one_used_filter(
-                search_response_builder = ResultNumberStrategyAgentDecorator.a_lot(
-                    search_response_builder = DefaultSearchResponseBuilderStrategyAgent(
-                        prompt_provider=LangsmithSearchResponseLotOneFilterPromptProvider(settings),
-                        llm_provider=inject_deep_llm_provider(settings)
-                    )
-                )
-            )
-        ),
-        NbDetectedFiltersStrategyAgentDecorator.with_detected_filter(
-            search_response_builder = NbUsedFiltersStrategyAgentDecorator.minus_one_used_filter(
-                search_response_builder = ResultNumberStrategyAgentDecorator.a_lot(
-                    search_response_builder = DefaultSearchResponseBuilderStrategyAgent(
-                        prompt_provider=LangsmithSearchResponseLotM1FilterPromptProvider(settings),
-                        llm_provider=inject_deep_llm_provider(settings)
-                    )
-                )
-            )
-        ),
-
-        # SearchResponseBuilderLotNoFilterStrategyAgent(
-        #     prompt_provider=LangsmithSearchResponseLotNoFilterPromptProvider(settings),
-        #     llm_provider=inject_deep_llm_provider(settings)
-        # ),
-        # SearchResponseBuilderLotOneFilterStrategyAgent(
-        #     prompt_provider=LangsmithSearchResponseLotOneFilterPromptProvider(settings),
-        #     llm_provider=inject_deep_llm_provider(settings)
-        # ),
-        # SearchResponseBuilderLotM1FilterStrategyAgent(
-        #     prompt_provider=LangsmithSearchResponseLotM1FilterPromptProvider(settings),
-        #     llm_provider=inject_deep_llm_provider(settings)
-        # )
-    ]
 
 # PROMPTS
 
