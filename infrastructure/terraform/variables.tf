@@ -1,3 +1,13 @@
+variable "tags" {
+  description = "Tags to apply to all resources"
+  type        = map(string)
+  default = {
+    Environment = "Development"
+    Project     = "MAYA"
+    ManagedBy   = "Terraform"
+  }
+}
+
 variable "resource_group_name" {
     description = "Name of the resource group"
     type        = string
@@ -48,4 +58,52 @@ variable "key_vault_name" {
     description = "Name of the Key Vault"
     type        = string
     default     = "maya-dev-kv"
+}
+
+variable "app_insights_name" {
+  description = "Name of the Application Insights"
+  type        = string
+  default     = "maya-dev-ais"
+}
+
+variable "cosmos_db_account_name" {
+  description = "Name of the Cosmos DB account"
+  type        = string
+  default     = "maya-dev-cosmos-db"
+}
+
+variable "cosmos_db_database_name" {
+  description = "Name of the Cosmos DB database"
+  type        = string
+  default     = "chatbot"
+}
+
+variable "cosmos_db_containers" {
+  description = "List of Cosmos DB containers with their partition keys"
+  type = list(object({
+    name          = string
+    partition_key = string
+  }))
+  default = [
+    {
+      name          = "embeddings"
+      partition_key = "/doc_type"
+    },
+    {
+      name          = "history"
+      partition_key = "/user_id"
+    },
+    {
+      name          = "attributes"
+      partition_key = "/project_id"
+    },
+    {
+      name          = "filters"
+      partition_key = "/attribute_id"
+    },
+    {
+      name          = "requests"
+      partition_key = "/user_id"
+    }
+  ]
 }

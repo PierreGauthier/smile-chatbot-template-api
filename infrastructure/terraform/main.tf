@@ -16,14 +16,20 @@ provider "azurerm" {
   }
 }
 
+data "azurerm_client_config" "current" {}
+
+resource "azurerm_resource_group" "maya_rg" {
+  name     = var.resource_group_name
+  location = var.location
+  tags = var.tags
+}
+
 # Generate a random suffix for Key Vault name
 resource "random_string" "kv_suffix" {
   length  = 6
   special = false
   upper   = false
 }
-
-data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "maya_kv" {
   name                       = "${var.key_vault_name}-${random_string.kv_suffix.result}"
@@ -42,25 +48,18 @@ resource "azurerm_key_vault" "maya_kv" {
     bypass         = "AzureServices"
     default_action = "Allow"
   }
-
-  tags = {
-    Environment = "Development"
-    Project     = "MAYA"
-    ManagedBy   = "Terraform"
-  }
-
+  tags = var.tags
   depends_on = [azurerm_resource_group.maya_rg]
 }
 
-resource "azurerm_resource_group" "maya_rg" {
-  name     = var.resource_group_name
-  location = var.location
-
-  tags = {
-    Environment = "Development"
-    Project     = "MAYA"
-    ManagedBy   = "Terraform"
-  }
+# Application Insights
+resource "azurerm_application_insights" "maya" {
+  name                = var.app_insights_name
+  location            = azurerm_resource_group.maya_rg.location
+  resource_group_name = azurerm_resource_group.maya_rg.name
+  application_type    = "web"
+  tags = var.tags
+  depends_on = [azurerm_key_vault.maya_kv]
 }
 
 # Grant Key Vault Administrator role to current user (you)
@@ -69,7 +68,6 @@ resource "azurerm_role_assignment" "kv_admin" {
   scope                = azurerm_key_vault.maya_kv.id
   role_definition_name = "Key Vault Administrator"
   principal_id         = data.azurerm_client_config.current.object_id
-
   depends_on = [azurerm_key_vault.maya_kv]
 }
 
@@ -79,6 +77,7 @@ resource "azurerm_service_plan" "maya_plan" {
   location            = var.location
   os_type             = "Linux"
   sku_name            = "B1"
+  tags = var.tags
   depends_on = [azurerm_resource_group.maya_rg]
 }
 
@@ -120,7 +119,7 @@ resource "azurerm_linux_web_app" "maya_api" {
   # Explicitly enable basic auth for SCM (enabled by default in Azure)
   # This is controlled at the app service level
   https_only = true
-
+  tags = var.tags
   depends_on = [azurerm_service_plan.maya_plan]
 }
 
@@ -133,6 +132,88 @@ resource "azurerm_role_assignment" "app_kv_secrets" {
 
   depends_on = [
     azurerm_key_vault.maya_kv,
+    azurerm_linux_web_app.maya_api
+  ]
+}
+
+# Cosmos DB Account
+resource "azurerm_cosmosdb_account" "maya_cosmos" {
+  name                = var.cosmos_db_account_name
+  location            = azurerm_resource_group.maya_rg.location
+  resource_group_name = azurerm_resource_group.maya_rg.name
+  offer_type          = "Standard"
+  kind                = "GlobalDocumentDB"
+
+  # Serverless capacity mode
+  capabilities {
+    name = "EnableServerless"
+  }
+
+  # Consistency policy
+  consistency_policy {
+    consistency_level = "Session"
+  }
+
+  # Single region deployment for dev
+  geo_location {
+    location          = azurerm_resource_group.maya_rg.location
+    failover_priority = 0
+  }
+
+  # Enable automatic failover (optional for serverless)
+  automatic_failover_enabled = false
+  tags = var.tags
+  depends_on = [azurerm_resource_group.maya_rg]
+}
+
+# Create Cosmos DB SQL Database
+resource "azurerm_cosmosdb_sql_database" "chatbot" {
+  name                = var.cosmos_db_database_name
+  resource_group_name = azurerm_resource_group.maya_rg.name
+  account_name        = azurerm_cosmosdb_account.maya_cosmos.name
+
+  depends_on = [azurerm_cosmosdb_account.maya_cosmos]
+}
+
+# Create Cosmos DB SQL Containers
+resource "azurerm_cosmosdb_sql_container" "containers" {
+  for_each = { for container in var.cosmos_db_containers : container.name => container }
+
+  name                = each.value.name
+  resource_group_name = azurerm_resource_group.maya_rg.name
+  account_name        = azurerm_cosmosdb_account.maya_cosmos.name
+  database_name       = azurerm_cosmosdb_sql_database.chatbot.name
+  partition_key_paths = [each.value.partition_key]
+
+  # Serverless doesn't support throughput settings
+  # No autoscale_settings or throughput needed
+
+  depends_on = [azurerm_cosmosdb_sql_database.chatbot]
+}
+
+# Grant App Service access to Cosmos DB (Data Contributor role)
+resource "azurerm_role_assignment" "app_cosmos_contributor" {
+  scope                = azurerm_cosmosdb_account.maya_cosmos.id
+  role_definition_name = "Cosmos DB Account Reader Role"
+  principal_id         = azurerm_linux_web_app.maya_api.identity[0].principal_id
+
+  depends_on = [
+    azurerm_cosmosdb_account.maya_cosmos,
+    azurerm_linux_web_app.maya_api
+  ]
+}
+
+# Grant App Service data plane access to Cosmos DB
+# This allows the managed identity to read/write data
+resource "azurerm_cosmosdb_sql_role_assignment" "app_cosmos_data" {
+  resource_group_name = azurerm_resource_group.maya_rg.name
+  account_name        = azurerm_cosmosdb_account.maya_cosmos.name
+  role_definition_id  = "${azurerm_cosmosdb_account.maya_cosmos.id}/sqlRoleDefinitions/00000000-0000-0000-0000-000000000002"
+  principal_id        = azurerm_linux_web_app.maya_api.identity[0].principal_id
+  scope               = azurerm_cosmosdb_account.maya_cosmos.id
+
+  depends_on = [
+    azurerm_cosmosdb_account.maya_cosmos,
     azurerm_linux_web_app.maya_api
   ]
 }

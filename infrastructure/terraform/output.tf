@@ -32,3 +32,35 @@ output "managed_identity_tenant_id" {
   description = "Tenant ID of the System-Assigned Managed Identity"
   value       = azurerm_linux_web_app.maya_api.identity[0].tenant_id
 }
+
+output "cosmos_db_account_name" {
+  description = "Name of the Cosmos DB account"
+  value       = azurerm_cosmosdb_account.maya_cosmos.name
+}
+
+output "cosmos_db_endpoint" {
+  description = "Endpoint URL of the Cosmos DB account"
+  value       = azurerm_cosmosdb_account.maya_cosmos.endpoint
+}
+
+output "cosmos_db_database_name" {
+  description = "Name of the Cosmos DB database"
+  value       = azurerm_cosmosdb_sql_database.chatbot.name
+}
+
+output "cosmos_db_containers" {
+  description = "List of Cosmos DB container names"
+  value       = [for container in azurerm_cosmosdb_sql_container.containers : container.name]
+}
+
+output "cosmos_db_primary_key" {
+  description = "Primary master key for Cosmos DB (sensitive)"
+  value       = azurerm_cosmosdb_account.maya_cosmos.primary_key
+  sensitive   = true
+}
+
+output "cosmos_db_connection_strings" {
+  description = "Connection strings for Cosmos DB (sensitive)"
+  value       = azurerm_cosmosdb_account.maya_cosmos.primary_sql_connection_string
+  sensitive   = true
+}
