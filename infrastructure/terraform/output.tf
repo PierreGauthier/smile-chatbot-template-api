@@ -3,6 +3,11 @@ output "resource_group_name" {
   value       = azurerm_resource_group.maya_rg.name
 }
 
+output "key_vault_name" {
+  description = "Name of the Key Vault"
+  value       = azurerm_key_vault.maya_kv.name
+}
+
 output "app_service_name" {
   description = "Name of the App Service"
   value       = azurerm_linux_web_app.maya_api.name
