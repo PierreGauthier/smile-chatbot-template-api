@@ -3,7 +3,7 @@ from fastapi import Depends
 from functools import partial
 
 from domain.fields import AttributeField
-from domain.models import SearchContext, AttributeSetDto, ElasticSuiteAttributeSet
+from domain.models import SearchContext, AttributeSetDto
 from domain.services.database import DatabaseAttributesSetupService
 from domain.logger import ContextLogger
 
@@ -31,10 +31,7 @@ class AttributeDetectionManager:
         context.attribute_sets = attribute_sets
 
         # Detect product (attribute set)
-        detected_attribute_sets:AttributeField = self.attribute_set_extraction_agent.invoke(
-            user_message=context.exchange,
-            attribute_set=[ElasticSuiteAttributeSet(name=attr.code, description=attr.description) for attr in attribute_sets]
-        )
+        detected_attribute_sets:AttributeField = self.attribute_set_extraction_agent.invoke(context)
         
         self.logger.debug_context(
             message=f"[{detected_attribute_sets.is_intent}]: {detected_attribute_sets.chain_of_thoughts}",

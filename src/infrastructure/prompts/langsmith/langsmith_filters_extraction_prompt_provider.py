@@ -4,12 +4,12 @@ from fastapi import Depends
 from langchain_core.prompts import ChatPromptTemplate
 from langsmith import Client
 
-from domain.models import AttributeFilterDto
-from application.prompts import FiltersExtractionPromptProvider
+from domain.models import AttributeFilterDto, SearchContext
+from application.prompts import PromptProvider
 
 from config import Settings, get_settings
 
-class LangsmithFiltersExtractionPromptProvider(FiltersExtractionPromptProvider):
+class LangsmithFiltersExtractionPromptProvider(PromptProvider[SearchContext]):
 
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
         self.client = Client(api_key=settings.langchain_api_key)
