@@ -1,3 +1,5 @@
+from .message_data import MessageData
+from .chat_message import ChatMessage
 from .language import Language
 from .base_context import BaseContext
 from .setup_service_result import SetupServiceResult
@@ -9,8 +11,6 @@ from .api_chat_request import ApiChatRequest
 from .document_identifier import DocumentIdentifier
 from .rag_chain_result import RagChainResult
 from .chat_service_result import ChatServiceResult
-from .message_data import MessageData
-from .chat_message import ChatMessage
 from .search_scoring_profile import SearchScoringProfile
 from .index_filter_result import IndexFilterResult
 from .search_response_item import SearchResponseItem

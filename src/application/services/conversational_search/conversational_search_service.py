@@ -88,7 +88,7 @@ class ConversationalSearchService(SearchService):
 
         # (4) Get attributes from DB and detect from user message
         context = self.attribute_set_manager.detect(context)
-        if not context.detected_attribute_sets.products:
+        if not context.detected_attribute_set.product:
             return SearchServiceResult(
                 user_id=user_id,
                 session_id=context.session_id,

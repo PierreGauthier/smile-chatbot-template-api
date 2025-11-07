@@ -3,9 +3,9 @@ from fastapi import Depends
 from config import Settings
 
 from domain.ai import LlmProvider
-from domain.models import ChatMessage, Language
+from domain.models import ChatMessage
 
-from application.prompts import SummarizeExchangePromptProvider
+from application.prompts import StaticPromptProvider
 
 from dependencies import inject_deep_llm_provider, inject_exchange_summarizer_prompt
 from config import Settings, get_settings
@@ -16,16 +16,16 @@ class ExchangeSummarizerAgent:
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
             llm_agent: Annotated[LlmProvider, Depends(inject_deep_llm_provider)],
-            prompt_provider: Annotated[SummarizeExchangePromptProvider, Depends(inject_exchange_summarizer_prompt)]):
+            prompt_provider: Annotated[StaticPromptProvider, Depends(inject_exchange_summarizer_prompt)]):
         """Initialize with configuration, language model provider, and prompt builder."""
         self.settings = settings
         self.prompt_provider = prompt_provider
         self.llm_agent = llm_agent
     
-    def invoke(self, exchange: List[ChatMessage], chat_lang:Language):
+    def invoke(self, exchange: List[ChatMessage]):
         """Generate a summary for the given chat exchange in the requested language."""
 
-        prompt_template = self.prompt_provider.get_prompt(chat_lang)
+        prompt_template = self.prompt_provider.get_prompt()
         
         exchange_list = []
         for message in exchange:

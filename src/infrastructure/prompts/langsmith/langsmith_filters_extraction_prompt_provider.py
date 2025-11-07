@@ -15,8 +15,11 @@ class LangsmithFiltersExtractionPromptProvider(PromptProvider[SearchContext]):
         self.client = Client(api_key=settings.langchain_api_key)
         self.prompt_name = settings.langsmith_filters_extraction_prompt_name
 
-    def get_prompt(self, filters:List[AttributeFilterDto]) -> ChatPromptTemplate:
+    def get_prompt(self, context:SearchContext) -> ChatPromptTemplate:
         prompt: ChatPromptTemplate = self.client.pull_prompt(self.prompt_name)
+
+        attribute_set = next((attr for attr in context.attribute_sets if attr.code == context.detected_attribute_set.product), None)
+        filters:List[AttributeFilterDto] = attribute_set.filters
 
         filters_declarations = []
         for filter in filters:

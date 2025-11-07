@@ -31,19 +31,18 @@ class AttributeDetectionManager:
         context.attribute_sets = attribute_sets
 
         # Detect product (attribute set)
-        detected_attribute_sets:AttributeField = self.attribute_set_extraction_agent.invoke(context)
+        detected_attribute_set:AttributeField = self.attribute_set_extraction_agent.invoke(context)
         
         self.logger.debug_context(
-            message=f"[{detected_attribute_sets.is_intent}]: {detected_attribute_sets.chain_of_thoughts}",
+            message=f"[{detected_attribute_set.is_intent}]: {detected_attribute_set.chain_of_thoughts}",
             context=context
         )
-        if detected_attribute_sets.is_intent:
-            products = ", ".join(detected_attribute_sets.products)
+        if detected_attribute_set.is_intent:
             self.logger.debug_context(
-                message=f"Attribute sets: {products}",
+                message=f"Attribute set: {detected_attribute_set.product}",
                 context=context
             )
         
-        context.detected_attribute_sets = detected_attribute_sets
+        context.detected_attribute_set = detected_attribute_set
 
         return context

@@ -10,12 +10,12 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableLambda
 
 from domain.ai import LlmProvider
-from domain.models import AttributeFilterDto, BaseContext
+from domain.models import AttributeFilterDto, SearchContext
 from domain.fields import build_pydantic_model, PydanticSchema, PriceRangeField
 from domain.logger import ContextLogger
 from domain.tools import repair_llm_pydantic_answer
 
-from application.prompts import FiltersExtractionPromptProvider
+from application.prompts import PromptProvider
 
 from dependencies import inject_deep_llm_provider, inject_filters_extraction_prompt, inject_logger
 from config import Settings, get_settings
@@ -26,7 +26,7 @@ class FilterExtractionAgent:
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
             llm_provider: Annotated[LlmProvider, Depends(inject_deep_llm_provider)],
-            prompt_provider: Annotated[FiltersExtractionPromptProvider, Depends(inject_filters_extraction_prompt)],
+            prompt_provider: Annotated[PromptProvider[SearchContext], Depends(inject_filters_extraction_prompt)],
             logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="FilterExtractionAgent"))]):
         """Store injected dependencies used to generate prompts, call the LLM, and log attempts."""
         self.settings = settings
@@ -35,8 +35,10 @@ class FilterExtractionAgent:
         self.logger = logger
         self.attempt = 1
 
-    def invoke(self, exchange:str, filters:List[AttributeFilterDto], context:BaseContext):
+    def invoke(self, context:SearchContext):
         """Parse user input into a validated filter payload using retryable LLM invocations."""
+        attribute_set = next((attr for attr in context.attribute_sets if attr.code == context.detected_attribute_set.product), None)
+        filters:List[AttributeFilterDto] = attribute_set.filters
         schemas = [
             PydanticSchema(
                 name=filter.code,
@@ -59,9 +61,7 @@ class FilterExtractionAgent:
         output_parser = PydanticOutputParser(pydantic_object=model_type)
 
         format_instructions = output_parser.get_format_instructions()
-        prompt:ChatPromptTemplate = self.prompt_provider.get_prompt(
-            filters=filters
-        )
+        prompt:ChatPromptTemplate = self.prompt_provider.get_prompt(context)
         prompt = prompt.partial(format_instructions=format_instructions)
         prompt.append(message=("human", "{question}"))
 
@@ -79,5 +79,5 @@ class FilterExtractionAgent:
         response = runnable.with_retry(
             stop_after_attempt=3,
             retry_if_exception_type=(OutputParserException, ValidationError, ValueError),
-        ).invoke(exchange)
+        ).invoke(context.exchange)
         return response

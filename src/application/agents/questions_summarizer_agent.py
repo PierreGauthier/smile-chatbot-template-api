@@ -1,11 +1,11 @@
-from typing import List, Annotated
+from typing import Annotated
 from fastapi import Depends
 from config import Settings
 
 from domain.ai import LlmProvider
-from domain.models import ChatMessage, ProductFilterDetectionResult
+from domain.models import SearchContext
 
-from application.prompts import QuestionSummarizerPromptProvider
+from application.prompts import PromptProvider
 
 from dependencies import inject_deep_llm_provider, inject_question_summarizer_prompt
 from config import Settings, get_settings
@@ -17,7 +17,7 @@ class QuestionsSummarizerAgent:
     def __init__(self, 
             settings: Annotated[Settings, Depends(get_settings)], 
             llm_agent: Annotated[LlmProvider, Depends(inject_deep_llm_provider)],
-            prompt_provider: Annotated[QuestionSummarizerPromptProvider, Depends(inject_question_summarizer_prompt)]):
+            prompt_provider: Annotated[PromptProvider[SearchContext], Depends(inject_question_summarizer_prompt)]):
         """
         Initialize the agent with configuration, LLM gateway, and prompt templates.
 
@@ -30,7 +30,8 @@ class QuestionsSummarizerAgent:
         self.prompt_provider = prompt_provider
         self.llm_agent = llm_agent
     
-    def invoke(self, last_exchange: List[ChatMessage], questions: List[ProductFilterDetectionResult]):
+    def invoke(self, context:SearchContext):
+        questions=context.request_chain_results
         """
         Summarize detected product questions alongside the latest exchange context.
 
@@ -42,7 +43,7 @@ class QuestionsSummarizerAgent:
             str: LLM-generated summary consolidating the product questions.
         """
 
-        prompt_template = self.prompt_provider.get_prompt(exchange=last_exchange)
+        prompt_template = self.prompt_provider.get_prompt(context)
         
         new_questions = [f"- [Product: {question.attribute_set_name}] -> {question.ai_question}" for question in questions]
 

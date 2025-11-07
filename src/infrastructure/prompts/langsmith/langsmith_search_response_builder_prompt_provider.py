@@ -131,7 +131,7 @@ class LangsmithSearchResponseBuilderPromptProvider(RagMainPromptProvider):
         rag_prompt:ChatPromptTemplate = self.client.pull_prompt(self.prompt_name)
 
         # {product_name}
-        product_name = search_context.detected_attribute_sets.terms[0]
+        product_name = search_context.detected_attribute_set.term
 
         # {nb_products}
         nb_products = search_context.search_total_count
