@@ -70,5 +70,6 @@ Ensure a `.env` file sits beside `docker-compose.yml`; the API exposes port `397
 
 ## Additional Resources
 - [`docs/setup.md`](docs/setup.md): Environment provisioning, configuration flow, and secrets management.
-- [`docs/azure_deployment.md`](docs/azure_deployment.md): Azure deployment checklist and operational tips.
+- [`docs/azure_deployment.md`](docs/azure_deployment.md): Azure setup checklist and operational tips.
+- [`infrastructure/terraform/README.md](infrastructure/terraform/README.md): Azure setup via **Terraform**
 - [`docs/ollama.md`](docs/ollama.md): Install Ollama (LLM) locally

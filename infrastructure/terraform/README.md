@@ -66,7 +66,27 @@ terraform apply
 ```
 Type `yes` when prompted to confirm.
 
-### 5. Verify the Deployment
+### 5: Configure AI Search
+Create the search **datasource** first:
+```bash
+./configure_search_datasource.sh
+```
+Then create the **indexes** and **indexers**:
+```bash
+az search index create \
+  --service-name maya-dev-search \
+  --resource-group maya-dev-rg \
+  --name index-1 \
+  --index-definition @search_index.json
+
+az search indexer create \
+  --service-name maya-dev-search \
+  --resource-group maya-dev-rg \
+  --name indexer-1 \
+  --indexer-definition @search_indexer.json
+```
+
+### 6. Verify the Deployment
 After successful deployment, verify:
 ```bash
 # Check outputs
@@ -79,7 +99,7 @@ az webapp show --name maya-dev-api --resource-group maya-dev-rg
 az webapp identity show --name maya-dev-api --resource-group maya-dev-rg
 ```
 
-### 6. Enable Basic Auth Publishing (If Needed)
+### 7. Enable Basic Auth Publishing (If needed)
 If Basic Auth for SCM is not enabled by default, you can set it explicitly via Azure CLI:
 ```bash
 az resource update \
@@ -91,7 +111,12 @@ az resource update \
   --set properties.allow=true
 ```
 
-### 7. 🔄 Updating Infrastructure
+### 8. App Service Logs (If needed)
+```bash
+az webapp log tail --name maya-dev-api --resource-group maya-dev-rg
+```
+
+## 🔄 Updating Infrastructure
 
 ```bash
 # Modify terraform.tfvars or main.tf
@@ -99,43 +124,12 @@ terraform plan
 terraform apply
 ```
 
-## 8. 🗑️ Cleanup
+## 🗑️ Cleanup
 
 ```bash
 terraform destroy
 ```
 ⚠️ **Warning**: Permanently deletes all resources!
-
----
-
-
-
-
-
-
-
-
-
-
-
-
-## 🎯 Deployment Steps
-
-
-### Step 4: Configure AI Search
-
-```bash
-./configure-search.sh
-```
-
-This automatically creates the data source, index, and indexer.
-
-
-### App Service Logs
-```bash
-az webapp log tail --name maya-dev-api --resource-group maya-dev-rg
-```
-
 
 ## ✅ Deployment Checklist
 
@@ -144,7 +138,8 @@ az webapp log tail --name maya-dev-api --resource-group maya-dev-rg
 - [ ] Customized `terraform.tfvars`
 - [ ] Run `terraform init`
 - [ ] Run `terraform apply`
-- [ ] Run `./configure-search.sh`
+- [ ] Run `./configure_search_datasource.sh`
+- [ ] Create index and indexer
 - [ ] Enable SCM Basic Auth in Portal
 - [ ] Deploy application code
 - [ ] Verify services are running

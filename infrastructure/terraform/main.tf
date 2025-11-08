@@ -253,3 +253,47 @@ resource "azurerm_cognitive_deployment" "openai_deployments" {
 
   depends_on = [azurerm_cognitive_account.maya_openai]
 }
+
+# Azure AI Search Service
+resource "azurerm_search_service" "maya_search" {
+  name                = var.search_service_name
+  resource_group_name = azurerm_resource_group.maya_rg.name
+  location            = azurerm_resource_group.maya_rg.location
+  sku                 = var.search_sku
+  replica_count       = var.search_replica_count
+  partition_count     = var.search_partition_count
+
+  # Enable System-Assigned Managed Identity for the Search Service
+  identity {
+    type = "SystemAssigned"
+  }
+
+  tags       = var.tags
+  depends_on = [azurerm_resource_group.maya_rg]
+}
+
+# Grant Search Service access to Cosmos DB (Reader role for metadata)
+resource "azurerm_role_assignment" "search_cosmos_reader" {
+  scope                = azurerm_cosmosdb_account.maya_cosmos.id
+  role_definition_name = "Cosmos DB Account Reader Role"
+  principal_id         = azurerm_search_service.maya_search.identity[0].principal_id
+
+  depends_on = [
+    azurerm_cosmosdb_account.maya_cosmos,
+    azurerm_search_service.maya_search
+  ]
+}
+
+# Grant Search Service data plane access to Cosmos DB
+resource "azurerm_cosmosdb_sql_role_assignment" "search_cosmos_data" {
+  resource_group_name = azurerm_resource_group.maya_rg.name
+  account_name        = azurerm_cosmosdb_account.maya_cosmos.name
+  role_definition_id  = "${azurerm_cosmosdb_account.maya_cosmos.id}/sqlRoleDefinitions/00000000-0000-0000-0000-000000000001"
+  principal_id        = azurerm_search_service.maya_search.identity[0].principal_id
+  scope               = azurerm_cosmosdb_account.maya_cosmos.id
+
+  depends_on = [
+    azurerm_cosmosdb_account.maya_cosmos,
+    azurerm_search_service.maya_search
+  ]
+}

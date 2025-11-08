@@ -1,0 +1,14 @@
+{
+    "name": "indexer-1",
+    "description": "Some description",
+    "dataSourceName": "c-search-ds",
+    "skillsetName": null,
+    "targetIndexName": "index-1",
+    "disabled": null,
+    "schedule": null,
+    "parameters": null,
+    "fieldMappings": [],
+    "outputFieldMappings": [],
+    "cache": null,
+    "encryptionKey": null
+}

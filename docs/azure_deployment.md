@@ -52,7 +52,7 @@ Ensure you have the following:
 - Search units: 1
 - Datasource:
     - Data Source: **Azure Cosmos DB**
-	- Name: **c-search-ds**
+	- Name: **maya-dev-ds**
 	- Cosmos DB account: **maya-dev-cosmos-db** (CosmosDB instance name)
 	- Database: **chatbot** (Cosmos DB database)
 	- Collection: **embeddings** (Vectors container)

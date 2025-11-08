@@ -85,3 +85,18 @@ output "openai_deployments" {
   description = "List of Azure OpenAI deployment names"
   value       = [for deployment in azurerm_cognitive_deployment.openai_deployments : deployment.name]
 }
+
+output "search_service_name" {
+  description = "Name of the Azure AI Search service"
+  value       = azurerm_search_service.maya_search.name
+}
+
+output "search_service_endpoint" {
+  description = "Endpoint URL for the Azure AI Search service"
+  value       = "https://${azurerm_search_service.maya_search.name}.search.windows.net"
+}
+
+output "search_service_id" {
+  description = "ID of the Azure AI Search service"
+  value       = azurerm_search_service.maya_search.id
+}

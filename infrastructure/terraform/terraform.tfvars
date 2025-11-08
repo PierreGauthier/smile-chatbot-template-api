@@ -6,6 +6,7 @@ openai_account_name     = "maya-dev-openai"
 cosmos_db_account_name  = "maya-dev-cosmos-db"
 app_insights_name       = "maya-dev-ais"
 key_vault_name          = "maya-dev-kv"
+search_service_name     = "maya-dev-search"
 
 # Override or add more app settings
 app_settings = {

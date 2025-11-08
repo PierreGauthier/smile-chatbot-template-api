@@ -146,3 +146,27 @@ variable "openai_deployments" {
     }
   ]
 }
+
+variable "search_service_name" {
+  description = "Name of the Azure AI Search service"
+  type        = string
+  default     = "maya-dev-search"
+}
+
+variable "search_sku" {
+  description = "SKU for Azure AI Search"
+  type        = string
+  default     = "basic"
+}
+
+variable "search_replica_count" {
+  description = "Number of replicas for Azure AI Search"
+  type        = number
+  default     = 1
+}
+
+variable "search_partition_count" {
+  description = "Number of partitions for Azure AI Search"
+  type        = number
+  default     = 1
+}
