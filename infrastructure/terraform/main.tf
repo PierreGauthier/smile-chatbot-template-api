@@ -217,3 +217,39 @@ resource "azurerm_cosmosdb_sql_role_assignment" "app_cosmos_data" {
     azurerm_linux_web_app.maya_api
   ]
 }
+
+# Create Azure OpenAI Account
+resource "azurerm_cognitive_account" "maya_openai" {
+  name                  = var.openai_account_name
+  location              = azurerm_resource_group.maya_rg.location
+  resource_group_name   = azurerm_resource_group.maya_rg.name
+  kind                  = "OpenAI"
+  sku_name              = var.openai_sku
+  custom_subdomain_name = var.openai_account_name
+
+  # Allow access from all networks for development
+  network_acls {
+    default_action = "Allow"
+  }
+  tags = var.tags
+  depends_on = [azurerm_resource_group.maya_rg]
+}
+
+# Create Azure OpenAI Model Deployments
+resource "azurerm_cognitive_deployment" "openai_deployments" {
+  for_each = { for deployment in var.openai_deployments : deployment.name => deployment }
+
+  name                 = each.value.name
+  cognitive_account_id = azurerm_cognitive_account.maya_openai.id
+  model {
+    format  = "OpenAI"
+    name    = each.value.model_name
+    version = each.value.model_version
+  }
+  scale {
+    type     = each.value.scale_type     # e.g., "Standard" or "Manual"
+    capacity = each.value.capacity       # e.g., 1, 2, ...
+  }
+
+  depends_on = [azurerm_cognitive_account.maya_openai]
+}

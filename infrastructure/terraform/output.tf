@@ -64,3 +64,24 @@ output "cosmos_db_connection_strings" {
   value       = azurerm_cosmosdb_account.maya_cosmos.primary_sql_connection_string
   sensitive   = true
 }
+
+output "openai_account_name" {
+  description = "Name of the Azure OpenAI account"
+  value       = azurerm_cognitive_account.maya_openai.name
+}
+
+output "openai_endpoint" {
+  description = "Endpoint URL of the Azure OpenAI account"
+  value       = azurerm_cognitive_account.maya_openai.endpoint
+}
+
+output "openai_primary_key" {
+  description = "Primary key for Azure OpenAI (sensitive)"
+  value       = azurerm_cognitive_account.maya_openai.primary_access_key
+  sensitive   = true
+}
+
+output "openai_deployments" {
+  description = "List of Azure OpenAI deployment names"
+  value       = [for deployment in azurerm_cognitive_deployment.openai_deployments : deployment.name]
+}

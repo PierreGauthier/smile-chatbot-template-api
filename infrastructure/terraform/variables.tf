@@ -107,3 +107,42 @@ variable "cosmos_db_containers" {
     }
   ]
 }
+
+variable "openai_account_name" {
+  description = "Name of the Azure OpenAI account"
+  type        = string
+  default     = "maya-dev-openai"
+}
+
+variable "openai_sku" {
+  description = "SKU for Azure OpenAI (S0 = Standard)"
+  type        = string
+  default     = "S0"
+}
+
+variable "openai_deployments" {
+  description = "List of Azure OpenAI model deployments"
+  type = list(object({
+    name          = string
+    model_name    = string
+    model_version = string
+    scale_type    = string
+    capacity      = number
+  }))
+  default = [
+    {
+      name          = "Ada"
+      model_name    = "text-embedding-ada-002"
+      model_version = "2"
+      scale_type    = "Standard"
+      capacity      = 1
+    },
+    {
+      name          = "gpt-4o-mini"
+      model_name    = "gpt-4o-mini"
+      model_version = "2024-07-18"
+      scale_type    = "GlobalStandard"
+      capacity      = 1
+    }
+  ]
+}
