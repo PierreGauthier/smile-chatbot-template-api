@@ -8,6 +8,10 @@ class Settings(BaseSettings):
     debug: bool = False # Langchain debug level
     log_level: str = "INFO" # General log level
     search_lang:str = "FR" # Preferred language for the conversational search
+
+    azure_ad_client_id: Optional[str] = None # Backend API Client ID (Entra ID)
+    azure_ad_tenant_id: Optional[str] = None # Azure Tenant (Directory) ID (Entra ID)
+    openapi_client_id: Optional[str] = None  # Frontend Client ID (for Swagger UI to authenticate)
     
     embeddings_llm_provider:str # Name if the embeddings LLMaaS provider
     deep_llm_provider:str # Name of the reasoning LLMaaS provider
@@ -48,9 +52,6 @@ class Settings(BaseSettings):
     microsoft_app_id: Optional[str] = None
     microsoft_app_password: Optional[str] = None
 
-    azure_ad_client_id: Optional[str] = None
-    azure_ad_tenant_id: Optional[str] = None
-
     applicationinsights_connection_string: Optional[str] = None # App Insights connection string
     pythonunbuffered:int = 1
     
@@ -67,7 +68,6 @@ class Settings(BaseSettings):
     langsmith_summary_exchange_prompt_name: str # Name of the prompt for message history summarization
     langsmith_intent_extraction_prompt_name: str # Name of the prompt for intent detection
     langsmith_language_detector_prompt_name: str # Name of the prompt for language detection
-
 
     # Elastic suite
     langsmith_attribute_set_extraction_prompt_name:str # Name of the prompt for attribute extraction from user request

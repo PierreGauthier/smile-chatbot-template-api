@@ -283,6 +283,59 @@ Ensure you have the following:
 	- Key Vault Secrets User: App Service (`maya-dev-api`)
 - Run the script `data/helper.ipynb` to obtain the secrets for the Key Vault.
 
+### Security
+
+#### App Registration Setup
+1. Register the Backend API in Azure Entra ID:
+    - Go to *Azure Portal > Azure Entra ID > +Add > App registration*
+    - Name: **maya-backend-api**
+    - Supported account types: Choose based on your needs (typically "Single tenant")
+    - Click *Register*
+    - Note down:
+        * Application (client) ID
+        * Directory (tenant) ID
+2. Expose the Backend API
+    - In your app registration, go to *Expose an API > Click "Add" next to "Application ID URI"*
+    - Accept the default: api://[backend-client-id], or customize it: api://chatbot-backend
+    - Click "Save"
+3. Add Scope
+    - Click *Add a scope*
+    - Scope name: `access_as_user`
+    - Who can consent:`Admins and users`
+    - Admin consent display name: `Access chatbot API`
+    - Admin consent description: "Allows the application to access the chatbot API on behalf of the signed-in user"
+    - User consent display name: "Access chatbot"
+    - User consent description: "Allows the application to access the chatbot on your behalf"
+    - State: `Enabled`
+    - Click *Add scope*
+    - Your scope is now: `api://[backend-client-id]/access_as_user`
+
+4. Configure Backend API Permissions (Optional, if your backend needs to call other Microsoft APIs)
+    - In the app registration, go to  *API permissions*
+    - If backend doesn't call other APIs: Leave as-is or remove default permissions
+    - If backend calls Microsoft Graph:
+        * Click *Add a permission > Microsoft Graph > Delegated permissions*
+    - Select: `User.Read`, `email`, `profile` (or whatever you need)
+    - Click *Add permissions*
+    - Click *Grant admin consent for [Tenant]*
+
+5. Register Frontend Application
+    - Go to *Azure Portal > Azure Entra ID > +Add > App registration*
+    - Name: *chatbot-frontend*
+    - Supported account types: "Accounts in this organizational directory only"
+    - Redirect URI:
+    - Platform: `Single-page application (SPA)`
+    - URI: http://localhost:9000 (add production URL later)
+    - Click *Register*
+    - Note down the Application (client) ID
+
+6. Add Additional Redirect URIs (Frontend)
+    - In the frontend App Registration go to  *Authentication > Single-page application > Add URI**
+    - `http://localhost:3000` (development)
+    - `http://localhost:5173` (if using Vite)
+    - `https://your-frontend.azurewebsites.net` (production)
+    - Go to *Advanced settings > Allow public client flows*: No (leave disabled for SPA)
+    - Go to *Supported account types*: Keep as single tenant
 ---
 
 ## **Step 2: Configure Deployment from GitHub using GitHub Actions**

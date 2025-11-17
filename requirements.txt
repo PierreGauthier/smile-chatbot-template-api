@@ -31,3 +31,6 @@ google-cloud-firestore
 google-auth
 langchain-google-vertexai
 langdetect
+python-jose[cryptography]
+fastapi-azure-auth
+httpx
