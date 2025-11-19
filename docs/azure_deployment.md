@@ -309,7 +309,6 @@ Ensure you have the following:
     - State: `Enabled`
     - Click *Add scope*
     - Your scope is now: `api://[backend-client-id]/access_as_user`
-
 4. Configure Backend API Permissions (Optional, if your backend needs to call other Microsoft APIs)
     - In the app registration, go to  *API permissions*
     - If backend doesn't call other APIs: Leave as-is or remove default permissions
@@ -318,7 +317,6 @@ Ensure you have the following:
     - Select: `User.Read`, `email`, `profile` (or whatever you need)
     - Click *Add permissions*
     - Click *Grant admin consent for [Tenant]*
-
 5. Register Frontend Application
     - Go to *Azure Portal > Azure Entra ID > +Add > App registration*
     - Name: *chatbot-frontend*
@@ -331,11 +329,52 @@ Ensure you have the following:
 
 6. Add Additional Redirect URIs (Frontend)
     - In the frontend App Registration go to  *Authentication > Single-page application > Add URI**
-    - `http://localhost:3000` (development)
-    - `http://localhost:5173` (if using Vite)
-    - `https://your-frontend.azurewebsites.net` (production)
+        - `http://localhost:3000` (development)
+        - `http://localhost:5173` (if using Vite)
+        - `https://oauth.pstmn.io/v1/callback` (for Postman)
+        - `https://your-frontend.azurewebsites.net` (production)
     - Go to *Advanced settings > Allow public client flows*: No (leave disabled for SPA)
     - Go to *Supported account types*: Keep as single tenant
+
+7. **Configure Frontend App Permissions:**
+    - In frontend app registration: *API permissions > Add a permission > My APIs*
+    - Select your backend API (`chatbot-backend-api`)
+    - Select the `access_as_user` scope
+    - Click *Add permissions*
+    - Click *Grant admin consent* (if you have admin rights)
+
+8. **Get Credentials:**
+- **Backend API:**
+	- Application (client) ID
+	- Directory (tenant) ID
+- **Frontend:**
+	- Application (client) ID
+	- Create a client secret: *Certificates & secrets → New client secret*
+	- Copy the value immediately
+
+#### Postman configuration for backend testing
+
+1. **Update the local API request**
+- Go to *Authorization*
+	- **Auth Type**: `OAuth 2.0`
+- Go to *Current Token* configuration
+	- **Token**: `Azure AD Token`
+	- **Header Prefix**: Bearer
+- Go to *Configure New Token*
+	- **Token Name**: `Azure AD Token`
+	- **Grant type**: `Authorization Code`
+	- **Callback URL**: `https://oauth.pstmn.io/v1/callback`
+	- **Auth URL**: `https://login.microsoftonline.com/{TENANT_ID}/oauth2/v2.0/authorize`
+	- **Access Token URL**: `https://login.microsoftonline.com/{TENANT_ID}/oauth2/v2.0/token`
+	- **Client ID**: `chatbot-frontend` Client ID (use Postman variables)
+	- **Client Secret**: `chatbot-frontend` Client Secret (use Postman variables)
+	- **Scope**: `api://{BACKEND_CLIENT_ID}/access_as_user`
+	- **State**: (empty)
+	- **Client Authentication**: `Send as Basic Auth header`
+
+2. **Send the request**
+To send the request, you first *Get New Access Token* (Authorization tab) -> *Use token* (this will add the token to the request) and then send the request
+
 ---
 
 ## **Step 2: Configure Deployment from GitHub using GitHub Actions**
