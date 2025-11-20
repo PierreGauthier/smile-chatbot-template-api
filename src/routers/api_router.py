@@ -89,7 +89,19 @@ async def chat(
     response: SetupServiceResult = service.setup()
     return response
 
-@router.post("/search", dependencies=[Depends(get_current_user)])
+@router.post("/sec/search", dependencies=[Depends(get_current_user)])
+async def chat(
+    service: Annotated[ConversationalSearchService, Depends(ConversationalSearchService)],
+    chat_request: ApiChatRequest = Body(...)
+):
+    response: ChatServiceResult = service.invoke(
+        input_message = chat_request.message, 
+        session_id=chat_request.session_id,
+        user_id=chat_request.user_id
+    )
+    return response
+
+@router.post("/search")
 async def chat(
     service: Annotated[ConversationalSearchService, Depends(ConversationalSearchService)],
     chat_request: ApiChatRequest = Body(...)
