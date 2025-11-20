@@ -6,6 +6,7 @@ import sys
 import traceback
 from datetime import datetime
 from http import HTTPStatus
+from auth import get_current_user
 
 from fastapi import FastAPI, Request, Response, Body
 from fastapi.responses import JSONResponse
@@ -88,7 +89,7 @@ async def chat(
     response: SetupServiceResult = service.setup()
     return response
 
-@router.post("/search")
+@router.post("/search", dependencies=[Depends(get_current_user)])
 async def chat(
     service: Annotated[ConversationalSearchService, Depends(ConversationalSearchService)],
     chat_request: ApiChatRequest = Body(...)

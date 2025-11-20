@@ -176,16 +176,16 @@ def inject_attribute_db_service(settings: Settings = Depends(get_settings)) -> D
             raise ValueError(f"Unsupported History DB service provider: {provider}")
 
 def inject_conversational_search_api(settings: Settings = Depends(get_settings)) -> ConversationalSearchClient:
-    # return ElasticSuiteSearchClient(
-    #     settings, 
-    #     ElasticSuiteSearchResponseBuilder(), 
-    #     inject_logger(module_name="ElasticSuiteSearchClient")
-    # )
-    return ElasticSuiteSearchClientMock(
+    return ElasticSuiteSearchClient(
         settings, 
         ElasticSuiteSearchResponseBuilder(), 
-        inject_logger(module_name="ElasticSuiteSearchClientMock")
+        inject_logger(module_name="ElasticSuiteSearchClient")
     )
+    # return ElasticSuiteSearchClientMock(
+    #     settings, 
+    #     ElasticSuiteSearchResponseBuilder(), 
+    #     inject_logger(module_name="ElasticSuiteSearchClientMock")
+    # )
 
 def inject_search_response_agent(settings: Settings = Depends(get_settings)) -> SearchResponseBuilderAgent:
     return ElasticSuiteSearchResponseBuilderAgent(

@@ -39,9 +39,6 @@ if settings.cors_allowed_origins:
         allow_headers=["*"],
     )
 
-# Initialize Azure AD authentication
-# app.include_router(azure_scheme.router, prefix="/oauth", tags=["OAuth2"])
-
 #tracer = trace.get_tracer(__name__, tracer_provider=get_tracer_provider())
 
 @app.exception_handler(Exception)
@@ -62,10 +59,9 @@ async def health_check():
 # Web app endpoints
 app.include_router(
     api_router.router,
-    #prefix=f"/api/search",
     tags=["chat"],
-    dependencies=[Depends(get_current_user)]
-)  # Protect all chat endpoints
+    # dependencies=[Depends(get_current_user)] # Protect all chat endpoints
+) 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -73,13 +69,6 @@ async def lifespan(app: FastAPI):
     if not getattr(app.state, "otel_configured", False):
         configure_azure_monitor()
         app.state.otel_configured = True
-
-@app.on_event("startup")
-async def load_config() -> None:
-    """
-    Load OpenID configuration on startup
-    """
-    #await azure_scheme.openid_config.load_config()
     
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=3978, log_level="trace", reload=True)
