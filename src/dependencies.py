@@ -1,6 +1,5 @@
-import logging, sys, os
+import logging
 from fastapi import Depends
-from langchain_core.prompts import ChatPromptTemplate
 
 from domain.logger import ContextLogger
 from domain.ai import LlmProvider, EmbeddingsProvider, VectorStoreProvider
@@ -58,8 +57,8 @@ settings = get_settings()
 logger = logging.getLogger("app")
 logger.setLevel(logging.INFO if settings.log_level == "INFO" else logging.DEBUG)
 
-def inject_logger(module_name:str) -> ContextLogger:
-    return ContextLogger(logger, {"component": module_name})
+def inject_logger() -> ContextLogger:
+    return ContextLogger(logger)
 
 def inject_configuration_client(settings: Settings = Depends(get_settings)) -> ElasticSuiteAttributeSetClient:
     return ElasticSuiteAttributeSetClient(
@@ -70,7 +69,7 @@ def inject_configuration_client(settings: Settings = Depends(get_settings)) -> E
 def inject_language_detector() -> LanguageDetector:
     return AzureOpenAILanguageDetector(
         settings=settings,
-        logger=inject_logger(module_name="LangDetectLanguageDetector")
+        logger=inject_logger()
     )
 
 def inject_embedding_provider(settings: Settings = Depends(get_settings)) -> EmbeddingsProvider:
@@ -179,12 +178,12 @@ def inject_conversational_search_api(settings: Settings = Depends(get_settings))
     return ElasticSuiteSearchClient(
         settings, 
         ElasticSuiteSearchResponseBuilder(), 
-        inject_logger(module_name="ElasticSuiteSearchClient")
+        inject_logger()
     )
     # return ElasticSuiteSearchClientMock(
     #     settings, 
     #     ElasticSuiteSearchResponseBuilder(), 
-    #     inject_logger(module_name="ElasticSuiteSearchClientMock")
+    #     inject_logger()
     # )
 
 def inject_search_response_agent(settings: Settings = Depends(get_settings)) -> SearchResponseBuilderAgent:

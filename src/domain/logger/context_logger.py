@@ -1,4 +1,5 @@
-import logging
+import logging, inspect
+
 from domain.models import BaseContext
 
 class ContextLogger(logging.LoggerAdapter):
@@ -13,6 +14,7 @@ class ContextLogger(logging.LoggerAdapter):
         # Extract call-time context
         user_id = kwargs.pop("user_id", None)
         session_id = kwargs.pop("session_id", None)
+        component = kwargs.pop("component", None)
 
         # Merge extras (adapter + call + context)
         merged_extra = {**(self.extra or {}), **(kwargs.pop("extra", {}) or {})}
@@ -20,6 +22,8 @@ class ContextLogger(logging.LoggerAdapter):
             merged_extra["user_id"] = user_id
         if session_id: 
             merged_extra["session_id"] = session_id
+        if component:
+            merged_extra["component"] = component
         kwargs["extra"] = merged_extra
 
         # Build prefix for console (optional)
@@ -35,15 +39,24 @@ class ContextLogger(logging.LoggerAdapter):
         return msg, kwargs
 
     def debug_context(self, message:str, context:BaseContext):
+        # caller = self.__get_caller()
+        frame = inspect.stack()[1].frame
+        caller_self = frame.f_locals.get('self', None)
+        caller = caller_self.__class__.__name__ if caller_self else "Unknown"
         self.debug(
-            message,
+            f"[{caller}]: {message}",
+            component=caller,
             user_id=context.user_id,
             session_id=context.session_id
         )
 
     def info_context(self, message:str, context:BaseContext):
+        frame = inspect.stack()[1].frame
+        caller_self = frame.f_locals.get('self', None)
+        caller = caller_self.__class__.__name__ if caller_self else "Unknown"
         self.info(
             message,
+            component=caller,
             user_id=context.user_id,
             session_id=context.session_id
         )

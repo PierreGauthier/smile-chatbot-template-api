@@ -1,7 +1,6 @@
 from typing import Annotated
 from fastapi import Depends
 from config import Settings, get_settings
-from functools import partial
 
 from langchain_core.globals import set_verbose, set_debug
 
@@ -29,7 +28,7 @@ class ConversationalSearchService(SearchService):
             request_manager:Annotated[RequestManager, Depends(RequestManager)],
             attribute_set_manager:Annotated[AttributeDetectionManager, Depends(AttributeDetectionManager)],
             search_manager:Annotated[SearchManager, Depends(SearchManager)],
-            logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="ConversationalSearchService"))]):
+            logger: Annotated[ContextLogger, Depends(inject_logger)]):
         """
         Initialize the conversational search service with its required dependencies.
 

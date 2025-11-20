@@ -1,7 +1,6 @@
 from typing import List, Annotated
 from fastapi import Depends
 import builtins
-from functools import partial
 from pydantic import ValidationError
 
 from langchain_core.output_parsers.pydantic import PydanticOutputParser
@@ -27,7 +26,7 @@ class FilterExtractionAgent:
             settings: Annotated[Settings, Depends(get_settings)], 
             llm_provider: Annotated[LlmProvider, Depends(inject_deep_llm_provider)],
             prompt_provider: Annotated[PromptProvider[SearchContext], Depends(inject_filters_extraction_prompt)],
-            logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="FilterExtractionAgent"))]):
+            logger: Annotated[ContextLogger, Depends(inject_logger)]):
         """Store injected dependencies used to generate prompts, call the LLM, and log attempts."""
         self.settings = settings
         self.prompt_provider = prompt_provider

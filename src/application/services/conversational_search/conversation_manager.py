@@ -1,6 +1,5 @@
 from typing import Annotated, List
 from fastapi import Depends
-from functools import partial
 
 from domain.models import SearchContext
 from domain.services.database import DatabaseHistoryService
@@ -18,7 +17,7 @@ class ConversationManager:
             self,
             summarize_exchange_agent : Annotated[ExchangeSummarizerAgent, Depends(ExchangeSummarizerAgent)],
             history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_db_service_for_search)],
-            logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="ConversationManager"))]):
+            logger: Annotated[ContextLogger, Depends(inject_logger)]):
         self.history_db_service = history_db_service
         self.summarize_exchange_agent = summarize_exchange_agent
         self.logger = logger 

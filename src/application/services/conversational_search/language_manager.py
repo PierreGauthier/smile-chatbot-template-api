@@ -1,6 +1,5 @@
 from typing import Annotated
 from fastapi import Depends
-from functools import partial
 
 from domain.models import SearchContext, Language
 from domain.logger import ContextLogger
@@ -17,7 +16,7 @@ class LanguageManager:
             self, 
             settings: Annotated[Settings, Depends(get_settings)],
             language_detector: Annotated[LanguageDetector, Depends(inject_language_detector)],
-            logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="LanguageManager"))]):
+            logger: Annotated[ContextLogger, Depends(inject_logger)]):
         """Initialize the language manager with configuration, detector, and contextual logger."""
         self.language_detector = language_detector
         self.settings = settings

@@ -1,6 +1,5 @@
 from typing import Annotated, List
 from fastapi import Depends
-from functools import partial
 
 from domain.models import SearchContext, UserRequestDto, ProductFilterDetectionResult, AttributeFilterDto, AttributeFilterValue
 from domain.services.database import DatabaseRequestService
@@ -17,7 +16,7 @@ class RequestManager:
             self, 
             filters_extraction_agent: Annotated[FilterExtractionAgent, Depends(FilterExtractionAgent)],
             request_db_service: Annotated[DatabaseRequestService, Depends(inject_request_db_service)],
-            logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="RequestManager"))]):
+            logger: Annotated[ContextLogger, Depends(inject_logger)]):
         """Persist injected dependencies used to process conversational requests."""
         self.request_db_service = request_db_service
         self.filters_extraction_agent = filters_extraction_agent

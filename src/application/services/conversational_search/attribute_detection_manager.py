@@ -1,6 +1,5 @@
 from typing import Annotated, List
 from fastapi import Depends
-from functools import partial
 
 from domain.fields import AttributeField
 from domain.models import SearchContext, AttributeSetDto
@@ -18,7 +17,7 @@ class AttributeDetectionManager:
             self,
             attribute_set_db_service : Annotated[DatabaseAttributesSetupService, Depends(inject_attribute_db_service)],
             attribute_set_extraction_agent: Annotated[AttributeSetExtractionAgent, Depends(AttributeSetExtractionAgent)],
-            logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="AttributeDetectionManager"))]):
+            logger: Annotated[ContextLogger, Depends(inject_logger)]):
         """Store collaborators required for attribute detection."""
         self.attribute_set_db_service = attribute_set_db_service
         self.attribute_set_extraction_agent = attribute_set_extraction_agent

@@ -1,6 +1,5 @@
-from typing import Annotated, List
+from typing import Annotated
 from fastapi import Depends
-from functools import partial
 
 from domain.models import SearchContext, FilteredSearchApiResponse
 from domain.api_client import ConversationalSearchClient
@@ -22,7 +21,7 @@ class SearchManager:
             summarize_question_agent : Annotated[QuestionsSummarizerAgent, Depends(QuestionsSummarizerAgent)],
             search_response_agent: Annotated[SearchResponseBuilderAgent, Depends(inject_search_response_agent)],
             conversational_search_client: Annotated[ConversationalSearchClient, Depends(inject_conversational_search_api)],
-            logger: Annotated[ContextLogger, Depends(partial(inject_logger, module_name="SearchManager"))]):
+            logger: Annotated[ContextLogger, Depends(inject_logger)]):
         """Store injected dependencies used to prepare and execute conversational search queries."""
         self.summarize_question_agent = summarize_question_agent
         self.conversational_search_client = conversational_search_client
