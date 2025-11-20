@@ -10,8 +10,11 @@
         "Ollama",
         "openai",
         "Padel",
+        "pytest",
+        "uvicorn",
         "vectorstore",
         "vectorstores",
+        "venv",
         "vertexai"
     ],
     "appService.zipIgnorePattern": [

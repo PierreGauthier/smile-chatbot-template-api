@@ -10,6 +10,7 @@ FastAPI service that exposes a Bot Framework-compatible chat endpoint backed by 
 - `/api/chat` endpoint ready for RAG pipeline combining Azure and GCP services for vector retrieval, history persistence, and language models.
 - `/api/setup` endpoint for configuring conversational search attribute_set and filters
 - `/api/search` endpoint for conversational search.
+- `/docs`endpoint for **Swagger UI** (with your Azure AD OAuth2 config)
 - Application-level telemetry via Azure Monitor OpenTelemetry exporter.
 - Health probes at `/` and `/health` (future feature: production-ready Docker and Compose definitions).
 
