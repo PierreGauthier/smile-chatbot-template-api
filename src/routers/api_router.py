@@ -54,7 +54,7 @@ async def on_error(context: TurnContext, error: Exception):
 
 ADAPTER.on_turn_error = on_error
 
-@router.post("/messages")
+@router.post("/v1/messages", deprecated=True)
 async def messages(chat_request: Request, BOT: Annotated[DefaultBot, Depends(DefaultBot)]) -> Response:
     
     if "application/json" in chat_request.headers["Content-Type"]:
@@ -70,7 +70,7 @@ async def messages(chat_request: Request, BOT: Annotated[DefaultBot, Depends(Def
         return JSONResponse(content=response.body, status_code=response.status)
     return Response(status_code=HTTPStatus.OK)
 
-@router.post("/chat")
+@router.post("/v1/chat", deprecated=True)
 async def chat(
     service: Annotated[ChatService, Depends(DefaultRagChatService)],
     chat_request: ApiChatRequest = Body(...)
@@ -82,14 +82,14 @@ async def chat(
     )
     return ai_response
 
-@router.post("/setup")
+@router.post("/v1/setup", deprecated=True)
 async def chat(
     service: Annotated[ConversationalSearchSetupService, Depends(ConversationalSearchSetupService)]
 ):
     response: SetupServiceResult = service.setup()
     return response
 
-@router.post("/sec/search", dependencies=[Depends(get_current_user)])
+@router.post("/v2/search", dependencies=[Depends(get_current_user)])
 async def chat(
     service: Annotated[ConversationalSearchService, Depends(ConversationalSearchService)],
     chat_request: ApiChatRequest = Body(...)
@@ -101,7 +101,7 @@ async def chat(
     )
     return response
 
-@router.post("/search")
+@router.post("/v1/search", deprecated=True)
 async def chat(
     service: Annotated[ConversationalSearchService, Depends(ConversationalSearchService)],
     chat_request: ApiChatRequest = Body(...)

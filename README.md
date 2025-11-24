@@ -6,10 +6,11 @@
 FastAPI service that exposes a Bot Framework-compatible chat endpoint backed by Retrieval-Augmented Generation (RAG) and Conversational Search pipelines for the SMILE virtual assistant. It orchestrates Azure and GCP services, and LangChain components to deliver grounded responses while emitting telemetry through Azure Monitor.
 
 ## Features
-- `/api/messages` endpoint ready for Azure Bot Emulator or Bot Service channels.
-- `/api/chat` endpoint ready for RAG pipeline combining Azure and GCP services for vector retrieval, history persistence, and language models.
-- `/api/setup` endpoint for configuring conversational search attribute_set and filters
-- `/api/search` endpoint for conversational search.
+- `/api/v1/messages` endpoint ready for Azure Bot Emulator or Bot Service channels.
+- `/api/v1/chat` endpoint ready for RAG pipeline combining Azure and GCP services for vector retrieval, history persistence, and language models.
+- `/api/v1/setup` endpoint for configuring conversational search attribute_set and filters.
+- `/api/v1/search` endpoint for conversational search.
+- `/api/v2/search` secured (OAuth2 - Azure AD) endpoint for conversational search.
 - `/docs`endpoint for **Swagger UI** (with your Azure AD OAuth2 config)
 - Application-level telemetry via Azure Monitor OpenTelemetry exporter.
 - Health probes at `/` and `/health` (future feature: production-ready Docker and Compose definitions).

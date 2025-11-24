@@ -21,7 +21,7 @@ async def lifespan(app: FastAPI):
 #app = FastAPI(lifespan=lifespan)
 app = FastAPI(
     title=settings.project_name,
-    openapi_url=f"/api/v1/openapi.json",
+    openapi_url=f"/api/v2/openapi.json",
     swagger_ui_oauth2_redirect_url='/oauth2-redirect',
     swagger_ui_init_oauth={
         'usePkceWithAuthorizationCodeGrant': True,
