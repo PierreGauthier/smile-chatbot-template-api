@@ -73,7 +73,7 @@ class ConversationManager:
         """Summarize the conversation thread when multiple messages exist, otherwise echo input."""
         exchange = context.input_message
         if len(context.message_thread) > 1:
-            exchange = self.summarize_exchange_agent.invoke(context.message_thread, context.chat_lang)
+            exchange = self.summarize_exchange_agent.invoke(context.message_thread)
             self.logger.debug_context(message=f"Exchange summary: {exchange}", context=context)
         else:
             self.logger.debug_context(message=f"Input message: {exchange}", context=context)
