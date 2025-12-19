@@ -8,8 +8,7 @@ langchain
 langchain-ollama
 langchainhub
 azure-cosmos==4.5.1
-azure-monitor-opentelemetry
-azure-identity==1.15.0
+azure-identity
 azure-keyvault-secrets==4.8.0
 python-jose==3.3.0
 azure-appconfiguration-provider==1.1.0
@@ -21,8 +20,9 @@ python-multipart==0.0.9
 azure-cognitiveservices-speech==1.37.0
 jsonschema==4.21.1
 azure-search-documents
-opentelemetry-sdk
-opentelemetry-api
+azure-monitor-opentelemetry==1.6.1
+opentelemetry-sdk==1.38.0
+opentelemetry-api==1.38.0
 opentelemetry-instrumentation
 opentelemetry-instrumentation-fastapi
 PyMuPDF
