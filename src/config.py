@@ -75,6 +75,7 @@ class Settings(BaseSettings):
     langsmith_elastic_suite_question_summarizer_prompt_name:str # Name of the prompt for user question summarization
     langsmith_empty_search_response_builder_prompt_name:str # Name of the prompt for empty response (no product found) generation
     langsmith_not_empty_search_response_builder_prompt_name:str # Name of the prompt for NOT empty response (some product found) generation
+    langsmith_chit_chat_prompt_name:str # Name of the prompt for detecting Chit-Chat exchanges
 
     elastic_suite_search_response_builder_prompt_name:str
 

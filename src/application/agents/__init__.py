@@ -5,6 +5,7 @@ from .attribute_set_extraction_agent import AttributeSetExtractionAgent
 from .filter_extraction_agent import FilterExtractionAgent
 from .questions_summarizer_agent import QuestionsSummarizerAgent
 from .search_response_builder_agent import SearchResponseBuilderAgent
+from .chit_chat_agent import ChitChatAgent
 
 __all__ = [
     "ExchangeSummarizerAgent",
@@ -13,5 +14,6 @@ __all__ = [
     "AttributeSetExtractionAgent",
     "FilterExtractionAgent",
     "QuestionsSummarizerAgent",
-    "SearchResponseBuilderAgent"
+    "SearchResponseBuilderAgent",
+    "ChitChatAgent"
 ]

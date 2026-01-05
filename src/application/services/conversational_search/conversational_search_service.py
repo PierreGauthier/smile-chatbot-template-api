@@ -80,8 +80,8 @@ class ConversationalSearchService(SearchService):
         context = self.conversation_manager.insert_or_create_thread(context)
 
         # (1.5) If chit-chat -> return response
-        context = self.conversation_manager.manage_chit_chat(context)
-        if context.chit_chat:
+        is_chit_chat, context = self.conversation_manager.manage_chit_chat(context)
+        if is_chit_chat:
             return SearchServiceResult(
                 user_id=context.user_id,
                 session_id=context.session_id,
