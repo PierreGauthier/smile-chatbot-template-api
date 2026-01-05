@@ -211,7 +211,7 @@ def inject_question_summarizer_prompt(settings: Settings = Depends(get_settings)
 def inject_rag_main_prompt(settings: Settings = Depends(get_settings)) -> RagMainPromptProvider:
     return LangsmithRagMainPromptProvider(settings)
 
-def inject_search_response_prompt(settings: Settings = Depends(get_settings)) -> RagMainPromptProvider:
+def inject_search_response_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
     return LangsmithSearchResponseBuilderPromptProvider(settings)
 
 def inject_empty_search_response_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:

@@ -16,11 +16,15 @@ class ConversationManager:
     def __init__(
             self,
             summarize_exchange_agent : Annotated[ExchangeSummarizerAgent, Depends(ExchangeSummarizerAgent)],
+
             history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_db_service_for_search)],
             logger: Annotated[ContextLogger, Depends(inject_logger)]):
         self.history_db_service = history_db_service
         self.summarize_exchange_agent = summarize_exchange_agent
         self.logger = logger 
+
+    def manage_chit_chat(self, context:SearchContext) -> tuple[bool, SearchContext]:
+        pass
         
     def insert_or_create_thread(self, context:SearchContext) -> SearchContext:
         """Persist the user's message, creating a new thread when needed, and update context history."""

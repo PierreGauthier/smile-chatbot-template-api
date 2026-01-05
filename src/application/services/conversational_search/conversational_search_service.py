@@ -78,6 +78,16 @@ class ConversationalSearchService(SearchService):
 
         # (1) Get (or create) message thread
         context = self.conversation_manager.insert_or_create_thread(context)
+
+        # (1.5) If chit-chat -> return response
+        context = self.conversation_manager.manage_chit_chat(context)
+        if context.chit_chat:
+            return SearchServiceResult(
+                user_id=context.user_id,
+                session_id=context.session_id,
+                answer=context.ai_answer,
+                products=context.search_result
+            )
         
         # (2) Summarize exchange
         context = self.conversation_manager.summarize_exchange(context)
