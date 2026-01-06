@@ -3,9 +3,10 @@ from fastapi import Depends
 
 from domain.models import SearchContext
 from domain.services.database import DatabaseHistoryService
+from domain.fields import ChitChatField
 from domain.logger import ContextLogger
 
-from application.agents import ExchangeSummarizerAgent
+from application.agents import ExchangeSummarizerAgent, ChitChatAgent
 from application.models import SearchChatMessage
 
 from dependencies import inject_history_db_service_for_search, inject_logger
@@ -16,15 +17,19 @@ class ConversationManager:
     def __init__(
             self,
             summarize_exchange_agent : Annotated[ExchangeSummarizerAgent, Depends(ExchangeSummarizerAgent)],
-
+            chit_chat_agent: Annotated[ChitChatAgent, Depends(ChitChatAgent)],
             history_db_service: Annotated[DatabaseHistoryService, Depends(inject_history_db_service_for_search)],
             logger: Annotated[ContextLogger, Depends(inject_logger)]):
         self.history_db_service = history_db_service
         self.summarize_exchange_agent = summarize_exchange_agent
+        self.chit_chat_agent = chit_chat_agent
         self.logger = logger 
 
     def manage_chit_chat(self, context:SearchContext) -> tuple[bool, SearchContext]:
-        pass
+        chit_chat:ChitChatField = self.chit_chat_agent.invoke(context.message_thread)
+        if chit_chat.is_chit_chat:
+            context.ai_answer = chit_chat.response
+        return chit_chat.is_chit_chat, context
         
     def insert_or_create_thread(self, context:SearchContext) -> SearchContext:
         """Persist the user's message, creating a new thread when needed, and update context history."""
