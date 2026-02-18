@@ -1,6 +1,9 @@
-from typing import Annotated
+from dataclasses import asdict
+from typing import Annotated, AsyncGenerator
 from fastapi import APIRouter, Depends
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
+import json
+import asyncio
 
 import sys
 import traceback
@@ -94,7 +97,7 @@ async def chat(
     service: Annotated[ConversationalSearchService, Depends(ConversationalSearchService)],
     chat_request: ApiChatRequest = Body(...)
 ):
-    response: ChatServiceResult = service.invoke(
+    response: ChatServiceResult = service.legacy_invoke(
         input_message = chat_request.message, 
         session_id=chat_request.session_id,
         user_id=chat_request.user_id
@@ -106,9 +109,32 @@ async def chat(
     service: Annotated[ConversationalSearchService, Depends(ConversationalSearchService)],
     chat_request: ApiChatRequest = Body(...)
 ):
-    response: ChatServiceResult = service.invoke(
+    response: ChatServiceResult = service.legacy_invoke(
         input_message = chat_request.message, 
         session_id=chat_request.session_id,
         user_id=chat_request.user_id
     )
     return response
+
+@router.post("/v3/search")
+async def chat(
+    service: Annotated[ConversationalSearchService, Depends(ConversationalSearchService)],
+    chat_request: ApiChatRequest = Body(...)
+):    
+    async def event_generator() -> AsyncGenerator[str, None]:
+        for result in service.invoke(
+            input_message=chat_request.message,
+            session_id=chat_request.session_id,
+            user_id=chat_request.user_id
+        ):
+            yield f"data: {json.dumps(asdict(result))}\n\n"
+    
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        }
+    )

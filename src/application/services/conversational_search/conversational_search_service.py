@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Generator
 from fastapi import Depends
 from config import Settings, get_settings
 
@@ -53,7 +53,12 @@ class ConversationalSearchService(SearchService):
         set_verbose(settings.debug)
         set_debug(settings.debug)
 
-    def invoke(self, input_message: str, user_id: str, session_id: str = None) -> SearchServiceResult:
+    def invoke(
+        self, 
+        input_message: str, 
+        user_id: str, 
+        session_id: str = None
+    ) -> Generator[SearchServiceResult, None, None]:
         """
         Run the conversational search workflow for the given user input.
 
@@ -61,9 +66,10 @@ class ConversationalSearchService(SearchService):
             input_message: Raw message supplied by the user.
             user_id: Identifier for the user issuing the request.
             session_id: Existing conversation thread identifier, if any.
-
-        Returns:
-            SearchServiceResult populated with the AI answer and matched products.
+        
+        Yields:
+            SearchServiceResult at different pipeline stages with is_final=False,
+            then a final SearchServiceResult with is_final=True.
         """
         
         context = SearchContext(
@@ -79,15 +85,26 @@ class ConversationalSearchService(SearchService):
         # (1) Get (or create) message thread
         context = self.conversation_manager.insert_or_create_thread(context)
 
+        # (1.2) Acknowledgment
+        yield SearchServiceResult(
+            user_id=context.user_id,
+            session_id=context.session_id,
+            answer=self._build_confirmation_message(context),
+            products=[],
+            is_final=False,
+        )
+
         # (1.5) If chit-chat -> return response
         is_chit_chat, context = self.conversation_manager.manage_chit_chat(context)
         if is_chit_chat:
-            return SearchServiceResult(
+            yield SearchServiceResult(
                 user_id=context.user_id,
                 session_id=context.session_id,
                 answer=context.ai_answer,
-                products=context.search_result
+                products=context.search_result,
+                is_final=True,
             )
+            return
         
         # (2) Summarize exchange
         context = self.conversation_manager.summarize_exchange(context)
@@ -98,12 +115,14 @@ class ConversationalSearchService(SearchService):
         # (4) Get attributes from DB and detect from user message
         context = self.attribute_set_manager.detect(context)
         if not context.detected_attribute_set.product:
-            return SearchServiceResult(
+            yield SearchServiceResult(
                 user_id=user_id,
                 session_id=context.session_id,
                 answer="Sorry, we don't sell this product here.", # -> TODO: response agent
-                products=[]
+                products=[],
+                is_final=True,
             )
+            return
 
         # (5) Build a request for each product that the user is searching for
         context = self.request_manager.build_requests(context)
@@ -111,14 +130,16 @@ class ConversationalSearchService(SearchService):
         # (6) Upsert the requests
         self.request_manager.upsert_requests(context)
 
-        # (7) If no product or filter detected -> TODO: response agent
+        # (7) If no product or filter detected
         if not context.request_chain_results:
-            return SearchServiceResult(
+            yield SearchServiceResult(
                 user_id=user_id,
                 session_id=context.session_id,
                 answer="Sorry, I couldn't find the product(s) you are searching for.",
-                products=[]
+                products=[],
+                is_final=True,
             )
+            return
 
         # (8) Search OR ask for filters
         context = self.search_manager.search(context)
@@ -128,9 +149,34 @@ class ConversationalSearchService(SearchService):
 
         self.logger.info_context("Search workflow complete.", context)
 
-        return SearchServiceResult(
+        yield SearchServiceResult(
             user_id=context.user_id,
             session_id=context.session_id,
             answer=context.ai_answer,
-            products=context.search_result
+            products=context.search_result,
+            is_final=True,
         )
+
+    def legacy_invoke(self, input_message: str, user_id: str, session_id: str = None) -> SearchServiceResult:
+        """
+        Legacy synchronous method for backward compatibility (v1/v2).
+        Consumes the stream and returns only the final result.
+        """
+        final_result = None
+        for result in self.invoke_stream(input_message, user_id, session_id):
+            if result.is_final:
+                final_result = result
+        return final_result
+
+    def _build_confirmation_message(self, context: SearchContext) -> str:
+        """Construit un message de confirmation basique"""
+        lang = context.chat_lang.lang_code if context.chat_lang else "fr"
+        
+        confirmations = {
+            "fr": "Parfait ! Je traite votre demande...",
+            "en": "Great! Processing your request...",
+            "es": "¡Perfecto! Procesando su solicitud...",
+            "de": "Perfekt! Ihre Anfrage wird bearbeitet..."
+        }
+        
+        return confirmations.get(lang, confirmations["fr"])
