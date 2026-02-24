@@ -43,7 +43,8 @@ from infrastructure.prompts.langsmith import (
     LangsmithSearchResponseBuilderPromptProvider,
     LangsmithEmptySearchResponseBuilderPromptProvider,
     LangsmithSummarizeExchangePromptProvider,
-    LangsmithChitChatPromptProvider
+    LangsmithChitChatPromptProvider,
+    LangsmithSearchSummaryPromptProvider
 )
 from infrastructure.ollama.ai import OllamaLlmProvider
 from infrastructure.configuration.elastic_suite import ElasticSuiteAttributeSetClient, ElasticSuiteAttributeSetResponseBuilder
@@ -223,3 +224,6 @@ def inject_exchange_summarizer_prompt(settings: Settings = Depends(get_settings)
 
 def inject_chit_chat_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
     return LangsmithChitChatPromptProvider(settings)
+
+def inject_search_summary_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
+    return LangsmithSearchSummaryPromptProvider(settings)

@@ -76,8 +76,9 @@ class Settings(BaseSettings):
     langsmith_empty_search_response_builder_prompt_name:str # Name of the prompt for empty response (no product found) generation
     langsmith_not_empty_search_response_builder_prompt_name:str # Name of the prompt for NOT empty response (some product found) generation
     langsmith_chit_chat_prompt_name:str # Name of the prompt for detecting Chit-Chat exchanges
+    langsmith_search_summary_prompt_name: str # Name of the prompt for search summary
 
-    elastic_suite_search_response_builder_prompt_name:str
+    elasticsuite_search_response_builder_prompt_name:str
 
     elastic_suite_api_base_url: str # Base URL for Elastic Suite attributes and filter retrieval 
     elastic_suite_attribute_set_endpoint:str # Elastic Suite endpoint

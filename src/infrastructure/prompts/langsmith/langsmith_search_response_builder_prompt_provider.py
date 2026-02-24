@@ -113,7 +113,7 @@ class LangsmithSearchResponseBuilderPromptProvider(RagMainPromptProvider):
 
     def __init__(self, settings: Annotated[Settings, Depends(get_settings)]):
         self.client = Client(api_key=settings.langchain_api_key)
-        self.prompt_name = settings.elastic_suite_search_response_builder_prompt_name
+        self.prompt_name = settings.elasticsuite_search_response_builder_prompt_name
         self.filter_information_strategies:List[FilterStatusStrategy] = [
             FilterStatusNoUsedFilterStrategy(),
             FilterStatusOneUsedFilterStrategy(),

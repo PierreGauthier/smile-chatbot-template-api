@@ -123,7 +123,17 @@ class ConversationalSearchService(SearchService):
         # (5) Build a request for each product that the user is searching for
         context = self.request_manager.build_requests(context)
 
-        # (6) Upsert the requests
+        # (6) Generate search summary
+        search_summary = self.conversation_manager.generate_search_summary(context)
+        yield SearchServiceResult(
+            user_id=context.user_id,
+            session_id=context.session_id,
+            answer=search_summary,
+            products=[],
+            is_final=False,
+        )
+
+        # (6.5) Upsert the requests
         self.request_manager.upsert_requests(context)
 
         # (7) If no product or filter detected
