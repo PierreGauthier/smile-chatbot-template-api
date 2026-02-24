@@ -17,6 +17,7 @@ from application.services.conversational_search import (
 )
 
 from dependencies import inject_logger
+
 class ConversationalSearchService(SearchService):
     """Coordinates the end-to-end conversational product search workflow."""
 
@@ -85,25 +86,20 @@ class ConversationalSearchService(SearchService):
         # (1) Get (or create) message thread
         context = self.conversation_manager.insert_or_create_thread(context)
 
-        # (1.2) Acknowledgment
+        # (1.5) Detect chit-chat and generate response/acknowledgment
+        is_chit_chat, context = self.conversation_manager.manage_chit_chat(context)
+        
+        # Send the response (either chit-chat or acknowledgment)
         yield SearchServiceResult(
             user_id=context.user_id,
             session_id=context.session_id,
-            answer=self._build_confirmation_message(context),
+            answer=context.ai_answer,
             products=[],
-            is_final=False,
+            is_final=is_chit_chat,  # If chit-chat, this is the final response
         )
-
-        # (1.5) If chit-chat -> return response
-        is_chit_chat, context = self.conversation_manager.manage_chit_chat(context)
+        
+        # If chit-chat, stop here
         if is_chit_chat:
-            yield SearchServiceResult(
-                user_id=context.user_id,
-                session_id=context.session_id,
-                answer=context.ai_answer,
-                products=context.search_result,
-                is_final=True,
-            )
             return
         
         # (2) Summarize exchange
@@ -167,16 +163,3 @@ class ConversationalSearchService(SearchService):
             if result.is_final:
                 final_result = result
         return final_result
-
-    def _build_confirmation_message(self, context: SearchContext) -> str:
-        """Construit un message de confirmation basique"""
-        lang = context.chat_lang.lang_code if context.chat_lang else "fr"
-        
-        confirmations = {
-            "fr": "Parfait ! Je traite votre demande...",
-            "en": "Great! Processing your request...",
-            "es": "¡Perfecto! Procesando su solicitud...",
-            "de": "Perfekt! Ihre Anfrage wird bearbeitet..."
-        }
-        
-        return confirmations.get(lang, confirmations["fr"])

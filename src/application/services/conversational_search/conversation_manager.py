@@ -26,9 +26,16 @@ class ConversationManager:
         self.logger = logger 
 
     def manage_chit_chat(self, context:SearchContext) -> tuple[bool, SearchContext]:
-        chit_chat:ChitChatField = self.chit_chat_agent.invoke(context.message_thread)
-        if chit_chat.is_chit_chat:
-            context.ai_answer = chit_chat.response
+        """
+        Detect chit-chat and generate appropriate response.
+        
+        Returns:
+            - (True, context) if chit-chat detected → context.ai_answer contains full response
+            - (False, context) if actionable → context.ai_answer contains short acknowledgment
+        """
+        chit_chat:ChitChatField = self.chit_chat_agent.invoke(context)
+        context.ai_answer = chit_chat.response
+        
         return chit_chat.is_chit_chat, context
         
     def insert_or_create_thread(self, context:SearchContext) -> SearchContext:
