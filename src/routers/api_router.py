@@ -125,7 +125,8 @@ async def chat(
         for result in service.invoke(
             input_message=chat_request.message,
             session_id=chat_request.session_id,
-            user_id=chat_request.user_id
+            user_id=chat_request.user_id,
+            max_products=chat_request.max_products
         ):
             yield f"data: {json.dumps(asdict(result))}\n\n"
     

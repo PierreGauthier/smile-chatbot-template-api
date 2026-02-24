@@ -58,7 +58,8 @@ class ConversationalSearchService(SearchService):
         self, 
         input_message: str, 
         user_id: str, 
-        session_id: str = None
+        session_id: str = None,
+        max_products: int = 10
     ) -> Generator[SearchServiceResult, None, None]:
         """
         Run the conversational search workflow for the given user input.
@@ -67,6 +68,7 @@ class ConversationalSearchService(SearchService):
             input_message: Raw message supplied by the user.
             user_id: Identifier for the user issuing the request.
             session_id: Existing conversation thread identifier, if any.
+            max_products: Maximum number of products to return (default: 10).
         
         Yields:
             SearchServiceResult at different pipeline stages with is_final=False,
@@ -77,7 +79,8 @@ class ConversationalSearchService(SearchService):
             input_message=input_message, 
             user_id=user_id, 
             session_id=session_id,
-            is_first_call= not session_id
+            is_first_call= not session_id,
+            max_products=max_products
         )
 
         # (0) Detect chat language
