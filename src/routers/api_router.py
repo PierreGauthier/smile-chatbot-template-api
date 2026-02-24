@@ -126,7 +126,8 @@ async def chat(
             input_message=chat_request.message,
             session_id=chat_request.session_id,
             user_id=chat_request.user_id,
-            max_products=chat_request.max_products
+            max_products=chat_request.max_products,
+            url=chat_request.url,
         ):
             yield f"data: {json.dumps(asdict(result))}\n\n"
     

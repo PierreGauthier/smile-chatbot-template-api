@@ -23,6 +23,7 @@ class SearchContext(BaseContext):
     search_result:List[SearchResponseItem] = field(default_factory=list)
     search_total_count:int = 0
     max_products: int = 10
+    url: str = None
 
     def get_valued_filters(self):
         return [f for f in self.request_chain_results[0].detected_filters if self.__is_valued(f.value)]

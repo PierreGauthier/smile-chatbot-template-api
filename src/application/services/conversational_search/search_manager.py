@@ -5,7 +5,7 @@ from domain.models import SearchContext, FilteredSearchApiResponse
 from domain.api_client import ConversationalSearchClient
 from domain.logger import ContextLogger
 
-from application.agents import QuestionsSummarizerAgent, SearchResponseBuilderAgent
+from application.agents import QuestionsSummarizerAgent, SearchResponseBuilderAgent, UrlBuilderAgent, UrlBuilderAgent
 
 from dependencies import (
     inject_conversational_search_api, 
@@ -21,11 +21,13 @@ class SearchManager:
             summarize_question_agent : Annotated[QuestionsSummarizerAgent, Depends(QuestionsSummarizerAgent)],
             search_response_agent: Annotated[SearchResponseBuilderAgent, Depends(inject_search_response_agent)],
             conversational_search_client: Annotated[ConversationalSearchClient, Depends(inject_conversational_search_api)],
+            url_builder_agent: Annotated[UrlBuilderAgent, Depends(UrlBuilderAgent)],
             logger: Annotated[ContextLogger, Depends(inject_logger)]):
         """Store injected dependencies used to prepare and execute conversational search queries."""
         self.summarize_question_agent = summarize_question_agent
         self.conversational_search_client = conversational_search_client
         self.search_response_agent = search_response_agent
+        self.url_builder_agent = url_builder_agent
         self.logger = logger
 
     def search(self, context:SearchContext) -> SearchContext:
@@ -87,6 +89,9 @@ class SearchManager:
             context.search_result = items
             
             # TODO: take into account all the result for the answer
+        
+        # Build search URL with applied filters
+        context.url = self.url_builder_agent.build_search_url(context)
 
         # else:
         #     # Summarize the set of questions

@@ -6,3 +6,4 @@ class ApiChatRequest(BaseModel):
     session_id: str | None = None
     message: str
     max_products: int | None = Field(default=10, ge=1, le=20, description="Maximum number of products to return (1-20)")
+    url: str = None 
