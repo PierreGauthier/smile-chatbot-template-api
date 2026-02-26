@@ -47,5 +47,8 @@
         "env.bak{,/**}",
         "venv.bak{,/**}",
         ".vscode{,/**}"
-    ]
+    ],
+    "files.exclude": {
+        "**/__pycache__": true
+    }
 }

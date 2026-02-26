@@ -9,3 +9,4 @@ class SearchServiceResult:
         session_id:str
         answer:str
         products: List[SearchResponseItem]
+        is_final: bool = True

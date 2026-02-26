@@ -31,6 +31,7 @@ class ElasticSuiteGraphqlQueryFactory:
                 name
                 price_range { minimum_price { final_price { value currency } } }
                 image { url }
+                url_key
             }
             page_info { current_page page_size total_pages }
             aggregations { attribute_code frontend_input options { label value } }

@@ -9,6 +9,7 @@ from .langsmith_search_response_builder_prompt_provider import LangsmithSearchRe
 from .langsmith_summarize_exchange_prompt_provider import LangsmithSummarizeExchangePromptProvider
 from .langsmith_language_detector_prompt_provider import LangsmithLanguageDetectorPromptProvider
 from .langsmith_chit_chat_prompt_provider import LangsmithChitChatPromptProvider
+from .langsmith_search_summary_prompt_provider import LangsmithSearchSummaryPromptProvider
 
 __all__ = [
     "LangsmithContextualizePromptProvider",
@@ -22,5 +23,6 @@ __all__ = [
     "LangsmithSearchResponseBuilderPromptProvider",
     "LangsmithSummarizeExchangePromptProvider",
     "LangsmithLanguageDetectorPromptProvider",
-    "LangsmithChitChatPromptProvider"
+    "LangsmithChitChatPromptProvider",
+    "LangsmithSearchSummaryPromptProvider",
 ]
