@@ -1,4 +1,4 @@
-from typing import Annotated, Dict
+from typing import Annotated, List
 from fastapi import Depends
 
 from domain.fields import AttributeSetField
@@ -10,7 +10,7 @@ from application.agents import AttributeSetExtractionAgent
 
 from dependencies import inject_attribute_db_service, inject_logger
 
-class AttributeSetDetectionManager:
+class AttributeDetectionManager:
     """Coordinates the retrieval of attribute set metadata and detection of user intent."""
 
     def __init__(
@@ -26,10 +26,10 @@ class AttributeSetDetectionManager:
     def detect(self, context:SearchContext) -> SearchContext:
         """Populate the search context with attribute sets and detection results."""
         # Get attribute set list
-        attribute_sets:Dict[int, AttributeSetDto] = self.attribute_set_db_service.load_attribute_sets()
+        attribute_sets:List[AttributeSetDto] = self.attribute_set_db_service.load_attribute_sets()
         context.attribute_sets = attribute_sets
 
-        # Detect product family (attribute set)
+        # Detect product (attribute set)
         detected_attribute_set:AttributeSetField = self.attribute_set_extraction_agent.invoke(context)
         
         self.logger.debug_context(
