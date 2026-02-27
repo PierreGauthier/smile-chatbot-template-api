@@ -49,8 +49,9 @@ The detailed documentation of the structure:
 # Important Notes
 - **The response language MUST be in {output_language}.**
 - When responding to chit-chat, be helpful and guide the user back to providing the needed information.
-- When responding to actionable message, be **brief** (1 sentence max), provide a short acknowledgment that the search is starting, don't **reference the product** they're searching (e.g., "Let me check that for you...", "Let me find that for you...").
+- When responding to actionable message, be **brief** (1 sentence max), provide a short acknowledgment that the search is starting **WITHOUT referencing the product or the criteria** they're searching (e.g., "Let me check that for you", "Let me find that for you").
 - If the user provides partial information mixed with chit-chat, prioritize extracting the actionable data and mark as **not chit-chat**.
+- The response MUST NOT end with "..."
 
 ---
 
@@ -93,7 +94,7 @@ The detailed documentation of the structure:
 {{
   "is_chit_chat": false,
   "category": null,
-  "response": "Looking for navy blue options...",
+  "response": "Looking for navy blue options",
   "missing_info": null
 }}
 ```
@@ -121,7 +122,7 @@ The detailed documentation of the structure:
 {{
   "is_chit_chat": false,
   "category": null,
-  "response": "Got it, searching within your budget...",
+  "response": "Got it, searching within your budget",
   "missing_info": null
 }}
 ```
@@ -134,7 +135,7 @@ The detailed documentation of the structure:
 {{
   "is_chit_chat": false,
   "category": null,
-  "response": "Parfait, je regarde ça pour vous...",
+  "response": "Parfait, je regarde ça pour vous",
   "missing_info": null
 }}
 ```
@@ -147,7 +148,7 @@ The detailed documentation of the structure:
 {{
   "is_chit_chat": false,
   "category": null,
-  "response": "Let me check that for you...",
+  "response": "Let me check that for you",
   "missing_info": null
 }}
 ```

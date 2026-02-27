@@ -34,7 +34,7 @@ class ElasticSuiteGraphqlQueryFactory:
                 url_key
             }
             page_info { current_page page_size total_pages }
-            aggregations { attribute_code frontend_input options { label value } }
+            aggregations { attribute_code frontend_input options { label value count } }
         }
         """
 
