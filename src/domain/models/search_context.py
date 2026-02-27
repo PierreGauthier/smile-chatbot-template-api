@@ -1,7 +1,7 @@
 from typing import List
 from dataclasses import dataclass, field
 
-from domain.fields import AttributeField
+from domain.fields import AttributeSetField
 from domain.models import (
     UserRequestDto,
     AttributeSetDto,
@@ -17,7 +17,7 @@ class SearchContext(BaseContext):
     search_lang:Language = None
     requests: List[UserRequestDto] = field(default_factory=list)
     attribute_sets: List[AttributeSetDto] = field(default_factory=list)
-    detected_attribute_set: AttributeField = None
+    detected_attribute_set: AttributeSetField = None
     request_chain_results: List[ProductFilterDetectionResult] = field(default_factory=list)
     search_used_filters: List[AttributeFilterValue] = field(default_factory=list)
     search_result:List[SearchResponseItem] = field(default_factory=list)

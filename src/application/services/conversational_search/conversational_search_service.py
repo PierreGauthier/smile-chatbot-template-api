@@ -11,7 +11,7 @@ from application.services.conversational_search import (
     LanguageManager,
     ConversationManager,
     RequestManager,
-    AttributeDetectionManager,
+    AttributeSetDetectionManager,
     SearchManager,
     SearchService, 
 )
@@ -27,7 +27,7 @@ class ConversationalSearchService(SearchService):
             language_manager:Annotated[LanguageManager, Depends(LanguageManager)],
             conversation_manager:Annotated[ConversationManager, Depends(ConversationManager)],
             request_manager:Annotated[RequestManager, Depends(RequestManager)],
-            attribute_set_manager:Annotated[AttributeDetectionManager, Depends(AttributeDetectionManager)],
+            attribute_set_manager:Annotated[AttributeSetDetectionManager, Depends(AttributeSetDetectionManager)],
             search_manager:Annotated[SearchManager, Depends(SearchManager)],
             logger: Annotated[ContextLogger, Depends(inject_logger)]):
         """
