@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Tuple
 from fastapi import Depends
 
 from langchain_core.output_parsers.pydantic import PydanticOutputParser
@@ -26,15 +26,31 @@ class SearchTermExtractionAgent:
         self.prompt_provider = prompt_provider
         self.pydantic_object = SearchTermField
 
-    def invoke(self, context: SearchContext) -> str:
-        """Extract and return the search term from the user's message."""
+    def invoke(self, context: SearchContext) -> Tuple[str, bool]:
+        """Extract search term and detect if it's a new search.
+        
+        Returns:
+            Tuple of (search_term, is_new_search)
+        """
         output_parser = PydanticOutputParser(pydantic_object=self.pydantic_object)
         format_instructions = output_parser.get_format_instructions()
         prompt_template: ChatPromptTemplate = self.prompt_provider.get_prompt(context)
 
-        prompt_template = prompt_template.partial(format_instructions=format_instructions)
+        previous_search_term = self._get_previous_search_term(context)
+        prompt_template = prompt_template.partial(
+            format_instructions=format_instructions,
+            previous_search_term=previous_search_term
+        )
         messages = prompt_template.format_messages(question=context.exchange)
         output = self.llm_agent.invoke(messages)
 
         response = output_parser.parse(output.content)
-        return response.term
+        return response.term, response.is_new_search
+
+    def _get_previous_search_term(self, context: SearchContext) -> str:
+        """Extract the previous search term from the last request."""
+        if not context.requests:
+            return "None"
+        
+        last_request = context.requests[-1]
+        return last_request.search_term if last_request.search_term else "None"

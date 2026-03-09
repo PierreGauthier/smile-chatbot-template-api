@@ -95,13 +95,17 @@ class ConversationalSearchService(SearchService):
         # (3) Get requests
         context = self.request_manager.get_requests(context)
 
-        # (4) Extract search term & filters       
+        # (4) Extract search term & detect new search
         context = self.search_manager.extract_search_term(context)
+        
+        if context.needs_reset:
+            context = self.conversation_manager.reset_search_session(context)
+        
         if not context.search_term:
             yield SearchServiceResult(
                 user_id=user_id,
                 session_id=context.session_id,
-                answer="Sorry, we don't sell this product here.", # -> TODO: response agent
+                answer="Sorry, we don't sell this product here.",  # -> TODO: response agent
                 products=[],
                 is_final=True,
             )

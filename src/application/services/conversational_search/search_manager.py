@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Tuple
 from fastapi import Depends
 
 from domain.models import SearchContext, FilteredSearchApiResponse, FilterDto
@@ -31,8 +31,14 @@ class SearchManager:
         self.logger = logger
 
     def extract_search_term(self, context: SearchContext) -> SearchContext:
-        """Extract and return the search term from the user's message."""
-        context.search_term = self.search_term_extraction_agent.invoke(context)
+        """Extract search term and detect if it's a new search.
+        
+        Returns:
+            Updated context with search_term and needs_reset flag set.
+        """
+        search_term, is_new_search = self.search_term_extraction_agent.invoke(context)
+        context.needs_reset = not context.is_first_call and is_new_search
+        context.search_term = search_term
         return context
 
     def search(self, context: SearchContext) -> SearchContext:

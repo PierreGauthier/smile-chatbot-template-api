@@ -24,6 +24,7 @@ class SearchContext(BaseContext):
     search_total_count:int = 0
     search_available_filters: List[FilterDto] = field(default_factory=list)
     max_products: int = 10
+    needs_reset: bool = False
 
     # Deprecated fields
     attribute_sets: List[AttributeSetDto] = field(default_factory=list)
