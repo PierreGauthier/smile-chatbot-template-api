@@ -10,6 +10,14 @@
             "request": "launch",
             "program":"src/app.py",
             "jinja": true
+        },
+        {
+            "name": "Python Debugger: Pytest",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "args": ["tests", "-vv"],
+            "jinja": true
         }
     ]
 }

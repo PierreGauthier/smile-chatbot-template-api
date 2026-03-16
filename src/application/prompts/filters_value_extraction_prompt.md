@@ -27,9 +27,9 @@ Analyze the conversation history (user messages and assistant messages) to extra
 - If a field cannot be determined, set its value to zero (for numerical fields) or empty (for string fields).
 - If the extracted value is in the list/range above, return it exactly as shown (lowercase, no extra spaces).
 - The extracted value **MUST** respect the declared data type. Example: if a filter's data type is string, return "3" not 3.
+- The filter code should match exactly the filter list provided, no translation or adaptation.
 - If price is not specified, put 0 for both `min_price` and `max_price`.
 
----
 # Examples
 
 **IMPORTANT: These examples show the EXACT format you must return - only the data values, nothing else:**
@@ -46,6 +46,9 @@ Analyze the conversation history (user messages and assistant messages) to extra
 - Utilisateur : "Je voudrais quelque chose de rouge"
 - Assistant : {{"color": "red", "price": {{"min_price": 0, "max_price": 0}}}}
 
+**Final Instruction: Return ONLY valid JSON data matching the filter fields. No schema definitions, no properties object, no required array. Just the data values in JSON format.**
+
 ---
 
-**Final Instruction: Return ONLY valid JSON data matching the filter fields. No schema definitions, no properties object, no required array. Just the data values in JSON format.**
+HUMAN
+{question}

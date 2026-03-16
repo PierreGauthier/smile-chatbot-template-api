@@ -66,21 +66,21 @@
     - Which filters are missing but relevant
     - Why the refinement question was generated (or why not)
 
-  ---
-  # Examples
+# Examples
 
-  1.
-  - Utilisateur : "Je cherche un barbecue Weber noir entre 50 et 150 euros"
-  - Assistant : {{"detected_filter_codes": ["marque", "couleur", "price"], "chain_of_thoughts": "Detected: 'Weber' (marque), 'noir' (couleur), '50 et 150 euros' (price). Missing but relevant: matiere and facet_hauteur could help refine. Generated question to ask about these.", "refinement_question": "Avez-vous une préférence de matériau (acier inoxydable, fonte) ou de taille ?"}}
+- Utilisateur: Je cherche un barbecue Weber noir entre 50 et 150 euros
+- Assistant: {{"detected_filter_codes": ["marque", "couleur", "price"], "chain_of_thoughts": "Detected: 'Weber' (marque), 'noir' (couleur), '50 et 150 euros' (price). Missing but relevant: matiere and facet_hauteur could help refine. Generated question to ask about these.", "refinement_question": "Avez-vous une préférence de matériau (acier inoxydable, fonte) ou de taille ?"}}
 
-  2.
-  - Utilisateur : "Un barbecue"
-  - Assistant : {{"detected_filter_codes": [], "chain_of_thoughts": "No filters detected. Multiple relevant filters missing (marque, couleur, price, matiere). Generated broad refinement question.", "refinement_question": "Quel type de barbecue cherchez-vous ? Avez-vous un budget, une marque préférée ou un matériau en tête ?"}}
+- Utilisateur: Un barbecue
+- Assistant: {{"detected_filter_codes": [], "chain_of_thoughts": "No filters detected. Multiple relevant filters missing (marque, couleur, price, matiere). Generated broad refinement question.", "refinement_question": "Quel type de barbecue cherchez-vous ? Avez-vous un budget, une marque préférée ou un matériau en tête ?"}}
 
-  3.
-  - Utilisateur : "Je voudrais quelque chose de rouge et pas trop cher"
-  - Assistant : {{"detected_filter_codes": ["couleur", "price"], "chain_of_thoughts": "Detected: 'rouge' (couleur), 'pas trop cher' (price). Missing: marque and matiere are relevant for refinement.", "refinement_question": "Avez-vous une préférence de marque ou de matériau ?"}}
+- Utilisateur: Je voudrais quelque chose de rouge et pas trop cher
+- Assistant: {{"detected_filter_codes": ["couleur", "price"], "chain_of_thoughts": "Detected: 'rouge' (couleur), 'pas trop cher' (price). Missing: marque and matiere are relevant for refinement.", "refinement_question": "Avez-vous une préférence de marque ou de matériau ?"}}
 
-  4.
-  - Utilisateur : "Un barbecue en acier inoxydable, grand modèle, pour gaz, marque Weber, noir, 200 euros"
-  - Assistant : {{"detected_filter_codes": ["matiere", "facet_hauteur", "type_raccordement", "marque", "couleur", "price"], "chain_of_thoughts": "All relevant filters detected. No refinement needed.", "refinement_question": ""}}
+- Utilisateur: Un barbecue en acier inoxydable, grand modèle, pour gaz, marque Weber, noir, 200 euros
+- Assistant: {{"detected_filter_codes": ["matiere", "facet_hauteur", "type_raccordement", "marque", "couleur", "price"], "chain_of_thoughts": "All relevant filters detected. No refinement needed.", "refinement_question": ""}}
+
+---
+
+HUMAN
+{question}

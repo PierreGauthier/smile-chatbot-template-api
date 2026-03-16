@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from domain.models import AttributeSetDto
 
 class AttributeSetField(BaseModel):
     product:str = Field(description="The name of the product that the user searches.")

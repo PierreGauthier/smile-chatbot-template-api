@@ -32,7 +32,7 @@ class SearchContext(BaseContext):
 
     def get_valued_filters(self):
         return [f for f in self.request_chain_results[0].detected_filters if self.__is_valued(f.value)]
-    
+
     def __is_valued(self, filter_value):
         if isinstance(filter_value, dict):
             # handle case where PriceRangeField is represented as dict

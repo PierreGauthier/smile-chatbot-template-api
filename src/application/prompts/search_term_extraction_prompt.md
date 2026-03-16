@@ -43,7 +43,10 @@ Previous search term: `{previous_search_term}`
 - Previous: "running shoe"
 - Output: `{{"term": "laptop", "chain_of_thoughts": "The user completely changed their mind from 'running shoe' to 'laptop' (different product category).", "is_new_search": true}}`
 
-
-
 # Output Format
 {format_instructions}
+
+---
+
+HUMAN
+{question}

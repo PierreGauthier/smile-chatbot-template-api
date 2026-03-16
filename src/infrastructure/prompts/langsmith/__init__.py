@@ -8,11 +8,8 @@ from .langsmith_rag_main_prompt_provider import LangsmithRagMainPromptProvider
 from .langsmith_search_response_builder_prompt_provider import LangsmithSearchResponseBuilderPromptProvider
 from .langsmith_summarize_exchange_prompt_provider import LangsmithSummarizeExchangePromptProvider
 from .langsmith_language_detector_prompt_provider import LangsmithLanguageDetectorPromptProvider
-from .langsmith_chit_chat_prompt_provider import LangsmithChitChatPromptProvider
 from .langsmith_search_summary_prompt_provider import LangsmithSearchSummaryPromptProvider
-from .langsmith_search_term_extraction_prompt_provider import LangsmithSearchTermExtractionPromptProvider
-from .langsmith_filters_detection_prompt_provider import LangsmithFiltersDetectionPromptProvider
-from .langsmith_filters_value_extraction_prompt_provider import LangsmithFiltersValueExtractionPromptProvider
+from .langsmith_prompt_provider import LangsmithPromptProvider
 
 
 __all__ = [
@@ -27,9 +24,6 @@ __all__ = [
     "LangsmithSearchResponseBuilderPromptProvider",
     "LangsmithSummarizeExchangePromptProvider",
     "LangsmithLanguageDetectorPromptProvider",
-    "LangsmithChitChatPromptProvider",
     "LangsmithSearchSummaryPromptProvider",
-    "LangsmithSearchTermExtractionPromptProvider",
-    "LangsmithFilterDetectionPromptProvider",
-    "LangsmithFilterValueExtractionPromptProvider",
+    "LangsmithPromptProvider"
 ]

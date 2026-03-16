@@ -6,9 +6,9 @@ from domain.ai import LlmProvider, EmbeddingsProvider, VectorStoreProvider
 from domain.models import SearchContext
 from domain.api_client import ConversationalSearchClient
 from domain.services.database import (
-    DatabaseHistoryService, 
-    DatabaseDocumentService, 
-    DatabaseAttributesSetupService, 
+    DatabaseHistoryService,
+    DatabaseDocumentService,
+    DatabaseAttributesSetupService,
     DatabaseRequestService
 )
 
@@ -22,16 +22,16 @@ from application.models import RagChatMessage, SearchChatMessage
 from infrastructure.gcp.services import GoogleCloudStorageDocumentService, FirestoreHistoryService
 from infrastructure.gcp.ai import VertexLlmProvider, VertexVectorStoreProvider
 from infrastructure.azure.services import (
-    CosmosDbDocumentService, 
-    CosmosDbHistoryService, 
+    CosmosDbDocumentService,
+    CosmosDbHistoryService,
     CosmosDBAttributesSetupService,
     CosmosDbRequestService
 )
 from infrastructure.azure.ai import AzureOpenAiLlmProvider, AzureSearchVectorStoreProvider
 from infrastructure.openai.ai import OpenAIEmbeddingsProvider
 from infrastructure.search.elastic_suite import (
-    ElasticSuiteSearchClient, 
-    ElasticSuiteSearchClientMock, 
+    ElasticSuiteSearchClient,
+    ElasticSuiteSearchClientMock,
     ElasticSuiteSearchResponseBuilder
 )
 from infrastructure.prompts.langsmith import (
@@ -43,12 +43,10 @@ from infrastructure.prompts.langsmith import (
     LangsmithSearchResponseBuilderPromptProvider,
     LangsmithEmptySearchResponseBuilderPromptProvider,
     LangsmithSummarizeExchangePromptProvider,
-    LangsmithChitChatPromptProvider,
     LangsmithSearchSummaryPromptProvider,
-    LangsmithSearchTermExtractionPromptProvider,
-    LangsmithFiltersDetectionPromptProvider,
-    LangsmithFiltersValueExtractionPromptProvider
+    LangsmithPromptProvider
 )
+from infrastructure.prompts.local import LocalPromptProvider
 from infrastructure.ollama.ai import OllamaLlmProvider
 from infrastructure.configuration.elastic_suite import ElasticSuiteAttributeSetClient, ElasticSuiteAttributeSetResponseBuilder
 from infrastructure.agents.elastic_suite import ElasticSuiteSearchResponseBuilderAgent
@@ -74,6 +72,7 @@ def inject_configuration_client(settings: Settings = Depends(get_settings)) -> E
 def inject_language_detector() -> LanguageDetector:
     return AzureOpenAILanguageDetector(
         settings=settings,
+        prompt_provider=inject_language_detector_prompt(settings),
         logger=inject_logger()
     )
 
@@ -109,7 +108,7 @@ def inject_light_llm_provider(settings: Settings = Depends(get_settings)) -> Llm
             return VertexLlmProvider(settings)
         case _:
             raise ValueError(f"Unsupported LLM provider: {provider}")
-        
+
 def inject_vector_store_provider(settings: Settings = Depends(get_settings)) -> VectorStoreProvider:
     """Injects a Vector Search provider"""
     provider = settings.retriever_provider.lower()
@@ -169,7 +168,7 @@ def inject_request_db_service(settings: Settings = Depends(get_settings)) -> Dat
             return CosmosDbRequestService(settings)
         case _:
             raise ValueError(f"Unsupported Request DB service provider: {provider}")
-        
+
 def inject_attribute_db_service(settings: Settings = Depends(get_settings)) -> DatabaseAttributesSetupService:
     """Injects database service for attribute-set and filters (Conversational Search)"""
     provider = settings.attribute_set_db_provider.lower()
@@ -181,25 +180,66 @@ def inject_attribute_db_service(settings: Settings = Depends(get_settings)) -> D
 
 def inject_conversational_search_api(settings: Settings = Depends(get_settings)) -> ConversationalSearchClient:
     return ElasticSuiteSearchClient(
-        settings, 
-        ElasticSuiteSearchResponseBuilder(), 
+        settings,
+        ElasticSuiteSearchResponseBuilder(),
         inject_logger()
     )
     # return ElasticSuiteSearchClientMock(
-    #     settings, 
-    #     ElasticSuiteSearchResponseBuilder(), 
+    #     settings,
+    #     ElasticSuiteSearchResponseBuilder(),
     #     inject_logger()
     # )
 
 def inject_search_response_agent(settings: Settings = Depends(get_settings)) -> SearchResponseBuilderAgent:
     return ElasticSuiteSearchResponseBuilderAgent(
-        settings=settings, 
+        settings=settings,
         llm_provider=inject_deep_llm_provider(settings),
         empty_search_prompt_provider=inject_empty_search_response_prompt(settings),
         not_empty_search_prompt_provider=inject_search_response_prompt(settings)
     )
 
+
 # PROMPTS
+
+def _get_prompt_provider(settings: Settings, prompt_name: str) -> StaticPromptProvider:
+    """Helper to create the appropriate prompt provider"""
+    use_langsmith = settings.use_langsmith_prompts
+    langchain_api_key = settings.langchain_api_key
+    local_prompts_dir = settings.local_prompts_dir
+    return LangsmithPromptProvider(langchain_api_key, prompt_name) if use_langsmith else LocalPromptProvider(local_prompts_dir, prompt_name)
+
+def inject_chit_chat_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
+    return _get_prompt_provider(settings, settings.prompt_name_chit_chat)
+
+def inject_exchange_summarizer_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
+    return _get_prompt_provider(settings, settings.prompt_name_summary_exchange)
+
+def inject_filters_detection_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
+    return _get_prompt_provider(settings, settings.prompt_name_filters_detection)
+
+def inject_filters_value_extraction_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
+    return _get_prompt_provider(settings, settings.prompt_name_filters_value_extraction)
+
+def inject_language_detector_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
+    return _get_prompt_provider(settings, settings.prompt_name_language_detector)
+
+def inject_question_summarizer_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
+    return _get_prompt_provider(settings, settings.prompt_name_question_summarizer)
+
+def inject_search_summary_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
+    return _get_prompt_provider(settings, settings.prompt_name_search_summary)
+
+def inject_search_term_extraction_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
+    return _get_prompt_provider(settings, settings.prompt_name_search_term_extraction)
+
+
+
+def inject_search_response_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
+    return _get_prompt_provider(settings, settings.prompt_name_search_term_extraction)
+
+def inject_empty_search_response_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
+    return _get_prompt_provider(settings, settings.prompt_name_search_term_extraction)
+
 
 def inject_attribute_set_extraction_prompt(settings: Settings = Depends(get_settings)) -> PromptProvider[SearchContext]:
     return LangsmithAttributeSetExtractionPromptProvider(settings)
@@ -210,32 +250,5 @@ def inject_filters_extraction_prompt(settings: Settings = Depends(get_settings))
 def inject_intent_extraction_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
     return LangsmithIntentExtractionPromptProvider(settings)
 
-def inject_question_summarizer_prompt(settings: Settings = Depends(get_settings)) -> PromptProvider[SearchContext]:
-    return LangsmithQuestionSummarizerPromptProvider(settings)
-
 def inject_rag_main_prompt(settings: Settings = Depends(get_settings)) -> RagMainPromptProvider:
     return LangsmithRagMainPromptProvider(settings)
-
-def inject_search_response_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
-    return LangsmithSearchResponseBuilderPromptProvider(settings)
-
-def inject_empty_search_response_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
-    return LangsmithEmptySearchResponseBuilderPromptProvider(settings)
-
-def inject_exchange_summarizer_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
-    return LangsmithSummarizeExchangePromptProvider(settings)
-
-def inject_chit_chat_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
-    return LangsmithChitChatPromptProvider(settings)
-
-def inject_search_summary_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
-    return LangsmithSearchSummaryPromptProvider(settings)
-
-def inject_search_term_extraction_prompt(settings: Settings = Depends(get_settings)) -> StaticPromptProvider:
-    return LangsmithSearchTermExtractionPromptProvider(settings)
-
-def inject_filters_detection_prompt(settings: Settings = Depends(get_settings)) -> PromptProvider[SearchContext]:
-    return LangsmithFiltersDetectionPromptProvider(settings)
-
-def inject_filters_value_extraction_prompt(settings: Settings = Depends(get_settings)) -> PromptProvider[SearchContext]:
-    return LangsmithFiltersValueExtractionPromptProvider(settings)

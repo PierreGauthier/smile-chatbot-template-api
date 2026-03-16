@@ -12,7 +12,7 @@ from application.services.conversational_search import (
     ConversationManager,
     RequestManager,
     SearchManager,
-    SearchService, 
+    SearchService,
 )
 
 from dependencies import inject_logger
@@ -51,9 +51,9 @@ class ConversationalSearchService(SearchService):
         set_debug(settings.debug)
 
     def invoke(
-        self, 
-        input_message: str, 
-        user_id: str, 
+        self,
+        input_message: str,
+        user_id: str,
         session_id: str = None,
         max_products: int = 10
     ) -> Generator[SearchServiceResult, None, None]:
@@ -65,7 +65,7 @@ class ConversationalSearchService(SearchService):
             user_id: Identifier for the user issuing the request.
             session_id: Existing conversation thread identifier, if any.
             max_products: Maximum number of products to return (default: 10).
-        
+
         Yields:
             SearchServiceResult at different pipeline stages with is_final=False,
             then a final SearchServiceResult with is_final=True.
@@ -85,10 +85,10 @@ class ConversationalSearchService(SearchService):
             answer=context.ai_answer,
             products=[],
             is_final=is_chit_chat,  # If chit-chat, this is the final response
-        )   
+        )
         if is_chit_chat:
             return
-        
+
         # (2) Summarize exchange
         context = self.conversation_manager.summarize_exchange(context)
 
@@ -97,10 +97,10 @@ class ConversationalSearchService(SearchService):
 
         # (4) Extract search term & detect new search
         context = self.search_manager.extract_search_term(context)
-        
+
         if context.needs_reset:
             context = self.conversation_manager.reset_search_session(context)
-        
+
         if not context.search_term:
             yield SearchServiceResult(
                 user_id=user_id,
@@ -140,7 +140,7 @@ class ConversationalSearchService(SearchService):
 
         # (8) Search OR ask for filters
         context = self.search_manager.search(context)
-        
+
         # (9) Insert the AI message in the DB
         self.conversation_manager.store_ai_answer(context)
 
@@ -167,15 +167,15 @@ class ConversationalSearchService(SearchService):
 
     # Get (or create) search context
     def _get_search_context(
-            self, 
-            input_message: str, 
-            user_id: str, 
+            self,
+            input_message: str,
+            user_id: str,
             session_id: str = None,
             max_products: int = 10,
     ) -> SearchContext:
         return SearchContext(
-            input_message=input_message, 
-            user_id=user_id, 
+            input_message=input_message,
+            user_id=user_id,
             session_id=session_id,
             is_first_call= not session_id,
             max_products=max_products

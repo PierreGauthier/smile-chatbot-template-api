@@ -16,8 +16,8 @@ from config import Settings, get_settings
 class SearchTermExtractionAgent:
     """Extract the main search term from a user message, independent of attribute sets."""
 
-    def __init__(self, 
-            settings: Annotated[Settings, Depends(get_settings)], 
+    def __init__(self,
+            settings: Annotated[Settings, Depends(get_settings)],
             llm_agent: Annotated[LlmProvider, Depends(inject_deep_llm_provider)],
             prompt_provider: Annotated[PromptProvider[SearchContext], Depends(inject_search_term_extraction_prompt)]):
         """Store injected dependencies for search term extraction."""
@@ -28,13 +28,13 @@ class SearchTermExtractionAgent:
 
     def invoke(self, context: SearchContext) -> Tuple[str, bool]:
         """Extract search term and detect if it's a new search.
-        
+
         Returns:
             Tuple of (search_term, is_new_search)
         """
         output_parser = PydanticOutputParser(pydantic_object=self.pydantic_object)
         format_instructions = output_parser.get_format_instructions()
-        prompt_template: ChatPromptTemplate = self.prompt_provider.get_prompt(context)
+        prompt_template: ChatPromptTemplate = self.prompt_provider.get_prompt()
 
         previous_search_term = self._get_previous_search_term(context)
         prompt_template = prompt_template.partial(
@@ -51,6 +51,6 @@ class SearchTermExtractionAgent:
         """Extract the previous search term from the last request."""
         if not context.requests:
             return "None"
-        
+
         last_request = context.requests[-1]
         return last_request.search_term if last_request.search_term else "None"

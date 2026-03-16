@@ -4,22 +4,23 @@ from domain.logger import ContextLogger
 from domain.agents import LanguageDetector
 from config import Settings
 
+from application.prompts import StaticPromptProvider
 from application.chains import BasicPydanticChain
 
 from infrastructure.azure.ai import AzureOpenAiLlmProvider
-from infrastructure.prompts.langsmith import LangsmithLanguageDetectorPromptProvider
 
 class AzureOpenAILanguageDetector(LanguageDetector):
 
     def __init__(
             self,
             settings: Settings,
+            prompt_provider: StaticPromptProvider,
             logger:ContextLogger):
         self.logger = logger
         self.detector_chain = BasicPydanticChain(
             settings=settings,
             llm_agent=AzureOpenAiLlmProvider(settings),
-            prompt_provider=LangsmithLanguageDetectorPromptProvider(settings),
+            prompt_provider=prompt_provider,
             pydantic_object=LanguageField
         )
 
